@@ -1,0 +1,38 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+App:
+  Properties:
+    Formulas: |-
+      =clr_BLUEBERRY=RGBA(0,46,255,1);
+      clr_SEARCH_CONTAINER=RGBA(255,238,230,1);
+      clr_GOLDENRODLIGHT=RGBA(250,250,210,1);
+      clr_BLUELIGHT=RGBA(210,230,250,1);
+      clr_BLUELIGHTLIGHT=RGBA(232,243,255,1);
+      clr_DARKGREYMED=RGBA(106,122,127,1);
+      clr_BRIGHTRED=RGBA(215,58,60,1);
+      clr_BRIGHTYELLOW=RGBA(255,255,0,1);
+      clr_YELLOWSELECTED=RGBA(255,255,191,1);
+
+      const_CrLf=Char(13)&Char(10);
+      const_DQ=Char(34);
+      format_Percent="0.00%";
+      format_Currency="$#,###,##0.00";
+      format_CurrencyNoDec="$#,###,##0";
+    OnStart: |+
+      =Clear(col_pbMenu);
+      Clear(col_BuildMenu);
+      Clear(col_pbMenuPerf);
+      Clear(col_pbMenuUtil);
+
+      Set(pbMenu_LogPerformance,true);
+
+      dData.BuildDemoMenus();
+
+    StartScreen: ='pbMenu Demo'
+    Theme: =PowerAppsTheme

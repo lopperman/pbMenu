@@ -1,0 +1,342 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  pbMenu Demo:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
+      OnVisible: |-
+        =If(CountIf(col_pbMenu,true)=0,dData.BuildDemoMenus());
+        UpdateContext({vert1Menu: "mainVert1"});
+        UpdateContext({vert2Menu: "mainVert2"});
+    Children:
+      - Header1:
+          Control: Header@0.0.44
+          Properties:
+            Height: =40
+            Logo: =stickeromglove
+      - MM:
+          Control: CanvasComponent
+          ComponentName: pbMenu
+          Properties:
+            BorderColor: =PowerAppsTheme.Colors.Darker20
+            BorderWidth: =1
+            BusyBehavior: =Self.BusyBehaviorChoices.Spinning
+            BusyMessage: =spin.msg
+            CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
+            ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
+            EnableCollapsedState: =true
+            Height: =Self.MinimumHeight
+            IsBusy: '=spin.waiting=true '
+            ManageItemStates: =true
+            MenuColorPalette: =PowerAppsTheme.Colors.PrimaryForeground
+            MenuItemTextColor: =
+            MenuKey: ="Main"
+            OnBeforeAction: |-
+              =Switch(Upper(p_itemKey), 
+                  Upper("miNavBuild"), Navigate('Menu Builder',ScreenTransition.Fade); true, 
+                  Upper("togglePerfLogging"), 
+                      Set(pbMenu_LogPerformance,Not(pbMenu_LogPerformance));
+                      Notify($"'pbMenu_LogPerformance' global variable is now set to: {pbMenu_LogPerformance}.  Any pbMenu using 'pbMenu_LogPerformance' for the Log Performance property will now use this value",NotificationType.Information,5000);
+                      true, 
+
+                  false 
+              )
+            OnRemoveMenuItem: =
+            OverrideExpandedWidth: =0
+            PerformanceLogging: =pbMenu_LogPerformance
+            Reset: =Reset(MM)
+            ShowNavBackButton: =false
+            ToolbarOrientation: =MM.LayoutChoices.Horizontal
+            ToolbarPadding: =If(Upper(MM.ToolbarOrientation)=Upper(MM.LayoutChoices.Horizontal), 'Toolbar.Padding'.Medium,  'Toolbar.Padding'.Small)
+            VerticalDefaultCollapsed: =true
+            Width: =Parent.Width
+            Y: =Header1.Y + Header1.Height
+      - pbMenu_Vert:
+          Control: CanvasComponent
+          ComponentName: pbMenu
+          Properties:
+            BorderColor: =PowerAppsTheme.Colors.Darker20
+            BorderWidth: =1
+            BusyBehavior: =Self.BusyBehaviorChoices.Spinning
+            BusyMessage: =spin.msg
+            CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
+            ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
+            EnableCollapsedState: =true
+            Fill: =RGBA(214, 221, 224, 1)
+            Height: =Parent.Height - Self.Y -8
+            IsBusy: '=spin.waiting=true '
+            ManageItemStates: =true
+            MenuColorPalette: =RGBA(189, 49, 51, 1)
+            MenuItemTextColor: =
+            MenuKey: =vert1Menu
+            OnBeforeAction: "=Set(spin,{waiting: true,msg: $\"Busy, please wait: {Text(Now(),\"hh:mm:ss am/pm\")}\"});\nWith({handled: \n    Switch(Upper(p_itemKey), \n        Upper(\"useMenu_mainVert1\"), UpdateContext({vert1Menu:\"mainVert1\"}); Self.ItemState_UpdateAll(true); true, \n        Upper(\"useMenu_mainVert2\"), UpdateContext({vert1Menu:\"mainVert2\"}); Self.ItemState_UpdateAll(true); true, \n        Upper(\"disableOtherMenus\"), MM.ItemState_UpdateAll(false); pbMenu_Vert_1.ItemState_UpdateAll(false); true, \n        Upper(\"enableOtherMenus\"), MM.ItemState_UpdateAll(true); pbMenu_Vert_1.ItemState_UpdateAll(true); true, \n\n        false\n    )},\n//    If(Not(handled), \n//        Notify($\"Normally, this menu item ({Self.MenuKey}.{p_itemKey}) would be wired up to something!\",NotificationType.Information,2000)\n//    );\n    //add false here to route request back to pbMenu action handler\n    handled  \n);\nSet(spin,Blank());\n\n        \n"
+            OnRemoveMenuItem: =
+            OverrideExpandedWidth: =160
+            PerformanceLogging: =pbMenu_LogPerformance
+            Reset: =Reset(pbMenu_Vert)
+            ShowNavBackButton: =false
+            ToolbarOrientation: =pbMenu_Vert.LayoutChoices.Vertical
+            ToolbarPadding: =""
+            VerticalDefaultCollapsed: =true
+            Width: =Self.MinimumWidth()
+            Y: '=MM.Y + MM.Height + 10 '
+      - pbMenu_Vert_1:
+          Control: CanvasComponent
+          ComponentName: pbMenu
+          Properties:
+            BorderColor: =PowerAppsTheme.Colors.Lighter50
+            BorderWidth: =1
+            BusyBehavior: =Self.BusyBehaviorChoices.Disabled
+            BusyMessage: =spin.msg
+            CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
+            ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
+            EnableCollapsedState: =true
+            Fill: =RGBA(252, 252, 217, 1)
+            Height: =Parent.Height - Self.Y -8
+            IsBusy: '=spin.waiting=true '
+            ManageItemStates: =true
+            MenuColorPalette: =RGBA(45, 128, 40, 1)
+            MenuItemTextColor: =
+            MenuKey: =vert2Menu
+            OnBeforeAction: "=With({handled: \n    Switch(Upper(p_itemKey), \n        Upper(\"useMenu_mainVert1\"), UpdateContext({vert2Menu:\"mainVert1\"}); Self.ItemState_UpdateAll(true); true, \n        Upper(\"useMenu_mainVert2\"), UpdateContext({vert2Menu:\"mainVert2\"}); Self.ItemState_UpdateAll(true); true, \n        false\n    )},\n    If(Not(handled), \n        Notify($\"Normally, this menu item ({Self.MenuKey}.{p_itemKey}) would be wired up to something!\",NotificationType.Information,2000)\n    );\n    //add false here to route request back to pbMenu action handler\n    true \n)\n\n        \n"
+            OnRemoveMenuItem: =
+            OverrideExpandedWidth: =150
+            PerformanceLogging: =pbMenu_LogPerformance
+            Reset: =Reset(pbMenu_Vert_1)
+            ShowNavBackButton: =false
+            ToolbarOrientation: =pbMenu_Vert_1.LayoutChoices.Vertical
+            ToolbarPadding: =""
+            VerticalDefaultCollapsed: =true
+            Width: =Self.MinimumWidth()
+            X: =pbMenu_Vert.X + pbMenu_Vert.Width
+            Y: '=MM.Y + MM.Height + 10 '
+      - Container1:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            BorderColor: '=PowerAppsTheme.Colors.Lighter20 '
+            BorderThickness: =2
+            Fill: =PowerAppsTheme.Colors.Lighter80
+            Height: '=Parent.Height - Self.Y - 10 '
+            Width: '=Parent.Width - Self.X - 10 '
+            X: =pbMenu_Vert_1.X + pbMenu_Vert_1.Width + 10
+            Y: '=cont_BuildUtil.Y + cont_BuildUtil.Height + 10 '
+          Children:
+            - TextCanvas2:
+                Control: Text@0.0.51
+                Properties:
+                  AutoHeight: =true
+                  Text: ="GET STARTED WITH 'pbMenu' - select a menu item for additional "
+                  Weight: ='TextCanvas.Weight'.Bold
+                  Width: '=Parent.Width - Self.X * 2 '
+                  X: =10
+                  Y: =10
+            - TextCanvas2_1:
+                Control: Text@0.0.51
+                Properties:
+                  AutoHeight: =true
+                  Text: |-
+                    ="*** 01 Create Menu Items using the 'CreateMenuItem' function on any pbMenu control. " & const_CrLf & "(Optionally, set the 'MenuData' (Table) source to any datasource which contains the following column names / data types:  ItemAppearance: Text, ItemDisabled: Boolean, ItemDisplayName: Text, ItemIconName: Text (Icon Name), ItemIconStyle: Text ('Outline' or 'Filled'), ItemKey: Text, ItemTooltip: Text, confirmItemAction: Boolean, disableOnSelect: Boolean, menuKey: Text)"
+                    & const_CrLf & const_CrLf 
+                    & "*** 02 Set the following properties on the pbMenu component on your screen:" & const_CrLf 
+                    & " - MenuKey: Menu Name that has at least 1 item in menu data (col_pbMenu = default collection)" & const_CrLf  
+                    & " - MenuOrientation: ([component name].LayoutChoices.Horizontal or [component name].LayoutChoices.Vertical)" & const_CrLf
+                    & " - Width: Recommend setting to 'Self.MinimumWidth' for 'Vertial' Layout Orientation" & const_CrLf 
+                    & " - Height: Recommend setting to 'Self.MinimumHeight' for 'Horizontal' Layout Orientation" & const_CrLf 
+                    & const_CrLf & "All other properties are optional"
+                  Weight: ='TextCanvas.Weight'.Semibold
+                  Width: '=Parent.Width - Self.X * 2 '
+                  X: =10
+                  Y: '=TextCanvas2.Y + TextCanvas2.Height + 10 '
+      - cont_BuildUtil:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            BorderColor: '=PowerAppsTheme.Colors.Lighter20 '
+            BorderThickness: =2
+            Fill: =PowerAppsTheme.Colors.PrimaryForeground
+            Height: =300
+            Width: '=Parent.Width - Self.X - 10 '
+            X: =pbMenu_Vert_1.X + pbMenu_Vert_1.Width + 10
+            Y: "=MM.Y + MM.Height + 10 +100\n//Container1.Y + Container1.Height + 10 "
+          Children:
+            - txtInteractiveBuildTitle:
+                Control: Text@0.0.51
+                Properties:
+                  AutoHeight: =true
+                  Text: '="Interactive Build Menu Demo" '
+                  Weight: ='TextCanvas.Weight'.Bold
+                  Width: '=Parent.Width - Self.X * 2 '
+                  X: =10
+                  Y: =10
+            - txtInteractiveBuildInfo:
+                Control: Text@0.0.51
+                Properties:
+                  AutoHeight: =true
+                  Height: '=Parent.Height - Self.Y - 10 '
+                  Text: |-
+                    ="Click the 'MENU BUILDER' menu item to build and interact with the pbMenu" & const_CrLf & const_CrLf & 
+                    "*** Choose and switch between Horizontal, Vertical Fixed Width, and Vertical Collapsible layouts" & const_CrLf & 
+                    "*** Use custom color palette to select toolbar button colors" & const_CrLf & 
+                    "*** Build menu items, add optional spacers" & const_CrLf & 
+                    "*** Create menu items that disable automatically when selected (or manage menu item states manually" & const_CrLf & 
+                    "*** Create menu items that require user confirmation after initial selection" & const_CrLf & 
+                    "*** Choose behavior of menu when application is busy" & const_CrLf & 
+                    "*** Instantly change available menu items" & const_CrLf & 
+                    "*** View all information about a menu, including filterable pbMenu properties, functions, actions, and events" & const_CrLf & 
+                    "*** Build JSON for adding menu items at run-time"
+                  Weight: ='TextCanvas.Weight'.Semibold
+                  Width: '=Parent.Width - Self.X * 2 '
+                  X: '=txtInteractiveBuildTitle.X '
+                  Y: '=txtInteractiveBuildTitle.Y + txtInteractiveBuildTitle.Height + 10 '
+      - btnDemoIsNotBusy:
+          Control: Button@0.0.45
+          Properties:
+            BasePaletteColor: =PowerAppsTheme.Colors.Lighter60
+            BorderColor: =RGBA(224, 86, 6, 1)
+            BorderStyle: =BorderStyle.Solid
+            BorderThickness: =1
+            FontWeight: =FontWeight.Bold
+            OnSelect: =Set(spin,Blank());
+            Text: ="Is Not Busy"
+            Width: =126
+            X: '=btnDemoDisableAll.X + btnDemoDisableAll.Width + 2 '
+            Y: '=btnDemoIsBusy.Y + btnDemoIsBusy.Height + 2 '
+      - btnDemoIsBusy:
+          Control: Button@0.0.45
+          Properties:
+            BasePaletteColor: =PowerAppsTheme.Colors.Lighter60
+            BorderColor: =RGBA(224, 86, 6, 1)
+            BorderStyle: =BorderStyle.Solid
+            BorderThickness: =1
+            FontWeight: =FontWeight.Bold
+            OnSelect: |+
+              =Set(spin,{waiting: true,msg: $"Busy, please wait: {Text(Now(),"hh:mm:ss am/pm")}"});
+
+            Text: ="Is Busy"
+            Width: =126
+            X: '=btnDemoEnableAll.X + btnDemoEnableAll.Width + 2 '
+            Y: =MM.Y + MM.Height + 10
+      - btnDemoDisableAll:
+          Control: Button@0.0.45
+          Properties:
+            BasePaletteColor: =PowerAppsTheme.Colors.Lighter60
+            BorderColor: =RGBA(224, 86, 6, 1)
+            BorderStyle: =BorderStyle.Solid
+            BorderThickness: =1
+            FontWeight: =FontWeight.Bold
+            OnSelect: =MM.ItemState_UpdateAll(false)
+            Text: ="disable all"
+            Width: =126
+            X: =pbMenu_Vert_1.X + pbMenu_Vert_1.Width + 10
+            Y: '=btnDemoEnableAll.Y + btnDemoEnableAll.Height + 2 '
+      - btnDemoEnableAll:
+          Control: Button@0.0.45
+          Properties:
+            BasePaletteColor: =PowerAppsTheme.Colors.Lighter60
+            BorderColor: =RGBA(224, 86, 6, 1)
+            BorderStyle: =BorderStyle.Solid
+            BorderThickness: =1
+            FontWeight: =FontWeight.Bold
+            OnSelect: =MM.ItemState_UpdateAll(true)
+            Text: ="enable all"
+            Width: =126
+            X: =pbMenu_Vert_1.X + pbMenu_Vert_1.Width + 10
+            Y: =MM.Y + MM.Height + 10
+      - dData:
+          Control: CanvasComponent
+          ComponentName: demoData
+          Properties:
+            Height: =105
+            Width: =310
+            X: =Parent.Width - Self.Width - 8
+            Y: =MM.Y + MM.Height
+      - btnDemoRebuildMenus:
+          Control: Button@0.0.45
+          Properties:
+            BasePaletteColor: =PowerAppsTheme.Colors.Lighter60
+            BorderColor: =RGBA(224, 86, 6, 1)
+            BorderStyle: =BorderStyle.Solid
+            BorderThickness: =1
+            FontWeight: =FontWeight.Bold
+            Height: =66
+            Icon: ="GlobeError"
+            OnSelect: |
+              =Clear(col_pbMenu);
+              Clear(col_pbMenuUtil);
+              dData.BuildDemoMenus();
+            Text: ="REBUILD MENUS"
+            Width: =126
+            X: =btnDemoIsBusy.X + btnDemoIsBusy.Width + 20
+            Y: =MM.Y + MM.Height + 10
+      - githubProfile:
+          Control: Image@2.2.3
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            BorderThickness: =2
+            DisabledBorderColor: =RGBA(0, 0, 0, 0)
+            DisabledFill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =4
+            Height: =64
+            HoverBorderColor: =RGBA(0, 46, 255, 1)
+            HoverFill: =RGBA(180, 214, 250, 1)
+            Image: =github
+            ImagePosition: =ImagePosition.Stretch
+            OnSelect: =MM.DoMenu(MM.MenuKey,"launchgithub")
+            PressedBorderColor: =RGBA(0, 0, 0, 0)
+            PressedFill: =RGBA(0, 0, 0, 0)
+            Tooltip: ="lopperman @ github"
+            Width: =50
+            X: =btnDemoRebuildMenus.X + btnDemoRebuildMenus.Width + 20
+            Y: =102
+      - redditProfile:
+          Control: Image@2.2.3
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            BorderThickness: =2
+            DisabledBorderColor: =RGBA(0, 0, 0, 0)
+            DisabledFill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =4
+            Height: =64
+            HoverBorderColor: =RGBA(0, 46, 255, 1)
+            HoverFill: =RGBA(180, 214, 250, 1)
+            Image: =reddit
+            OnSelect: =MM.DoMenu(MM.MenuKey,"launchreddit")
+            PressedBorderColor: =RGBA(0, 0, 0, 0)
+            PressedFill: =RGBA(0, 0, 0, 0)
+            Tooltip: ="ITFuture @ reddit"
+            Width: =50
+            X: '=githubProfile.X + githubProfile.Width + 20 '
+            Y: =102
+      - btnDemoIsNotBusy_1:
+          Control: Button@0.0.45
+          Properties:
+            BasePaletteColor: =PowerAppsTheme.Colors.Lighter60
+            BorderColor: =RGBA(224, 86, 6, 1)
+            BorderStyle: =BorderStyle.Solid
+            BorderThickness: =1
+            FontWeight: =FontWeight.Bold
+            Height: =btnDemoRebuildMenus.Height
+            OnSelect: =MM.DoMenu(MM.MenuKey,"google")
+            Text: "=\"Use non-existing menu item ('google')\" "
+            Width: =160
+            X: '=redditProfile.X + redditProfile.Width + 20 '
+            Y: '=btnDemoRebuildMenus.Y '
+      - TextCanvas5:
+          Control: Text@0.0.51
+          Properties:
+            AutoHeight: =true
+            FontColor: =clr_BLUEBERRY
+            Text: |-
+              =$"'pbMenu_LogPerformance' global variable set to: {pbMenu_LogPerformance}"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =400
+            X: =pbMenu_Vert_1.X + pbMenu_Vert_1.Width + 10
+            Y: =173

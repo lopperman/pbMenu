@@ -1,0 +1,384 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+ComponentDefinitions:
+  compEditControls:
+    DefinitionType: CanvasComponent
+    AccessAppScope: true
+    CustomProperties:
+      AddEnabled:
+        PropertyKind: Input
+        DisplayName: AddEnabled
+        Description: A custom property
+        DataType: Boolean
+        Default: =true
+      AddVisible:
+        PropertyKind: Input
+        DisplayName: AddVisible
+        Description: A custom property
+        DataType: Boolean
+        Default: =true
+      BorderColor:
+        PropertyKind: Input
+        DisplayName: Border Color
+        Description: A custom property
+        DataType: Color
+        Default: =RGBA(214, 221, 224, 1)
+      ButtonBorderColor:
+        PropertyKind: Input
+        DisplayName: Button Border Color
+        Description: A custom property
+        DataType: Color
+        Default: =RGBA(214, 221, 214, 1)
+      ButtonStyle:
+        PropertyKind: Input
+        DisplayName: ButtonStyle
+        Description: A custom property
+        RaiseOnReset: true
+        DataType: Text
+        Default: ="outline"
+      CancelEditEnabled:
+        PropertyKind: Input
+        DisplayName: CancelEditEnabled
+        Description: A custom property
+        DataType: Boolean
+        Default: =true
+      ComponentBorderWidth:
+        PropertyKind: Input
+        DisplayName: Component Border Width
+        Description: A custom property
+        DataType: Number
+        Default: '=1   '
+      DeleteEnabled:
+        PropertyKind: Input
+        DisplayName: DeleteEnabled
+        Description: A custom property
+        DataType: Boolean
+        Default: =true
+      DeleteVisible:
+        PropertyKind: Input
+        DisplayName: DeleteVisible
+        Description: A custom property
+        DataType: Boolean
+        Default: =true
+      EditEnabled:
+        PropertyKind: Input
+        DisplayName: EditEnabled
+        Description: A custom property
+        DataType: Boolean
+        Default: =true
+      Gradient1:
+        PropertyKind: Input
+        DisplayName: Gradient1
+        Description: A custom property
+        DataType: Text
+        Default: ="rgba(255, 255, 255, 1)"
+      Gradient2:
+        PropertyKind: Input
+        DisplayName: Gradient2
+        Description: A custom property
+        DataType: Text
+        Default: ="rgba(0,46,255,.15)"
+      MinimumHeight:
+        PropertyKind: Output
+        DisplayName: MinimumHeight
+        Description: A custom property
+        DataType: Number
+      MinimumWidth:
+        PropertyKind: Output
+        DisplayName: MinimumWidth
+        Description: A custom property
+        DataType: Number
+      OnAdd:
+        PropertyKind: Event
+        DisplayName: OnAdd
+        Description: A custom property
+        ReturnType: None
+        Default: =
+      OnCancelEdit:
+        PropertyKind: Event
+        DisplayName: OnCancel
+        Description: A custom property
+        ReturnType: None
+        Default: =
+      OnDelete:
+        PropertyKind: Event
+        DisplayName: OnDelete
+        Description: A custom property
+        ReturnType: None
+        Default: =
+      OnEdit:
+        PropertyKind: Event
+        DisplayName: OnEdit
+        Description: A custom property
+        ReturnType: None
+        Default: =
+      OnSave:
+        PropertyKind: Event
+        DisplayName: OnSave
+        Description: A custom property
+        ReturnType: None
+        Default: =
+      SaveEnabled:
+        PropertyKind: Input
+        DisplayName: SaveEnabled
+        Description: A custom property
+        DataType: Boolean
+        Default: =true
+      UseGradientBackdrop:
+        PropertyKind: Input
+        DisplayName: Use Gradient Backdrop
+        Description: A custom property
+        DataType: Boolean
+        Default: =true
+    Properties:
+      Fill: =RGBA(0,0,0,0)
+      Height: =50
+      MinimumHeight: =45
+      MinimumWidth: =180
+      OnReset: =Set(varDelete,false)
+      Width: =200
+    Children:
+      - contEditButtons:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            BorderColor: =compEditControls.BorderColor
+            BorderThickness: =compEditControls.ComponentBorderWidth
+            ChildTabPriority: =false
+            EnableChildFocus: =false
+            Fill: =RGBA(0,0,0,0)
+            Height: =compEditControls.Height - Self.Y * 2
+            PaddingBottom: =2
+            PaddingLeft: =2
+            PaddingRight: =2
+            PaddingTop: =2
+            RadiusBottomLeft: =2
+            RadiusBottomRight: =2
+            RadiusTopLeft: =2
+            RadiusTopRight: =2
+            Visible: =compEditControls.Width >= 150 && compEditControls.Height >=45
+            Width: =compEditControls.Width - (Self.X * 2)
+            X: =2 + (Self.BorderThickness/2)
+            Y: =2 + Self.BorderThickness / 2
+          Children:
+            - htmlGradient:
+                Control: HtmlViewer@2.1.0
+                Properties:
+                  BorderColor: =RGBA(214, 221, 224, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =Parent.Height
+                  HtmlText: |-
+                    =$"<div style='width: {Self.Width}px; height: {Self.Height-1}px; background: radial-gradient(" & compEditControls.Gradient1 & ", " & compEditControls.Gradient2 & ");'></div>"
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Visible: =compEditControls.UseGradientBackdrop
+                  Width: =Parent.Width
+                  X: '=0   '
+                  Y: '=0   '
+            - btnDeleteOutline_1:
+                Control: Button@0.0.45
+                Properties:
+                  AccessibleLabel: ="Delete Record"
+                  Appearance: =If(Lower(compEditControls.ButtonStyle)="outline", 'ButtonCanvas.Appearance'.Outline,'ButtonCanvas.Appearance'.Primary)
+                  BasePaletteColor: =If(compEditControls.ButtonStyle="Outline",RGBA(0,0,0,0), RGBA(255,0,0,1))
+                  BorderColor: =compEditControls.ButtonBorderColor
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =1
+                  DisplayMode: =If(compEditControls.DeleteEnabled,DisplayMode.Edit,DisplayMode.Disabled)
+                  Font: =Font.Verdana
+                  FontColor: =If(Lower(compEditControls.ButtonStyle)="outline", RGBA(255, 0, 0, 1),RGBA(255,255,255,1))
+                  FontSize: =36
+                  Height: =contEditButtons.Height * .8
+                  Icon: ="Delete"
+                  IconStyle: "=If(Lower(compEditControls.ButtonStyle)=\"outline\", 'ButtonCanvas.IconStyle'.Filled,'ButtonCanvas.IconStyle'.Outline)  "
+                  Layout: ='ButtonCanvas.Layout'.IconOnly
+                  OnSelect: =Set(varDelete,true)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0.00
+                  PaddingTop: =0.00
+                  Text: =
+                  Visible: |
+                    =If(varDelete=true || compEditControls.DeleteVisible=false,false,true)
+                  Width: =btnEditOutline_1.Width
+                  X: =btnSaveOutline_1.X + btnEditOutline_1.Width + 4
+                  Y: =contEditButtons.Height * .1
+            - btnEditOutline_1:
+                Control: Button@0.0.45
+                Properties:
+                  AccessibleLabel: ="Edit"
+                  Appearance: =If(Lower(compEditControls.ButtonStyle)="outline", 'ButtonCanvas.Appearance'.Outline,'ButtonCanvas.Appearance'.Primary)
+                  BorderColor: =compEditControls.ButtonBorderColor
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =1
+                  DisplayMode: =If(compEditControls.EditEnabled && Not(varDelete=true),DisplayMode.Edit,DisplayMode.Disabled)
+                  FontColor: =If(Lower(compEditControls.ButtonStyle)="outline", RGBA(15, 108, 189, 1),RGBA(255,255,255,1))
+                  FontSize: =36
+                  Height: =contEditButtons.Height * .8
+                  Icon: ="Edit"
+                  IconStyle: "=If(Lower(compEditControls.ButtonStyle)=\"outline\", 'ButtonCanvas.IconStyle'.Filled,'ButtonCanvas.IconStyle'.Outline)  "
+                  Layout: ='ButtonCanvas.Layout'.IconOnly
+                  OnSelect: =compEditControls.OnEdit();
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0.00
+                  PaddingTop: =0.00
+                  Text: =
+                  Visible: =Not(varDelete)
+                  Width: |
+                    =(contEditButtons.Width - contEditButtons.BorderThickness -24) * .2
+                    //(contEditButtons.Width - (Self.X * 2) - contEditButtons.BorderThickness * 2) * .20
+                    //(contEditButtons.Width - 6 - (contEditButtons.BorderThickness * 2)) * 0.184
+                  X: "=//(contEditButtons.Width + (1-contEditButtons.BorderThickness)) * 0.021186441\n(contEditButtons.BorderThickness/2) + 4 "
+                  Y: =contEditButtons.Height * .1
+            - btnUndoOutline_1:
+                Control: Button@0.0.45
+                Properties:
+                  AccessibleLabel: ="Undo Edit"
+                  Appearance: =If(Lower(compEditControls.ButtonStyle)="outline", 'ButtonCanvas.Appearance'.Outline,'ButtonCanvas.Appearance'.Primary)
+                  BorderColor: =compEditControls.ButtonBorderColor
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =1
+                  DisplayMode: =If(compEditControls.CancelEditEnabled && Not(varDelete=true),DisplayMode.Edit,DisplayMode.Disabled)
+                  FontColor: =If(Lower(compEditControls.ButtonStyle)="outline", RGBA(15, 108, 189, 1),RGBA(255,255,255,1))
+                  FontSize: =36
+                  Height: =contEditButtons.Height * .8
+                  Icon: ="ArrowUndo"
+                  IconStyle: "=If(Lower(compEditControls.ButtonStyle)=\"outline\", 'ButtonCanvas.IconStyle'.Filled,'ButtonCanvas.IconStyle'.Outline)  "
+                  Layout: ='ButtonCanvas.Layout'.IconOnly
+                  OnSelect: =compEditControls.OnCancelEdit()
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0.00
+                  PaddingTop: =0.00
+                  Text: =
+                  Visible: =Not(varDelete)
+                  Width: =btnEditOutline_1.Width
+                  X: =btnEditOutline_1.X + btnEditOutline_1.Width + 4
+                  Y: =contEditButtons.Height * .1
+            - btnSaveOutline_1:
+                Control: Button@0.0.45
+                Properties:
+                  AccessibleLabel: ="Save Changes"
+                  Appearance: =If(Lower(compEditControls.ButtonStyle)="outline", 'ButtonCanvas.Appearance'.Outline,'ButtonCanvas.Appearance'.Primary)
+                  BorderColor: =compEditControls.ButtonBorderColor
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =1
+                  DisplayMode: =If(compEditControls.SaveEnabled,DisplayMode.Edit,DisplayMode.Disabled)
+                  FontColor: =If(Lower(compEditControls.ButtonStyle)="outline", RGBA(15, 108, 189, 1),RGBA(255,255,255,1))
+                  FontSize: =36
+                  Height: =contEditButtons.Height * .8
+                  Icon: ="Save"
+                  IconStyle: "=If(Lower(compEditControls.ButtonStyle)=\"outline\", 'ButtonCanvas.IconStyle'.Filled,'ButtonCanvas.IconStyle'.Outline)  "
+                  Layout: ='ButtonCanvas.Layout'.IconOnly
+                  OnSelect: =compEditControls.OnSave()
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0.00
+                  PaddingTop: =0.00
+                  Text: =
+                  Visible: =Not(varDelete)
+                  Width: =btnEditOutline_1.Width
+                  X: =btnUndoOutline_1.X + btnEditOutline_1.Width + 4
+                  Y: =contEditButtons.Height * .1
+            - btnAddOutline_1:
+                Control: Button@0.0.45
+                Properties:
+                  AccessibleLabel: ="Add Record"
+                  Appearance: =If(Lower(compEditControls.ButtonStyle)="outline", 'ButtonCanvas.Appearance'.Outline,'ButtonCanvas.Appearance'.Primary)
+                  BorderColor: =compEditControls.ButtonBorderColor
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =1
+                  DisplayMode: =If(compEditControls.AddEnabled && Not(varDelete=true),DisplayMode.Edit,DisplayMode.Disabled)
+                  FontColor: =If(Lower(compEditControls.ButtonStyle)="outline", RGBA(15, 108, 189, 1),RGBA(255,255,255,1))
+                  FontSize: =36
+                  Height: =contEditButtons.Height * .8
+                  Icon: ="Add"
+                  IconStyle: "=If(Lower(compEditControls.ButtonStyle)=\"outline\", 'ButtonCanvas.IconStyle'.Filled,'ButtonCanvas.IconStyle'.Outline)  "
+                  Layout: ='ButtonCanvas.Layout'.IconOnly
+                  OnSelect: |
+                    =compEditControls.OnAdd();
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0.00
+                  PaddingTop: =0.00
+                  Text: =
+                  Visible: =compEditControls.AddVisible && Not(varDelete)
+                  Width: =btnEditOutline_1.Width
+                  X: |
+                    =If(btnDeleteOutline_1.Visible=false,btnDeleteOutline_1.X,btnDeleteOutline_1.X + btnEditOutline_1.Width + 4)
+                  Y: =contEditButtons.Height * .1
+            - btnConfirmDelete_1:
+                Control: Button@0.0.45
+                Properties:
+                  AccessibleLabel: ="Confirm Delete"
+                  Appearance: ='ButtonCanvas.Appearance'.Primary
+                  BasePaletteColor: =RGBA(249, 83, 109, 1)
+                  DisplayMode: =
+                  FontColor: =RGBA(255, 255, 255, 1)
+                  FontSize: =12
+                  FontWeight: =FontWeight.Bold
+                  Height: =contEditButtons.Height - Self.Y *2
+                  Icon: ="Delete"
+                  IconStyle: ='ButtonCanvas.IconStyle'.Outline
+                  Layout: ='ButtonCanvas.Layout'.TextOnly
+                  OnSelect: |-
+                    =compEditControls.OnDelete();
+                    Set(varDelete,false)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0.00
+                  PaddingTop: =0.00
+                  Text: ="CONFIRM DELETE"
+                  Visible: =varDelete
+                  Width: =contEditButtons.Width * 1/3 - 4
+                  X: =4
+                  Y: '=4   '
+            - btnCancelDelete_1:
+                Control: Button@0.0.45
+                Properties:
+                  AccessibleLabel: ="Cancel Delete"
+                  Appearance: ='ButtonCanvas.Appearance'.Secondary
+                  BasePaletteColor: =RGBA(249, 83, 109, 1)
+                  DisplayMode: =
+                  FontSize: =12
+                  FontWeight: =FontWeight.Bold
+                  Height: =btnConfirmDelete_1.Height
+                  Icon: ="Delete"
+                  IconStyle: ='ButtonCanvas.IconStyle'.Outline
+                  Layout: ='ButtonCanvas.Layout'.TextOnly
+                  OnSelect: =Set(varDelete,false)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0.00
+                  PaddingTop: =0.00
+                  Text: ="CANCEL DELETE"
+                  Visible: =varDelete
+                  Width: =(contEditButtons.Width - ((contEditButtons.BorderThickness * 2)-2)) * 2/3 -4
+                  X: =contEditButtons.Width - Self.Width - 2
+                  Y: =4
+      - txtWarning:
+          Control: Text@0.0.51
+          Properties:
+            Align: ='TextCanvas.Align'.Center
+            BorderColor: =RGBA(189, 49, 51, 1)
+            BorderStyle: =BorderStyle.Solid
+            BorderThickness: =2
+            Fill: =RGBA(255, 255, 0, 1)
+            FontColor: =RGBA(189, 49, 51, 1)
+            Height: =Parent.Height
+            Size: =10
+            Text: |-
+              ="MIN WIDTH (curr: " & compEditControls.Width & ") = " & compEditControls.MinimumWidth & Char(13) & Char(10) & "MIN HEIGHT (curr: " & compEditControls.Height & ") = " & compEditControls.MinimumHeight
+            VerticalAlign: =VerticalAlign.Middle
+            Visible: =compEditControls.Width < compEditControls.MinimumWidth || compEditControls.Height < compEditControls.MinimumHeight
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =Parent.Width

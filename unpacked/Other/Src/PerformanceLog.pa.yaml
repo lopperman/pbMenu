@@ -1,0 +1,142 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  PerformanceLog:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
+      OnVisible: |-
+        =UpdateContext({perfSource: SortByColumns(AddColumns(col_pbMenuPerf,'StartTm',Text(start,"hh:mm:ss.fff"),'EndTm',Text(end,"hh:mm:ss.fff")),"start",SortOrder.Descending)})
+    Children:
+      - hdrHelp_1:
+          Control: Header@0.0.44
+          Properties:
+            Height: =40
+            Logo: =stickeromglove
+      - pbMenu_PerfLog:
+          Control: CanvasComponent
+          ComponentName: pbMenu
+          Properties:
+            BorderColor: =PowerAppsTheme.Colors.Darker20
+            BorderWidth: =1
+            BusyBehavior: =Self.BusyBehaviorChoices.Spinning
+            BusyMessage: =spin.msg
+            CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
+            ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
+            EnableCollapsedState: =true
+            Height: =Self.MinimumHeight
+            IsBusy: '=spin.waiting=true '
+            ManageItemStates: =true
+            MenuColorPalette: =PowerAppsTheme.Colors.PrimaryForeground
+            MenuItemTextColor: =
+            MenuKey: ="pbMenuPerfLog"
+            OnBeforeAction: |
+              =Switch(Upper(p_itemKey), 
+                  Upper("sortStartToggle"), 
+                      UpdateContext({perfSource: SortByColumns(AddColumns(col_pbMenuPerf,'StartTm',Text(start,"hh:mm:ss.fff"),'EndTm',Text(end,"hh:mm:ss.fff")),"start",SortOrder.Descending)});
+                      true, 
+                  Upper("sortElapsedToggle"), 
+                      UpdateContext({perfSource: SortByColumns(AddColumns(col_pbMenuPerf,'StartTm',Text(start,"hh:mm:ss.fff"),'EndTm',Text(end,"hh:mm:ss.fff")),"elapsed",SortOrder.Descending)});
+                      true, 
+
+                  false
+              )
+            OnRemoveMenuItem: =
+            OverrideExpandedWidth: =0
+            PerformanceLogging: =pbMenu_LogPerformance
+            Reset: =Reset(pbMenu_PerfLog)
+            ShowNavBackButton: =true
+            ToolbarOrientation: =pbMenu_PerfLog.LayoutChoices.Horizontal
+            ToolbarPadding: =""
+            VerticalDefaultCollapsed: =true
+            Width: =Parent.Width
+            Y: =40
+      - tblPerf:
+          Control: Table@1.0.278
+          Properties:
+            EnableRangeSelection: ='PowerAppsOneGrid.EnableRangeSelection'.Disable
+            EnableSorting: ='PowerAppsOneGrid.EnableSorting'.Disable
+            FontSize: =11
+            FontWeight: =FontWeight.Semibold
+            HeaderFontColor: =RGBA(160, 64, 8, 1)
+            HeaderFontSize: =12
+            HeaderFontWeight: =FontWeight.Bold
+            Height: '=Parent.Height - Self.Y - 10 '
+            Items: =perfSource
+            ReflowBehavior: ='PowerAppsOneGrid.ReflowBehavior'.GridOnly
+            Width: =Parent.Width
+            Y: '=pbMenu_PerfLog.Y + pbMenu_PerfLog.Height + 10 '
+          Children:
+            - action1:
+                Control: TableDataField@1.5.0
+                Variant: textualColumn
+                IsLocked: true
+                Properties:
+                  FieldDisplayName: ="action"
+                  FieldName: ="action"
+                  FieldType: ="s"
+                  Order: =7
+                  Width: =200
+            - elapsed1:
+                Control: TableDataField@1.5.0
+                Variant: textualColumn
+                IsLocked: true
+                Properties:
+                  CanGrow: =false
+                  FieldDisplayName: ="elapsed"
+                  FieldName: ="elapsed"
+                  FieldType: ="n"
+                  HeaderText: ="Milliseconds"
+                  Order: =2
+                  Width: =120
+            - id1:
+                Control: TableDataField@1.5.0
+                Variant: textualColumn
+                IsLocked: true
+                Properties:
+                  CanGrow: =false
+                  FieldDisplayName: ="id"
+                  FieldName: ="id"
+                  FieldType: ="g"
+                  HeaderText: ="controlGUID"
+                  Order: =1
+                  Width: =250
+            - start2:
+                Control: TableDataField@1.5.0
+                Variant: textualColumn
+                IsLocked: true
+                Properties:
+                  CanGrow: =false
+                  FieldDisplayName: ="start"
+                  FieldName: ="start"
+                  FieldType: ="d"
+                  Order: =4
+                  Width: =180
+            - StartTm1:
+                Control: TableDataField@1.5.0
+                Variant: textualColumn
+                IsLocked: true
+                Properties:
+                  CanGrow: =false
+                  FieldDisplayName: ="StartTm"
+                  FieldName: ="StartTm"
+                  FieldType: ="s"
+                  Order: =5
+                  Width: =100
+            - EndTm1:
+                Control: TableDataField@1.5.0
+                Variant: textualColumn
+                IsLocked: true
+                Properties:
+                  CanGrow: =false
+                  FieldDisplayName: ="EndTm"
+                  FieldName: ="EndTm"
+                  FieldType: ="s"
+                  Order: =6
+                  Width: =100

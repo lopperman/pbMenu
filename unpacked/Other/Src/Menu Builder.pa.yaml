@@ -1,0 +1,1356 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  Menu Builder:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
+      OnVisible: |
+        =If(CountIf(col_pbMenu,true)=0,dData.BuildDemoMenus());
+        pbMenu_MenuBuilder.DoMenu(pbMenu_MenuBuilder.MenuKey,"mbBuild");
+
+        UpdateContext({miPrimaryColorPalette:PowerAppsTheme.Colors.Primary});
+        UpdateContext({confirmColorPalette:Color.Red});
+        UpdateContext({cancelColorPalette:clr_YELLOWSELECTED});
+        UpdateContext({ignoreUnhandled:true}); Reset(toggIgnoreUnhandled);
+        UpdateContext({manageItemStates:true}); Reset(toggManageItemStates);
+        UpdateContext({enableCollapse:true}); Reset(toggEnableCollapsedState);
+        UpdateContext({showAboutExMenu: false});
+        UpdateContext({ownR:Blank()}); Reset(txtOwnR);
+        UpdateContext({ownG:Blank()}); Reset(txtOwnG);
+        UpdateContext({ownB:Blank()}); Reset(txtOwnB);
+        UpdateContext({ownA:1}); Reset(txtOwnA);
+
+        UpdateContext({helperView: "menuProps"});
+
+        If(IsBlankOrError(currentDisplayedMenu), 
+            UpdateContext({currentDisplayedMenu: "exampleMenu"})
+        )
+    Children:
+      - Header1_1:
+          Control: Header@0.0.44
+          Properties:
+            Height: =40
+            Logo: =stickeromglove
+      - pbMenu_MenuBuilder:
+          Control: CanvasComponent
+          ComponentName: pbMenu
+          Properties:
+            BorderColor: =PowerAppsTheme.Colors.Darker20
+            BorderWidth: =1
+            BusyBehavior: =Self.BusyBehaviorChoices.Spinning
+            BusyMessage: =spin.msg
+            CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
+            ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
+            EnableCollapsedState: =true
+            Height: =Self.MinimumHeight
+            IsBusy: '=spin.waiting=true '
+            ManageItemStates: =true
+            MenuColorPalette: =PowerAppsTheme.Colors.PrimaryForeground
+            MenuItemTextColor: =
+            MenuKey: ="MenuBuilder"
+            OnBeforeAction: |-
+              =Switch(Upper(p_itemKey), 
+                  "MBBUILD", 
+                      UpdateContext({mbMode: "Build"}); 
+                      UpdateContext({helperMenu: "mbHelper_Build"});
+                      true, 
+                  "MBVIEWDATA", 
+                      UpdateContext({mbMode: "View"}); 
+                      UpdateContext({helperMenu: "mbHelper_View"});    
+                      true, 
+                  "MBEXAMPLEMENUABOUT",
+                      UpdateContext({showAboutExMenu: true});
+                      true,  
+                  "MBRESET", 
+                      RemoveIf(col_pbMenu, Upper(menuKey) = Upper("exampleMenu"));
+                      RemoveIf(col_BuildMenu, Upper(menuKey) = Upper("exampleMenu"));
+                      true,
+                  "MBEXAMPLEMENU", 
+                      //Note:  the code below creates the menu items, which can be rendered in any pbMenu control.   Additional properties, which affect behavior of the menu and menu items, are set on each pbMenu control placed on your screen(s).  For this demo, most of the customizable pbMenu properties are linked to on screen controls (like 'MenuOrientation') near the top of the current screen. Try changing those properties to view how it affect the layout and function of the pbMenu.
+                      // ** This code is executed in the 'OnBeforeUpdate' event for the pbMenu at the very top of this screen (pbMenu_MenuBuilder)
+                      // All menu data is stored in a single collection (which also means, you can add menu items using any pbMenu component, and any pbMenu component can render any menu)
+                      // In order to not remove menu data from other menus in this demo, I'm just clearing the 'exampleMenu' data here
+                      RemoveIf(col_pbMenu, Upper(menuKey) = Upper("exampleMenu"));
+                      // The 'col_BuildMenu' is used for this demo only, and is normally not a collection the pbMenu cares about
+                      RemoveIf(col_BuildMenu, Upper(menuKey) = Upper("exampleMenu"));
+                      Collect(col_BuildMenu, {menuKey: "exampleMenu"});
+                      // Build the menu items that will render when referencing 'exampleMenu'
+                      // Because the menu is getting built in response to another pbMenu.OnBeforeAction event, we're using 'Self' to refer to the pbMenu which raised the event, but since we're adding all menu items to the col_pbMenu collection (last parameter), we could change 'Self' to any pbMenu on any screen.
+                      //Create an 'Info Only' menu item.  (Not Selectable)
+                      Self.CreateInfoItem("exampleMenu","Example Menu",Self.ItemAppearanceChoices.Transparent,"Example Menu",true);
+                      //Create a 'spacer' menu item.  (Not Selectable, No text or icon displayed)
+                      Self.CreateSpacer("exampleMenu",true);
+                      //Create menu item 'exConfirm1' (The last 3 argements are for requiring disabling when selected, requiring confirmation, and (true) to add to col_pbMenu collection)
+                      Self.CreateMenuItem("exampleMenu","exConfirm1","Confirm","Delete",Self.ItemAppearanceChoices.Primary,Self.ItemIconStyleChoices.Filled,"Requires Confirmation",false,true,true);
+                      //Create menu item 'exConfirm2' (does not require confirmation)
+                      Self.CreateMenuItem("exampleMenu","exConfirm2","No Confirm","Add",Self.ItemAppearanceChoices.Primary,Self.ItemIconStyleChoices.Filled,"No Confirmation Required",false,false,true);
+                      //Another spacer
+                      Self.CreateSpacer("exampleMenu",true);        
+                      //exDisable1, exDisable2, exDisable3 will all disable when selected, as long as the pbMenu_Build menu has 'Enable Item States' set to true (default)
+                      //exDisable3 will also require a confirmation
+                      Self.CreateMenuItem("exampleMenu","exDisable1","Disable 1","Money",Self.ItemAppearanceChoices.Outline,Self.ItemIconStyleChoices.Filled,"Disable on Select",true,false,true);
+                      Self.CreateMenuItem("exampleMenu","exDisable2","Disable 2","ServiceBell",Self.ItemAppearanceChoices.Outline,Self.ItemIconStyleChoices.Filled,"Disable on Select",true,false,true);
+                      Self.CreateMenuItem("exampleMenu","exDisable3","Confirm & Disable 3","Eraser",Self.ItemAppearanceChoices.Outline,Self.ItemIconStyleChoices.Filled,"Confirm, Disable on Select",true,true,true);
+                      //the following 4 menus exist to show behavior of menu 'spillover' (if necessary, make your browser window more narrow)
+                      Self.CreateMenuItem("exampleMenu","exLong1","This is a really long display name 1","Money",Self.ItemAppearanceChoices.Outline,Self.ItemIconStyleChoices.Filled,"Calculate Widget",false,true,true);
+                      Self.CreateMenuItem("exampleMenu","exLong2","This is a really long display name 2","Money",Self.ItemAppearanceChoices.Outline,Self.ItemIconStyleChoices.Filled,"Calculate Widget",true,false,true);
+                      Self.CreateMenuItem("exampleMenu","exLong3","This is a really long display name 3","Money",Self.ItemAppearanceChoices.Outline,Self.ItemIconStyleChoices.Filled,"Calculate Widget",true,false,true);
+                      Self.CreateMenuItem("exampleMenu","exLong4","This is a really long display name 4","Money",Self.ItemAppearanceChoices.Outline,Self.ItemIconStyleChoices.Filled,"Calculate Widget",true,false,true);
+
+                      UpdateContext({ignoreUnhandled:true}); Reset(toggIgnoreUnhandled);
+                      UpdateContext({manageItemStates:true}); Reset(toggManageItemStates);
+                      UpdateContext({enableCollapse:true}); Reset(toggEnableCollapsedState);
+                      UpdateContext({currentDisplayedMenu: "exampleMenu"});
+
+
+                      true, 
+
+                  //if the menu selection is not handled above, returning false will pass the action on to the 'DoMenu' function of the pbMenu component.
+                  false
+              )
+            OnRemoveMenuItem: =
+            OverrideExpandedWidth: =0
+            PerformanceLogging: =pbMenu_LogPerformance
+            Reset: =Reset(pbMenu_MenuBuilder)
+            ShowNavBackButton: =true
+            ToolbarOrientation: =pbMenu_MenuBuilder.LayoutChoices.Horizontal
+            ToolbarPadding: =""
+            VerticalDefaultCollapsed: =true
+            Width: =Parent.Width
+            Y: =40
+      - cont_MenuData:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            BorderColor: =RGBA(15, 108, 189, 1)
+            BorderThickness: =2
+            Height: =Parent.Height - Self.Y - 10 -4
+            Visible: =mbMode="View"
+            Width: '=Parent.Width - Self.X - 10 '
+            X: '=pbMenu_BuildHelper.X + pbMenu_BuildHelper.Width + 10 '
+            Y: '=pbMenu_BuildHelper.Y + 2 '
+          Children:
+            - btnClearInfoFilter:
+                Control: Button@0.0.45
+                Properties:
+                  OnSelect: =Reset(srch_pbMenuInfo)
+                  Text: ="Clear Filter"
+                  X: =344
+                  Y: =5
+            - txt_pbMenu_Build_JSON:
+                Control: TextInput@0.0.54
+                Properties:
+                  BorderColor: =RGBA(160, 64, 8, 1)
+                  BorderStyle: =BorderStyle.Solid
+                  Height: '=Parent.Height - Self.Y - 10 '
+                  Mode: ='TextInputCanvas.Mode'.Multiline
+                  Value: |-
+                    =//JSON(Filter(pbMenu_Build.Information(),CountIf(cboSearchInformation.SelectedItems,true)=0 || name in Distinct(cboSearchInformation.SelectedItems,name)) ,JSONFormat.IndentFour)
+                    Switch(Upper(helperView), 
+                        "MENUPROPS", 
+                            JSON(
+                                With({rslt: 
+                                ForAll(pbMenu_Build.Information() As item, 
+                                    With({srch: Lower(srch_pbMenuInfo.Value)}, 
+                                        If(Len(srch)=0 || Find(srch,Lower(JSON(item)))>0, 
+                                            item 
+                                        )
+                                    )
+                                )}, 
+                                    Filter(rslt,Len(name)>0)
+                                )
+                                ,JSONFormat.IndentFour
+                            ), 
+                        Upper("menuitemsjson"), 
+                            JSON(pbMenu_Build.MenuItems,JSONFormat.IndentFour)
+                    )
+                  Width: '=Parent.Width - Self.X - 10 '
+                  X: =10
+                  Y: '=lblSeachHelp.Y + lblSeachHelp.Height + 10 '
+            - srch_pbMenuInfo:
+                Control: TextInput@0.0.54
+                Properties:
+                  BorderColor: =RGBA(15, 108, 189, 1)
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =1
+                  Placeholder: |-
+                    ="Search pbMenu_Build: Props"
+                  TriggerOutput: ='TextInputCanvas.TriggerOutput'.Delayed
+                  X: =10
+                  Y: =5
+            - lblSearchInfo:
+                Control: Text@0.0.51
+                Properties:
+                  FontColor: =clr_BLUEBERRY
+                  Height: '=34 '
+                  Size: =12
+                  Text: |-
+                    ="Information below comes from the interactive 'building' menu and is obtained from:  'pbMenu_Build.Information()'"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Weight: ='TextCanvas.Weight'.Bold
+                  Width: '=Parent.Width - Self.X - 10 '
+                  X: =453
+                  Y: '=srch_pbMenuInfo.Y '
+            - lblSeachHelp:
+                Control: Text@0.0.51
+                Properties:
+                  FontColor: =RGBA(106, 122, 127, 1)
+                  Height: =34
+                  PaddingLeft: =10
+                  Size: =12
+                  Text: ="(Search for any pbMenu property, function, event, or component action to view information / value of item -- for example, search for 'Input Property' to view information for items that can be set externally"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Weight: ='TextCanvas.Weight'.Bold
+                  Width: '=Parent.Width - Self.X - 10 '
+                  X: =10
+                  Y: =Max(srch_pbMenuInfo.Y + srch_pbMenuInfo.Height + 5,lblSearchInfo.Y + lblSearchInfo.Height + 5)
+      - cont_CreateMenuItems:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            BorderColor: =RGBA(160, 64, 8, 1)
+            BorderThickness: =2
+            Height: '=Parent.Height - Self.Y - 10 - 2 '
+            Visible: =mbMode="Build"
+            Width: '=Parent.Width - Self.X - 10 '
+            X: '=pbMenu_BuildHelper.X + pbMenu_BuildHelper.Width + 10 '
+            Y: '=pbMenu_BuildHelper.Y + 2 '
+          Children:
+            - pbMenu_Build:
+                Control: CanvasComponent
+                ComponentName: pbMenu
+                Properties:
+                  BorderColor: =clr_BLUEBERRY
+                  BorderWidth: =2
+                  BusyBehavior: =ddBusyBehavior.Selected.Value
+                  BusyMessage: =spin.msg
+                  CancelMenuColorPalette: =cancelColorPalette
+                  ConfirmationColorPalette: =confirmColorPalette
+                  EnableCollapsedState: =toggEnableCollapsedState.Checked
+                  Fill: =RGBA(255, 255, 219, 1)
+                  Height: '=If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal, Self.MinimumHeight,Parent.Height - Self.Y * 2 ) '
+                  IsBusy: '=spin.waiting=true '
+                  ManageItemStates: =toggManageItemStates.Checked
+                  MenuColorPalette: =miPrimaryColorPalette
+                  MenuItemTextColor: =
+                  MenuKey: =Coalesce(ddMenuKey.Selected.Value,"exampleMenu")
+                  OnBeforeAction: |-
+                    =With({wasHandled: 
+                        Switch(Upper(p_itemKey), 
+                            "handled key 1",true,
+                            false
+                            )
+                        }, 
+                        If(wasHandled=false, 
+                                Notify($"Menu Item: {Self.MenuKey}.{p_itemKey} ({Self.MenuItem(Self.MenuKey, p_itemKey).ItemDisplayName}) was selected",NotificationType.Information,2000)
+                        );
+                        If(toggIgnoreUnhandled.Checked,
+                            true,  
+                            wasHandled
+                        )
+
+                    )
+                  OnRemoveMenuItem: =
+                  OverrideExpandedWidth: =160
+                  PerformanceLogging: =pbMenu_LogPerformance
+                  Reset: =Reset(pbMenu_Build)
+                  ShowNavBackButton: =toggShowNavBack.Checked
+                  ToolbarOrientation: =Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)
+                  ToolbarPadding: =ddToolbarPadding.Selected.Value
+                  VerticalDefaultCollapsed: =true
+                  Width: =If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal,  Parent.Width - Self.X * 2 ,Self.MinimumWidth())
+                  X: =10
+                  Y: =10
+            - contSubBuild:
+                Control: GroupContainer@1.3.0
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =RGBA(160, 64, 8, 1)
+                  BorderThickness: =1
+                  Height: '=Parent.Height - Self.Y - 10 '
+                  Visible: '=showAboutExMenu <> true '
+                  Width: '=Parent.Width - Self.X - 10 '
+                  X: =If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical", pbMenu_Build.X + pbMenu_Build.Width + 10,10)
+                  Y: |-
+                    =txtBuildScreenInfo.Y + txtBuildScreenInfo.Height + 10 
+                    //If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical",10, pbMenu_Build.X + pbMenu_Build.Height + 10)
+                Children:
+                  - txtMenuName:
+                      Control: TextInput@0.0.54
+                      Group: Group1
+                      Properties:
+                        BorderColor: =clr_BLUEBERRY
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =2
+                        FontColor: =clr_BLUEBERRY
+                        OnChange: |-
+                          =If(Len(Self.Value)>0, 
+                              UpdateContext({currentDisplayedMenu: Self.Value});
+                              Reset(ddMenuKey);
+                          )
+                        Placeholder: ="Menu Name"
+                        Value: =currentDisplayedMenu
+                        Width: =150
+                        X: =8
+                        Y: '=txtBuildCustomMenuItem.Y + txtBuildCustomMenuItem.Height + 10 '
+                  - galSelectColor:
+                      Control: Gallery@2.15.0
+                      Variant: Vertical
+                      Properties:
+                        BorderColor: =RGBA(245, 245, 245, 1)
+                        FocusedBorderThickness: =0
+                        Height: =90
+                        Items: |
+                          =[
+                            "#FF5733", "#33FF57", "#3357FF", "#F1C40F", "#9B59B6",
+                            "#1ABC9C", "#E74C3C", "#2ECC71", "#3498DB", "#F39C12",
+                            "#8E44AD", "#16A085", "#C0392B", "#27AE60", "#2980B9",
+                            "#D35400", "#7F8C8D", "#BDC3C7", "#34495E", "#2C3E50",
+                            "#E67E22", "#95A5A6", "#ECF0F1", "#FF6F61", "#6B5B95",
+                            "#88B04B", "#F7CAC9", "#92A8D1", "#955251", "#B565A7",
+                            "#009B77", "#DD4124", "#45B8AC", "#EFC050", "#5B5EA6",
+                            "#9B2335", "#DFCFBE", "#55B4B0", "#E15D44", "#7FCDCD"
+                          ]
+                        NavigationStep: =10
+                        OnSelect: |
+                          =With({hexSource: ThisItem.Value, HexChars: "0123456789ABCDEF"}, 
+                              With(
+                                  {
+                                      tRed: 
+                                          With({HexR: Upper(Mid(hexSource,2,2))}, 
+                                              16 * (Find(Mid(HexR,1,1), HexChars) - 1 + Find(Mid(HexR, 2,1), HexChars) - 1)
+                                          ), 
+                                      tGreen: 
+                                          With({HexG: Upper(Mid(hexSource,4,2))}, 
+                                              16 * (Find(Mid(HexG,1,1), HexChars) - 1 + Find(Mid(HexG, 2,1), HexChars) - 1)
+                                          ), 
+                                      tBlue: 
+                                          With({HexB: Upper(Mid(hexSource,6,2))}, 
+                                              16 * (Find(Mid(HexB,1,1), HexChars) - 1 + Find(Mid(HexB, 2,1), HexChars) - 1)
+                                          )
+                                  }, 
+                                  UpdateContext({selectedColor: ColorValue(ThisItem.Value)});
+                              )
+                          );
+                          UpdateContext({ownR:0}); Reset(txtOwnR);
+                          UpdateContext({ownG:0}); Reset(txtOwnG);
+                          UpdateContext({ownB:0}); Reset(txtOwnB);
+                          UpdateContext({ownA:1}); Reset(txtOwnA);
+                        ShowNavigation: =true
+                        ShowScrollbar: =false
+                        TemplatePadding: =2
+                        TemplateSize: =16
+                        Width: =213
+                        WrapCount: =10
+                        X: =8
+                        Y: '=txtColorPaleteLabel.Y + txtColorPaleteLabel.Height + 10 '
+                      Children:
+                        - Rectangle3:
+                            Control: Rectangle@2.3.0
+                            Properties:
+                              BorderColor: =RGBA(0, 0, 0, 0)
+                              BorderStyle: =BorderStyle.None
+                              BorderThickness: =2
+                              DisabledFill: =RGBA(161, 159, 157, 0)
+                              Fill: =ColorValue(ThisItem.Value )
+                              FocusedBorderThickness: =4
+                              Height: =Parent.TemplateHeight
+                              HoverFill: =ColorValue(ThisItem.Value)
+                              OnSelect: =Select(Parent)
+                              PressedFill: =ColorValue(ThisItem.Value)
+                              Width: =Parent.TemplateWidth
+                  - TextCanvas3:
+                      Control: Text@0.0.51
+                      Group: Group1
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        AutoHeight: =true
+                        FontColor: =RGBA(15, 108, 189, 1)
+                        PaddingTop: =2
+                        Size: =10
+                        Text: ="Menu Name ('MenuKey')"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =txtMenuName.Width
+                        X: '=txtMenuName.X '
+                        Y: =txtMenuName.Y + txtMenuName.Height
+                  - txtMenuItemKey:
+                      Control: TextInput@0.0.54
+                      Group: Group1_1
+                      Properties:
+                        BorderColor: =RGBA(15, 108, 189, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        Placeholder: ="Menu Item Key"
+                        Width: =120
+                        X: =166
+                        Y: '=txtBuildCustomMenuItem.Y + txtBuildCustomMenuItem.Height + 10 '
+                  - TextCanvas3_1:
+                      Control: Text@0.0.51
+                      Group: Group1_1
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        AutoHeight: =true
+                        FontColor: =RGBA(15, 108, 189, 1)
+                        PaddingTop: =2
+                        Size: =10
+                        Text: ="Menu Item Key"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =txtMenuItemKey.Width
+                        X: '=txtMenuItemKey.X '
+                        Y: =txtMenuItemKey.Y + txtMenuItemKey.Height
+                  - ddItemAppearance:
+                      Control: DropDown@0.0.45
+                      Group: Group2
+                      Properties:
+                        BorderColor: =RGBA(15, 108, 189, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        DefaultSelectedItems: =[pbMenu_Build.ItemAppearanceChoices.Primary]
+                        Items: =ColumnNames(ParseJSON((JSON(pbMenu_BuildHelper.ItemAppearanceChoices))))
+                        Width: =120
+                        X: '=txtMenuItemTooltip.X + txtMenuItemTooltip.Width + 5 '
+                        Y: '=txtBuildCustomMenuItem.Y + txtBuildCustomMenuItem.Height + 10 '
+                  - TextCanvas3_3:
+                      Control: Text@0.0.51
+                      Group: Group2
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        AutoHeight: =true
+                        FontColor: =RGBA(15, 108, 189, 1)
+                        PaddingTop: =2
+                        Size: =10
+                        Text: ="Menu Item Appearance"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =ddItemAppearance.Width
+                        X: '=ddItemAppearance.X '
+                        Y: =ddItemAppearance.Y + ddItemAppearance.Height
+                  - txtMenuItemDisplay:
+                      Control: TextInput@0.0.54
+                      Group: Group1_2
+                      Properties:
+                        BorderColor: =RGBA(15, 108, 189, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        Placeholder: ="Menu Item Display"
+                        Width: =120
+                        X: '=txtMenuItemKey.X + txtMenuItemKey.Width + 5 '
+                        Y: '=txtBuildCustomMenuItem.Y + txtBuildCustomMenuItem.Height + 10 '
+                  - TextCanvas3_2:
+                      Control: Text@0.0.51
+                      Group: Group1_2
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        AutoHeight: =true
+                        FontColor: =RGBA(15, 108, 189, 1)
+                        PaddingTop: =2
+                        Size: =10
+                        Text: ="Menu Item Display"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =txtMenuItemDisplay.Width
+                        X: '=txtMenuItemDisplay.X '
+                        Y: =txtMenuItemDisplay.Y + txtMenuItemDisplay.Height
+                  - txtMenuItemTooltip:
+                      Control: TextInput@0.0.54
+                      Group: Group1_4
+                      Properties:
+                        BorderColor: =RGBA(15, 108, 189, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        Placeholder: ="Tooltip"
+                        Width: =150
+                        X: '=txtMenuItemDisplay.X + txtMenuItemDisplay.Width + 5 '
+                        Y: '=txtBuildCustomMenuItem.Y + txtBuildCustomMenuItem.Height + 10 '
+                  - TextCanvas3_6:
+                      Control: Text@0.0.51
+                      Group: Group1_4
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        AutoHeight: =true
+                        FontColor: =RGBA(15, 108, 189, 1)
+                        PaddingTop: =2
+                        Size: =10
+                        Text: ="Tooltip"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =txtMenuItemTooltip.Width
+                        X: '=txtMenuItemTooltip.X '
+                        Y: =txtMenuItemTooltip.Y + txtMenuItemTooltip.Height
+                  - ddIconStyle:
+                      Control: DropDown@0.0.45
+                      Group: Group2_1
+                      Properties:
+                        BorderColor: =RGBA(15, 108, 189, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        DefaultSelectedItems: =[pbMenu_Build.ItemIconStyleChoices.Filled]
+                        Items: =ColumnNames(ParseJSON((JSON(pbMenu_BuildHelper.ItemIconStyleChoices))))
+                        Width: =120
+                        X: '=ddItemAppearance.X + ddItemAppearance.Width + 5 '
+                        Y: '=txtBuildCustomMenuItem.Y + txtBuildCustomMenuItem.Height + 10 '
+                  - TextCanvas3_7:
+                      Control: Text@0.0.51
+                      Group: Group2_1
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        AutoHeight: =true
+                        FontColor: =RGBA(15, 108, 189, 1)
+                        PaddingTop: =2
+                        Size: =10
+                        Text: ="Icon Style"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =ddIconStyle.Width
+                        X: =ddIconStyle.X
+                        Y: =ddIconStyle.Y + ddIconStyle.Height
+                  - ddMenuOrientation:
+                      Control: DropDown@0.0.45
+                      Properties:
+                        BorderColor: =RGBA(160, 64, 8, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        DefaultSelectedItems: =[pbMenu_Build.LayoutChoices.Horizontal]
+                        Items: =ColumnNames(ParseJSON((JSON(pbMenu_BuildHelper.LayoutChoices))))
+                        Width: =120
+                        X: '=ddMenuKey.X + ddMenuKey.Width + 5 '
+                        Y: =iconMenuArrow.Y
+                  - TextCanvas3_8:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        AutoHeight: =true
+                        FontColor: =RGBA(160, 64, 8, 1)
+                        PaddingTop: =2
+                        Size: =10
+                        Text: ="Menu Orientation"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =ddMenuOrientation.Width
+                        X: '=ddMenuOrientation.X '
+                        Y: =ddMenuOrientation.Y + ddMenuOrientation.Height
+                  - toggDisableItemOnSelect:
+                      Control: Toggle@1.1.5
+                      Properties:
+                        FontColor: =RGBA(15, 108, 189, 1)
+                        FontSize: =12
+                        FontWeight: =FontWeight.Bold
+                        Height: =32
+                        Label: ="Disable Item On Select"
+                        ToggleSize: =14
+                        Width: =200
+                        X: =220
+                        Y: =TextCanvas3.Y + TextCanvas3.Height + 0
+                  - txtMIJson:
+                      Control: TextInput@0.0.54
+                      Properties:
+                        BorderColor: =RGBA(106, 122, 127, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        Height: '=Parent.Height - Self.Y - 10 '
+                        Mode: ='TextInputCanvas.Mode'.Multiline
+                        Value: |-
+                          =$"(JSON/Record that will be added to col_BuildMenu)" & const_CrLf & const_CrLf & 
+
+                          With({tmpRec: 
+                              {
+                                  ItemAppearance: $"{Coalesce(ddItemAppearance.Selected.Value, "Primary")}",
+                                  ItemDisabled: false,
+                                  ItemDisplayName: $"{Coalesce(txtMenuItemDisplay.Value,"[display name]")}",
+                                  ItemIconName: $"{Coalesce(ddIconName.Selected.Value,"GridDots")}",
+                                  ItemIconStyle: $"{ddIconStyle.Selected.Value}",
+                                  ItemKey: $"{Coalesce(txtMenuItemKey.Value,"[key]")}",
+                                  ItemTooltip: $"{txtMenuItemTooltip.Value}", 
+                                  confirmItemAction: true, 
+                                  disabledOnSelect: toggDisableItemOnSelect.Checked, 
+                                  menuKey: $"{Coalesce(txtMenuName.Value,"menu name")}"
+                              }}, 
+                              JSON(tmpRec,JSONFormat.IndentFour)
+                          )
+                        Width: =txtJSONLabel.Width
+                        X: '=txtJSONLabel.X '
+                        Y: '=txtJSONLabel.Y + txtJSONLabel.Height + 10 '
+                  - tblTempMenuItems:
+                      Control: Table@1.0.278
+                      Properties:
+                        EnableMultipleSelection: ='PowerAppsOneGrid.EnableMultipleSelection'.Enable
+                        EnableRangeSelection: ='PowerAppsOneGrid.EnableRangeSelection'.Disable
+                        FontSize: =11
+                        HeaderFontColor: =RGBA(15, 108, 189, 1)
+                        HeaderFontSize: =12
+                        HeaderFontWeight: =FontWeight.Bold
+                        Height: '=Parent.Height - Self.Y - 10 '
+                        Items: =Filter(col_pbMenu,Upper(menuKey)=Upper(pbMenu_Build.MenuKey))
+                        NoDataText: ="no menu items"
+                        ReflowBehavior: ='PowerAppsOneGrid.ReflowBehavior'.GridOnly
+                        ShowAvatar: ="no"
+                        Width: '=Parent.Width - Self.X - 10 '
+                        X: '=txtMIJson.X + txtMIJson.Width + 10 '
+                        Y: '=txtMIJson.Y '
+                      Children:
+                        - confirmItemAction1:
+                            Control: TableDataField@1.5.0
+                            Variant: textualColumn
+                            IsLocked: true
+                            Properties:
+                              FieldDisplayName: ="confirmItemAction"
+                              FieldName: ="confirmItemAction"
+                              FieldType: ="b"
+                              Order: =4
+                        - disableOnSelect1:
+                            Control: TableDataField@1.5.0
+                            Variant: textualColumn
+                            IsLocked: true
+                            Properties:
+                              FieldDisplayName: ="disableOnSelect"
+                              FieldName: ="disableOnSelect"
+                              FieldType: ="b"
+                              Order: =5
+                        - ItemAppearance1:
+                            Control: TableDataField@1.5.0
+                            Variant: textualColumn
+                            IsLocked: true
+                            Properties:
+                              FieldDisplayName: ="ItemAppearance"
+                              FieldName: ="ItemAppearance"
+                              FieldType: ="s"
+                              Order: =6
+                        - ItemIconName1:
+                            Control: TableDataField@1.5.0
+                            Variant: textualColumn
+                            IsLocked: true
+                            Properties:
+                              FieldDisplayName: ="ItemIconName"
+                              FieldName: ="ItemIconName"
+                              FieldType: ="s"
+                              Order: =7
+                        - ItemIconStyle1:
+                            Control: TableDataField@1.5.0
+                            Variant: textualColumn
+                            IsLocked: true
+                            Properties:
+                              FieldDisplayName: ="ItemIconStyle"
+                              FieldName: ="ItemIconStyle"
+                              FieldType: ="s"
+                              Order: =8
+                        - menuKey3:
+                            Control: TableDataField@1.5.0
+                            Variant: textualColumn
+                            IsLocked: true
+                            Properties:
+                              FieldDisplayName: ="menuKey"
+                              FieldName: ="menuKey"
+                              FieldType: ="s"
+                              Order: =1
+                              Width: =150
+                        - ItemKey2:
+                            Control: TableDataField@1.5.0
+                            Variant: textualColumn
+                            IsLocked: true
+                            Properties:
+                              FieldDisplayName: ="ItemKey"
+                              FieldName: ="ItemKey"
+                              FieldType: ="s"
+                              Order: =2
+                              Width: =150
+                        - ItemDisplayName2:
+                            Control: TableDataField@1.5.0
+                            Variant: textualColumn
+                            IsLocked: true
+                            Properties:
+                              FieldDisplayName: ="ItemDisplayName"
+                              FieldName: ="ItemDisplayName"
+                              FieldType: ="s"
+                              Order: =3
+                  - iconMenuArrow:
+                      Control: Icon@0.0.7
+                      Properties:
+                        Height: =40
+                        Icon: =If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical","ArrowLeft","ArrowUp")
+                        IconColor: =RGBA(255, 0, 0, 1)
+                        IconStyle: ='Icon.IconStyle'.Filled
+                        Width: =40
+                        X: =8
+                        Y: =8
+                  - txtBuildingThisMenu:
+                      Control: Text@0.0.51
+                      Properties:
+                        BorderColor: =RGBA(214, 221, 224, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        FontColor: =clr_BLUEBERRY
+                        Height: =iconMenuArrow.Height
+                        PaddingLeft: =10
+                        Text: ="CURRENTLY BUILDING THIS MENU"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =180
+                        X: =52
+                        Y: =8
+                  - Rectangle1:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =RGBA(160, 64, 8, 1)
+                        BorderThickness: =2
+                        DisabledFill: =RGBA(161, 159, 157, 1)
+                        Fill: =RGBA(160, 64, 8, 1)
+                        FocusedBorderThickness: =4
+                        Height: =2
+                        HoverFill: =RGBA(0, 120, 212, 1)
+                        PressedFill: =RGBA(0, 120, 212, 1)
+                        Width: '=Parent.Width - Self.X * 2 '
+                        X: '=iconMenuArrow.X '
+                        Y: =iconMenuArrow.Y + iconMenuArrow.Height + 50
+                  - ddBusyBehavior:
+                      Control: DropDown@0.0.45
+                      Properties:
+                        BorderColor: =RGBA(15, 108, 189, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        DefaultSelectedItems: =[pbMenu_Build.BusyBehaviorChoices.Spinning]
+                        Items: =ColumnNames(ParseJSON((JSON(pbMenu_BuildHelper.BusyBehaviorChoices))))
+                        Width: =110
+                        X: '=ddMenuOrientation.X + ddMenuOrientation.Width + 5 '
+                        Y: =ddMenuOrientation.Y
+                  - TextCanvas3_4:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        AutoHeight: =true
+                        FontColor: =RGBA(15, 108, 189, 1)
+                        PaddingTop: =2
+                        Size: =10
+                        Text: ="Busy Behavior"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =ddBusyBehavior.Width
+                        X: '=ddBusyBehavior.X '
+                        Y: =ddBusyBehavior.Y + ddBusyBehavior.Height
+                  - toggSimulateBusy:
+                      Control: Toggle@1.1.5
+                      Properties:
+                        BasePaletteColor: =RGBA(246, 142, 104, 1)
+                        FontColor: =RGBA(160, 64, 8, 1)
+                        FontSize: =12
+                        FontWeight: =FontWeight.Bold
+                        Height: '=26  '
+                        Label: ="Simulate App Busy"
+                        OnCheck: |-
+                          =Set(spin, {waiting: true, msg: $"({Text(Now(),"hh:mm:ss am/pm")}) Please Wait ..."})
+                        OnUncheck: |-
+                          =Set(spin, {waiting: false, msg: "Please Wait ..."})
+                        ToggleSize: =14
+                        Width: =180
+                        X: '=txtBuildingThisMenu.X '
+                        Y: =68
+                  - ddMenuKey:
+                      Control: DropDown@0.0.45
+                      Properties:
+                        BasePaletteColor: =clr_BLUEBERRY
+                        BorderColor: =clr_BLUEBERRY
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =2
+                        DefaultSelectedItems: "=[currentDisplayedMenu]\n\n//If(CountIf(col_BuildMenu,true)=0,[Blank()],[First(col_BuildMenu).menuKey]) "
+                        DisplayMode: =If(CountIf(col_BuildMenu,true)=0,DisplayMode.Disabled, DisplayMode.Edit)
+                        Items: '=SortByColumns(Distinct(col_BuildMenu,menuKey),"Value") '
+                        OnChange: |-
+                          =If(Not(IsBlankOrError(Self.Selected.Value)), 
+                              UpdateContext({currentDisplayedMenu:Self.Selected.Value});
+                              Reset(txtMenuName)
+                          )
+                        Width: =150
+                        X: =245
+                        Y: =8
+                  - TextCanvas3_9:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        AutoHeight: =true
+                        FontColor: =RGBA(160, 64, 8, 1)
+                        PaddingTop: =2
+                        Size: =10
+                        Text: ="Choose Custom Menu"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =ddMenuKey.Width
+                        X: '=ddMenuKey.X '
+                        Y: =ddMenuKey.Y + ddMenuKey.Height
+                  - txtSelectedColor:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        AutoHeight: =true
+                        FontColor: =RGBA(15, 108, 189, 1)
+                        PaddingTop: =2
+                        Size: =12
+                        Text: ="SELECTED COLOR"
+                        VerticalAlign: =VerticalAlign.Top
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =ddBusyBehavior.Width
+                        X: =8
+                        Y: =galSelectColor.Y + galSelectColor.Height + 3
+                  - Rectangle4:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =2
+                        DisabledFill: =RGBA(161, 159, 157, 1)
+                        Fill: |-
+                          =Coalesce(If(Not(IsBlank(customColor)), customColor, selectedColor)
+                          ,ColorValue("#247afd"))
+                        FocusedBorderThickness: =4
+                        Height: =18
+                        HoverFill: =RGBA(0, 120, 212, 1)
+                        PressedFill: =RGBA(0, 120, 212, 1)
+                        Width: =92
+                        X: =128
+                        Y: '=galSelectColor.Y + galSelectColor.Height + 5 '
+                  - ddToolbarPadding:
+                      Control: DropDown@0.0.45
+                      Properties:
+                        BorderColor: =RGBA(160, 64, 8, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        DefaultSelectedItems: =["Default"]
+                        Items: |-
+                          =ColumnNames(ParseJSON((JSON({Default: "Default", Small: 'Toolbar.Padding'.Small,Medium: 'Toolbar.Padding'.Medium,Large: 'Toolbar.Padding'.Large}))))
+                        Width: =100
+                        X: '=ddBusyBehavior.X + ddBusyBehavior.Width + 5 '
+                        Y: =ddBusyBehavior.Y
+                  - TextCanvas3_11:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        AutoHeight: =true
+                        FontColor: =RGBA(160, 64, 8, 1)
+                        PaddingTop: =2
+                        Size: =10
+                        Text: ="Toolbar Padding"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =ddToolbarPadding.Width
+                        X: '=ddToolbarPadding.X '
+                        Y: =ddToolbarPadding.Y + ddToolbarPadding.Height
+                  - toggShowNavBack:
+                      Control: Toggle@1.1.5
+                      Properties:
+                        BasePaletteColor: =RGBA(246, 142, 104, 1)
+                        FontColor: =RGBA(160, 64, 8, 1)
+                        FontSize: =12
+                        FontWeight: =FontWeight.Bold
+                        Height: '=26  '
+                        Label: ="Show 'Back' Button"
+                        OnCheck: =
+                        OnUncheck: =
+                        ToggleSize: =14
+                        Width: =200
+                        X: =toggEnableCollapsedState.X + toggEnableCollapsedState.Width
+                        Y: '=toggSimulateBusy.Y '
+                  - toggManageItemStates:
+                      Control: Toggle@1.1.5
+                      Properties:
+                        BasePaletteColor: =RGBA(246, 142, 104, 1)
+                        Checked: =manageItemStates
+                        FontColor: =RGBA(160, 64, 8, 1)
+                        FontSize: =12
+                        FontWeight: =FontWeight.Bold
+                        Height: '=26  '
+                        Label: ="Manage Item States"
+                        OnCheck: =
+                        OnUncheck: =
+                        ToggleSize: =14
+                        Width: =200
+                        X: =toggShowNavBack.X + toggShowNavBack.Width
+                        Y: '=toggSimulateBusy.Y '
+                  - toggRequireConfirmation:
+                      Control: Toggle@1.1.5
+                      Properties:
+                        FontColor: =RGBA(15, 108, 189, 1)
+                        FontSize: =12
+                        FontWeight: =FontWeight.Bold
+                        Height: =32
+                        Label: |
+                          ="Require Confirmation"
+                        ToggleSize: =14
+                        Width: =200
+                        X: =8
+                        Y: =TextCanvas3.Y + TextCanvas3.Height + 0
+                  - toggEnableCollapsedState:
+                      Control: Toggle@1.1.5
+                      Properties:
+                        BasePaletteColor: =RGBA(246, 142, 104, 1)
+                        Checked: '=enableCollapse '
+                        DisplayMode: =If(ddMenuOrientation.Selected.Value <> pbMenu_Build.LayoutChoices.Vertical,DisplayMode.Disabled, DisplayMode.Edit)
+                        FontColor: =RGBA(160, 64, 8, 1)
+                        FontSize: =12
+                        FontWeight: =FontWeight.Bold
+                        Height: '=26  '
+                        Label: ="Enabled Collapse"
+                        OnCheck: =
+                        OnUncheck: =
+                        ToggleSize: =14
+                        Width: =180
+                        X: =toggSimulateBusy.X + toggSimulateBusy.Width
+                        Y: '=toggSimulateBusy.Y '
+                  - ddIconName:
+                      Control: DropDown@0.0.45
+                      Properties:
+                        BorderColor: =RGBA(15, 108, 189, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        DefaultSelectedItems: =["GridDots"]
+                        Items: =["Add","Airplane","AppsListDetail","AppsList","ArrowClockwise","ArrowDownload","ArrowDown","ArrowExit","ArrowLeft","ArrowReset","ArrowRight","ArrowSort","ArrowSync","ArrowUndo","ArrowUp","Attach","CalendarAdd","Calendar", "Camera", "Cart", "Chat", "CheckmarkCircle", "Checkmark", "ChevronDown", "ChevronLeft", "ChevronRight", "ChevronUp", "Circle", "ClockAlarm", "Clock", "Copy", "Database", "Delete", "DismissCircle", "Dismiss", "DocumentAdd", "DocumentBulletList", "DocumentPdf", "Document", "Edit", "EmojiSmileSlight", "Eraser", "ErrorCircle", "Eye", "Filter", "GlobeArrowUp", "GlobeError", "GlobeProhibited", "Globe", "GlobeSync", "GlobeWarning", "GridDots", "History", "Home", "Info", "Link", "Mail", "Money", "MoreHorizontal", "Open", "PeopleAdd", "People", "Person", "Print", "Question", "SaveCopy", "Save", "Search", "Send", "ServiceBell", "Settings", "TextCaseTitle", "Warning"]
+                        Width: =140
+                        X: '=ddIconStyle.X + ddIconStyle.Width + 5 '
+                        Y: '=txtBuildCustomMenuItem.Y + txtBuildCustomMenuItem.Height + 10 '
+                  - TextCanvas3_13:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        AutoHeight: =true
+                        FontColor: =RGBA(15, 108, 189, 1)
+                        PaddingTop: =2
+                        Size: =10
+                        Text: ="Icon Name"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =ddIconName.Width
+                        X: =ddIconName.X
+                        Y: =ddIconName.Y + ddIconName.Height
+                  - btnSelectedColor:
+                      Control: Button@0.0.45
+                      Properties:
+                        BasePaletteColor: |
+                          =If(Not(IsBlank(customColor)), customColor, selectedColor)
+                        Height: =34
+                        OnSelect: =
+                        Text: ="Color Palette"
+                        Width: =213
+                        X: =8
+                        Y: '=Rectangle4.Y + Rectangle4.Height + 5 '
+                  - btnMenuItemColor:
+                      Control: Button@0.0.45
+                      Properties:
+                        BasePaletteColor: =miPrimaryColorPalette
+                        FontSize: =12
+                        Height: =26
+                        OnSelect: |-
+                          =UpdateContext({miPrimaryColorPalette: Rectangle4.Fill})
+                        Text: '="Menu Item Color" '
+                        Width: =160
+                        X: '=ddToolbarPadding.X + ddToolbarPadding.Width + 5 '
+                        Y: =8
+                  - btnConfirmColor:
+                      Control: Button@0.0.45
+                      Properties:
+                        BasePaletteColor: =confirmColorPalette
+                        FontSize: =12
+                        Height: =26
+                        OnSelect: |-
+                          =UpdateContext({confirmColorPalette: Rectangle4.Fill})
+                        Text: '="Confirm Button Color" '
+                        Width: =160
+                        X: '=btnMenuItemColor.X + btnMenuItemColor.Width + 5 '
+                        Y: =8
+                  - txtSelectedColor_1:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        AutoHeight: =true
+                        BorderColor: =RGBA(15, 108, 189, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        FontColor: =RGBA(15, 108, 189, 1)
+                        PaddingTop: =2
+                        Size: =10
+                        Text: ="CLICK TO SET COLOR TO SELECTED PALETTE COLOR BELOW"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: '=btnConfirmColor.X + btnConfirmColor.Width - Self.X '
+                        X: '=btnMenuItemColor.X '
+                        Y: =38
+                  - Icon1:
+                      Control: Icon@0.0.7
+                      Properties:
+                        Icon: =ddIconName.Selected.Value
+                        X: '=ddIconName.X + ddIconName.Width + 5 '
+                        Y: '=txtBuildCustomMenuItem.Y + txtBuildCustomMenuItem.Height + 10 '
+                  - toggIgnoreUnhandled:
+                      Control: Toggle@1.1.5
+                      Properties:
+                        BasePaletteColor: =RGBA(246, 142, 104, 1)
+                        Checked: =ignoreUnhandled
+                        FontColor: =RGBA(160, 64, 8, 1)
+                        FontSize: =12
+                        FontWeight: =FontWeight.Bold
+                        Height: '=26  '
+                        Label: ="Ignore Unhandled Items"
+                        OnCheck: =
+                        OnUncheck: =
+                        ToggleSize: =14
+                        Width: =220
+                        X: =toggManageItemStates.X + toggManageItemStates.Width
+                        Y: '=toggManageItemStates.Y '
+                  - txtBuildCustomMenuItem:
+                      Control: Text@0.0.51
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(106, 122, 127, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        Fill: =RGBA(232, 233, 235, 1)
+                        FontColor: =clr_BLUEBERRY
+                        Height: =
+                        PaddingLeft: =10
+                        Text: ="** CREATE MENU ITEM ** Use this section, with the option in the far left vertical menu, to create new menu items. (Create multiple menus by using different 'Menu Names', then use the 'Choose Custom Menu' dropdown above, to select which menu to render)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: '=Parent.Width - Self.X - 10 '
+                        X: =10
+                        Y: =108
+                  - Rectangle1_1:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =RGBA(160, 64, 8, 1)
+                        BorderThickness: =2
+                        DisabledFill: =RGBA(161, 159, 157, 1)
+                        Fill: =RGBA(160, 64, 8, 1)
+                        FocusedBorderThickness: =4
+                        Height: =2
+                        HoverFill: =RGBA(0, 120, 212, 1)
+                        PressedFill: =RGBA(0, 120, 212, 1)
+                        Width: '=Parent.Width - Self.X * 2 '
+                        X: =10
+                        Y: =toggRequireConfirmation.Y + toggRequireConfirmation.Height + Self.Height
+                  - txtOwnR:
+                      Control: TextInput@0.0.54
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(215, 58, 60, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        FontColor: =RGBA(215, 58, 60, 1)
+                        FontSize: =12
+                        FontWeight: =FontWeight.Bold
+                        OnChange: |-
+                          =If(txtCustomColorValid.Value="CUSTOM COLOR VALID", UpdateContext({customColor: RGBA(Int(txtOwnR.Value),Int(txtOwnG.Value),Int(txtOwnB.Value),If(Value(txtOwnA.Value) <=1,Value(txtOwnA.Value),Value(txtOwnA.Value)/100))}), UpdateContext({customColor:Blank()}))
+                        Placeholder: ="R"
+                        TriggerOutput: ='TextInputCanvas.TriggerOutput'.FocusOut
+                        Value: =ownR
+                        Width: '=50  '
+                        X: =7
+                        Y: '=txtEnterOwnColor.Y + txtEnterOwnColor.Height + 5 '
+                  - txtOwnG:
+                      Control: TextInput@0.0.54
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(52, 152, 47, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        FontColor: =RGBA(52, 152, 47, 1)
+                        FontSize: =12
+                        FontWeight: =FontWeight.Bold
+                        OnChange: |-
+                          =If(txtCustomColorValid.Value="CUSTOM COLOR VALID", UpdateContext({customColor: RGBA(Int(txtOwnR.Value),Int(txtOwnG.Value),Int(txtOwnB.Value),If(Value(txtOwnA.Value) <=1,Value(txtOwnA.Value),Value(txtOwnA.Value)/100))}), UpdateContext({customColor:Blank()}))
+                        Placeholder: ="G"
+                        TriggerOutput: ='TextInputCanvas.TriggerOutput'.FocusOut
+                        Value: =ownG
+                        Width: '=50  '
+                        X: =61
+                        Y: '=txtEnterOwnColor.Y + txtEnterOwnColor.Height + 5 '
+                  - txtOwnB:
+                      Control: TextInput@0.0.54
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(40, 134, 222, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        FontColor: =RGBA(40, 134, 222, 1)
+                        FontSize: =12
+                        FontWeight: =FontWeight.Bold
+                        OnChange: |-
+                          =If(txtCustomColorValid.Value="CUSTOM COLOR VALID", UpdateContext({customColor: RGBA(Int(txtOwnR.Value),Int(txtOwnG.Value),Int(txtOwnB.Value),If(Value(txtOwnA.Value) <=1,Value(txtOwnA.Value),Value(txtOwnA.Value)/100))}), UpdateContext({customColor:Blank()}))
+                        Placeholder: ="B"
+                        TriggerOutput: ='TextInputCanvas.TriggerOutput'.FocusOut
+                        Value: =ownB
+                        Width: '=50  '
+                        X: =115
+                        Y: '=txtEnterOwnColor.Y + txtEnterOwnColor.Height + 5 '
+                  - txtOwnA:
+                      Control: TextInput@0.0.54
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(106, 122, 127, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        FontColor: =RGBA(106, 122, 127, 1)
+                        FontSize: =12
+                        FontWeight: =FontWeight.Bold
+                        OnChange: |-
+                          =If(txtCustomColorValid.Value="CUSTOM COLOR VALID", UpdateContext({customColor: RGBA(Int(txtOwnR.Value),Int(txtOwnG.Value),Int(txtOwnB.Value),If(Value(txtOwnA.Value) <=1,Value(txtOwnA.Value),Value(txtOwnA.Value)/100))}), UpdateContext({customColor:Blank()}))
+                        Placeholder: ="A"
+                        TriggerOutput: ='TextInputCanvas.TriggerOutput'.FocusOut
+                        Value: =ownA
+                        Width: '=50  '
+                        X: =169
+                        Y: '=txtEnterOwnColor.Y + txtEnterOwnColor.Height + 5 '
+                  - txtEnterOwnColor:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        AutoHeight: =true
+                        FontColor: =RGBA(15, 108, 189, 1)
+                        PaddingTop: =2
+                        Size: =12
+                        Text: ="Or, Enter your own"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =btnSelectedColor.Width
+                        X: '=btnSelectedColor.X '
+                        Y: =btnSelectedColor.Y + btnSelectedColor.Height + 5
+                  - txtCustomColorValid:
+                      Control: TextInput@0.0.54
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(52, 152, 47, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        FontColor: =RGBA(52, 152, 47, 1)
+                        FontSize: =12
+                        FontWeight: =FontWeight.Bold
+                        Height: =28
+                        Mode: ='TextInputCanvas.Mode'.Multiline
+                        OnChange: =
+                        Placeholder: =
+                        TriggerOutput: ='TextInputCanvas.TriggerOutput'.Delayed
+                        Value: |-
+                          =With({ownIsValid: 
+                              IfError( 
+                                  With({rgbaR: Int(txtOwnR.Value), rgbaG: Int(txtOwnG.Value), rgbaB: Int(txtOwnB.Value), tmp_rgbaA: Value(txtOwnA.Value)}, 
+                                      With({rgbaA: If(tmp_rgbaA > 0 && tmp_rgbaA < 1, tmp_rgbaA, 
+                                          If(tmp_rgbaA / 100 <=1, tmp_rgbaA/100, -1))
+                                      }, 
+                                          If(rgbaR >=0 && rgbaR <=255 && rgbaG >=0 && rgbaG <=255 && rgbaB >=0 && rgbaB <=255 && rgbaA > 0 && rgbaA <=1 && (rgbaR + rgbaG + rgbaB) > 0, 
+                                              true, 
+                                              false
+                                          )
+                                      )
+                                  )    
+                              ,
+                              false)
+                              }, 
+                              If(ownIsValid,"CUSTOM COLOR VALID","")
+                          )
+                        Width: =211
+                        X: =8
+                        Y: '=txtOwnR.Y + txtOwnR.Height + 5 '
+                  - txtColorPaleteLabel:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        BorderColor: =RGBA(214, 221, 224, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        FontColor: =clr_BLUEBERRY
+                        Height: =iconMenuArrow.Height
+                        PaddingLeft: =10
+                        Size: =11
+                        Text: ="DEMO COLOR PALETTE"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =galSelectColor.Width
+                        X: '=galSelectColor.X '
+                        Y: '=Rectangle1_1.Y + Rectangle1_1.Height + 5 '
+                  - txtJSONLabel:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        BorderColor: =RGBA(214, 221, 224, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        FontColor: =clr_BLUEBERRY
+                        Height: =iconMenuArrow.Height
+                        PaddingLeft: =10
+                        Size: =11
+                        Text: |-
+                          ="INFORMATIONAL: JSON STRUCTURE FOR MENU ITEM, BASED ON VALUES FROM 'CREATE MENU ITEM'"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =300
+                        X: '=txtColorPaleteLabel.X + txtColorPaleteLabel.Width + 10 '
+                        Y: '=Rectangle1_1.Y + Rectangle1_1.Height + 5 '
+                  - txtCurrentSelectedMenu:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        BorderColor: =RGBA(214, 221, 224, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        FontColor: =clr_BLUEBERRY
+                        Height: =iconMenuArrow.Height
+                        PaddingLeft: =10
+                        Size: =11
+                        Text: |-
+                          =$"List of menu items for menuKey: '{pbMenu_Build.MenuKey}'. To delete items, select below, then use the delete menu item in the far left vertical pbMenu"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: '=Parent.Width - Self.X - 10 '
+                        X: '=txtJSONLabel.X + txtJSONLabel.Width + 10 '
+                        Y: '=txtJSONLabel.Y '
+            - Container2:
+                Control: GroupContainer@1.3.0
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =pbMenu_Build.BorderColor
+                  BorderThickness: =2
+                  Fill: =pbMenu_Build.Fill
+                  Height: '=Parent.Height - Self.Y - 10 '
+                  Visible: =showAboutExMenu=true
+                  Width: '=Parent.Width - Self.X - 10 '
+                  X: =If(pbMenu_Build.ToolbarOrientation=pbMenu_Build.LayoutChoices.Horizontal,pbMenu_Build.X,pbMenu_Build.X + pbMenu_Build.Width + 10)
+                  Y: =If(pbMenu_Build.ToolbarOrientation=pbMenu_Build.LayoutChoices.Horizontal,pbMenu_Build.Y + pbMenu_Build.Height + 10,pbMenu_Build.Y)
+                Children:
+                  - btnCloseAboutExMenu:
+                      Control: Button@0.0.45
+                      Properties:
+                        OnSelect: |
+                          =UpdateContext({showAboutExMenu:false});
+                          pbMenu_MenuBuilder.ItemState_UpdateAll(true)
+                        Text: ="OK"
+                        X: '=Parent.Width / 2 - Self.Width / 2 '
+                        Y: =action_LaunchGitHubPage.Y + action_LaunchGitHubPage.Height + 20
+                  - action_LaunchGitHubPage:
+                      Control: CanvasComponent
+                      ComponentName: confirmAction
+                      Properties:
+                        ButtonBorderColor: =RGBA(15, 108, 189, 1)
+                        ButtonColorFill: =RGBA(15, 108, 189, 1)
+                        ButtonColorOutline: =RGBA(0,0,0,0)
+                        ButtonEnabled: =true
+                        ButtonLayout: ='ButtonCanvas.Layout'.IconBefore
+                        ButtonStyle: ="Primary"
+                        ButtonText: ="View Example Menu Code (Github)"
+                        ButtonTextSize: =18
+                        ComponentBorderWidth: =3
+                        DefaultIcon: ="Globe"
+                        Fill: =RGBA(255, 255, 255, 1)
+                        FontColorFill: =RGBA(255, 255, 255, 1)
+                        FontColorOutline: =RGBA(15, 108, 189, 1)
+                        FontWeight: ="Bold"
+                        Height: =80
+                        OnActionConfirmed: |-
+                          =Launch("https://github.com/lopperman/pbMenu/blob/main/files/exampleMenu_code.pdf");
+                          Select(btnCloseAboutExMenu)
+                        Width: =300
+                        X: '=Parent.Width / 2 - Self.Width / 2 '
+                        Y: =20
+                  - ico_bonusArrow:
+                      Control: Icon@0.0.7
+                      Properties:
+                        Height: =action_LaunchGitHubPage.Height
+                        Icon: ="ArrowRight"
+                        IconColor: =clr_BLUEBERRY
+                        IconStyle: ='Icon.IconStyle'.Filled
+                        Width: =64
+                        X: =action_LaunchGitHubPage.X - Self.Width -30
+                        Y: '=action_LaunchGitHubPage.Y '
+                  - txtBonusControl:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.End
+                        FontColor: =clr_BLUEBERRY
+                        Height: =ico_bonusArrow.Height
+                        Size: =16
+                        Text: ="'Bonus' Custom Component (confirmAction)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =250
+                        X: '=ico_bonusArrow.X - Self.Width - 20 '
+                        Y: '=ico_bonusArrow.Y '
+                  - Image1:
+                      Control: Image@2.2.3
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =2
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4
+                        Height: =168
+                        HoverBorderColor: =RGBA(0, 0, 0, 0)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        Image: =exampleMenu
+                        PressedBorderColor: =RGBA(0, 0, 0, 0)
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        Width: =1086
+                        X: '=Parent.Width / 2 - Self.Width / 2 '
+                        Y: =btnCloseAboutExMenu.Y + btnCloseAboutExMenu.Height + 20
+                  - txtBonusControl_1:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Start
+                        FontColor: =clr_BLUEBERRY
+                        Height: =ico_bonusArrow.Height
+                        Size: =12
+                        Text: =$"The menu with the light yellow background ('pbMenu_Build') can be controlled & configured with the demo properties on this screen (e.g. 'Menu Orientation', 'Manage Item States'{const_CrLf}* Click 'CREATE EXAMPLE MENU' to add menu items with an assortment of behaviors"
+                        VerticalAlign: =VerticalAlign.Top
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =Image1.Width
+                        X: '=Image1.X '
+                        Y: '=Image1.Y + Image1.Height + 10 '
+            - txtBuildScreenInfo:
+                Control: Text@0.0.51
+                Properties:
+                  AutoHeight: =true
+                  BorderColor: =RGBA(106, 122, 127, 1)
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =1
+                  Fill: =RGBA(232, 233, 235, 1)
+                  FontColor: =clr_BLUEBERRY
+                  Height: =
+                  PaddingLeft: =10
+                  Text: ="TO GET STARTED, click the 'CREATE EXAMPLE MENU' menu item (above), or fill out 'CREATE MENU ITEM' section below, and click the Save button on the far left vertical menu.  See 'ABOUT EXAMPLE MENU' for more info"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Weight: ='TextCanvas.Weight'.Bold
+                  Width: '=Parent.Width - Self.X - 10 '
+                  X: =If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical", pbMenu_Build.X + pbMenu_Build.Width + 10,10)
+                  Y: =If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical",10, pbMenu_Build.X + pbMenu_Build.Height + 10)
+      - pbMenu_BuildHelper:
+          Control: CanvasComponent
+          ComponentName: pbMenu
+          Properties:
+            BorderColor: =PowerAppsTheme.Colors.Darker20
+            BorderWidth: =1
+            BusyBehavior: =Self.BusyBehaviorChoices.Disabled
+            BusyMessage: =spin.msg
+            CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
+            ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
+            EnableCollapsedState: =false
+            Fill: =RGBA(232, 233, 235, 1)
+            Height: '=Parent.Height - Self.Y - 10 '
+            IsBusy: '=spin.waiting=true '
+            ManageItemStates: =true
+            MenuColorPalette: =If(mbMode="View", PowerAppsTheme.Colors.Darker30,Color.Green)
+            MenuItemTextColor: =
+            MenuKey: =helperMenu
+            OnBeforeAction: "=Switch(Upper(p_itemKey), \n    \"MBHJSON\", \n        UpdateContext({helperView: \"menuItemsJSON\"});\n        true, \n    \"MBHMENUPROPS\", \n        UpdateContext({helperView: \"menuProps\"});\n        true, \n\n        \n    \"MBBSAVE\", \n        With({newMenuItem: \n            pbMenu_Build.CreateMenuItem(\n                $\"{Coalesce(txtMenuName.Value,\"menu name\")}\", \n                txtMenuItemKey.Value, \n                $\"{Coalesce(txtMenuItemDisplay.Value,\"[display name]\")}\", \n                $\"{Coalesce(ddIconName.Selected.Value,\"GridDots\")}\", \n                $\"{Coalesce(ddItemAppearance.Selected.Value, \"Primary\")}\", \n                $\"{ddIconStyle.Selected.Value}\",\n                $\"{txtMenuItemTooltip.Value}\", \n                toggDisableItemOnSelect.Checked, \n                toggRequireConfirmation.Checked, \n                true\n            )\n            }, \n            If(CountIf(col_BuildMenu,Upper(menuKey)=Upper(newMenuItem.menuKey))=0, \n                Collect(col_BuildMenu,newMenuItem.menuKey)\n            );\n        );\n        true, \n    \"MBBDELETE\", \n        If(CountIf(tblTempMenuItems.SelectedItems,true)=0, \n            Notify(\"To Delete, Please select 1 or more saved menu items from table\",NotificationType.Warning,3000), \n            With({deleteKeys: ForAll(tblTempMenuItems.SelectedItems As del, {key: del.ItemKey})}, \n                ForAll(deleteKeys As dk, \n                    With({tmpMenuKey: ddMenuKey.Selected.Value}, \n                        RemoveIf(col_pbMenu,Upper(menuKey)=Upper(ddMenuKey.Selected.Value) && Upper(ItemKey)=Upper(dk.key));\n                        If(CountIf(col_pbMenu,Upper(menuKey)=Upper(tmpMenuKey))=0, \n                            RemoveIf(col_BuildMenu,Upper(menuKey)=Upper(tmpMenuKey));\n                        )\n                    )\n                )\n            )\n        );\n        true, \n    \"REBUILDDEMOMENUS\", dData.BuildDemoMenus(); true, \n    Upper(\"mbbCreateSpacer\"), \n        If(Len(TrimEnds(txtMenuName.Value))=0, \n            Notify(\"Menu Key is required to create spacer.  Please enter menu name in the Menu Name ('Menu Key') Textbox\",NotificationType.Error,2000)\n            , \n            pbMenu_Build.CreateSpacer(txtMenuName.Value,true);\n            Notify($\"A new spacer was added for the {txtMenuName.Value} menu\" ,NotificationType.Success,3000)\n        );\n        true, \n    \n    false\n)"
+            OnRemoveMenuItem: =
+            OverrideExpandedWidth: =115
+            PerformanceLogging: =pbMenu_LogPerformance
+            Reset: =Reset(pbMenu_BuildHelper)
+            ShowNavBackButton: =false
+            ToolbarOrientation: =pbMenu_BuildHelper.LayoutChoices.Vertical
+            ToolbarPadding: =""
+            VerticalDefaultCollapsed: =true
+            Width: =If(Self.CollapsedMode(), Self.MinimumWidth(),Self.MinimumWidth() + 30)
+            Y: =pbMenu_MenuBuilder.Y + pbMenu_MenuBuilder.Height + 10

@@ -1,0 +1,38 @@
+App As appinfo:
+    BackEnabled: =true
+    Formulas: |-
+        =clr_BLUEBERRY=RGBA(0,46,255,1);
+        clr_SEARCH_CONTAINER=RGBA(255,238,230,1);
+        clr_GOLDENRODLIGHT=RGBA(250,250,210,1);
+        clr_BLUELIGHT=RGBA(210,230,250,1);
+        clr_BLUELIGHTLIGHT=RGBA(232,243,255,1);
+        clr_DARKGREYMED=RGBA(106,122,127,1);
+        clr_BRIGHTRED=RGBA(215,58,60,1);
+        clr_BRIGHTYELLOW=RGBA(255,255,0,1);
+        clr_YELLOWSELECTED=RGBA(255,255,191,1);
+        
+        const_CrLf=Char(13)&Char(10);
+        const_DQ=Char(34);
+        format_Percent="0.00%";
+        format_Currency="$#,###,##0.00";
+        format_CurrencyNoDec="$#,###,##0";
+    OnStart: |+
+        =Clear(col_pbMenu);
+        Clear(col_BuildMenu);
+        Clear(col_pbMenuPerf);
+        Clear(col_pbMenuUtil);
+        
+        Set(pbMenu_LogPerformance,true);
+        
+        dData.BuildDemoMenus();
+        
+    StartScreen: ='pbMenu Demo'
+    Theme: =PowerAppsTheme
+
+    Host As hostControl.DefaultHostControlVariant:
+        OnCancel: =false
+        OnEdit: =false
+        OnNew: =false
+        OnSave: =false
+        OnView: =false
+

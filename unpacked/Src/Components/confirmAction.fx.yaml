@@ -1,0 +1,132 @@
+confirmAction As CanvasComponent:
+    OnActionConfirmed():
+        ThisProperty:
+            Default: =
+    ButtonBorderColor: =RGBA(214, 221, 214, 1)
+    ButtonColorFill: =RGBA(255,0,0,1)
+    ButtonColorOutline: =RGBA(0,0,0,0)
+    ButtonEnabled: =true
+    ButtonLayout: ='ButtonCanvas.Layout'.IconBefore
+    ButtonStyle: ="outline"
+    ButtonText: ="DO SOMETHING"
+    ButtonTextSize: =12
+    ComponentBorderWidth: =1   
+    ControlGUID: =GUID()
+    DefaultIcon: ="Delete"
+    Fill: =RGBA(255, 255, 255, 1)
+    FontColorFill: =RGBA(255,255,255,1)
+    FontColorOutline: =RGBA(255, 0, 0, 1)
+    FontWeight: ="Text"
+    Height: =32
+    MinimumHeight: =32
+    MinimumWidth: =150 
+    OnReset: =Set(varDelete,false)
+    Width: =150 
+    X: =0
+    Y: =0
+    ZIndex: =2
+
+    txtWarning_3 As Text:
+        Align: ='TextCanvas.Align'.Center
+        BorderColor: =RGBA(189, 49, 51, 1)
+        BorderStyle: =BorderStyle.Solid
+        BorderThickness: =2
+        DisplayMode: =DisplayMode.Edit
+        Fill: =RGBA(255, 255, 0, 1)
+        FontColor: =RGBA(189, 49, 51, 1)
+        Height: =Parent.Height
+        Size: =10
+        Text: |-
+            ="MIN WIDTH (curr: " & confirmAction.Width & ") = " & confirmAction.MinimumWidth & Char(13) & Char(10) & "MIN HEIGHT (curr: " & confirmAction.Height & ") = " & confirmAction.MinimumHeight
+        VerticalAlign: =VerticalAlign.Middle
+        Visible: =confirmAction.Width < confirmAction.MinimumWidth || confirmAction.Height < confirmAction.MinimumHeight
+        Weight: ='TextCanvas.Weight'.Bold
+        Width: =Parent.Width
+        X: =0
+        Y: =0
+        ZIndex: =1
+
+    btnDeleteOutline_4 As Button:
+        Appearance: =If(Lower(confirmAction.ButtonStyle)="outline", 'ButtonCanvas.Appearance'.Outline,'ButtonCanvas.Appearance'.Primary)
+        BasePaletteColor: =If(confirmAction.ButtonStyle="Outline",confirmAction.ButtonColorOutline, confirmAction.ButtonColorFill)
+        BorderColor: =confirmAction.ButtonBorderColor
+        DisplayMode: =If(confirmAction.ButtonEnabled,DisplayMode.Edit,DisplayMode.Disabled)
+        Font: =""
+        FontColor: =If(Lower(confirmAction.ButtonStyle)="outline", confirmAction.FontColorOutline,confirmAction.FontColorFill)
+        FontSize: =If(Len(confirmAction.ButtonText)=0,Parent.Height - 4,If(confirmAction.ButtonTextSize=0,Parent.Height-4,confirmAction.ButtonTextSize))
+        FontWeight: =FontWeight.Bold
+        Height: =Parent.Height - Self.Y * 2 
+        Icon: =confirmAction.DefaultIcon
+        IconStyle: =If(Lower(confirmAction.ButtonStyle)="outline", 'ButtonCanvas.IconStyle'.Filled,'ButtonCanvas.IconStyle'.Outline)  
+        Layout: =If(Len(confirmAction.ButtonText)=0, 'ButtonCanvas.Layout'.IconOnly, confirmAction.ButtonLayout)
+        OnSelect: |-
+            =RemoveIf(colActionConfirmState,Id=confirmAction.ControlGUID);
+            Collect(colActionConfirmState,{Id:confirmAction.ControlGUID,Deleting:true});
+        PaddingBottom: =2
+        PaddingLeft: =2
+        PaddingRight: =2
+        PaddingTop: =2
+        Text: =If(Len(confirmAction.ButtonText)=0,Blank(),confirmAction.ButtonText)
+        Visible: |-
+            =IsBlank(LookUp(colActionConfirmState,Id=confirmAction.ControlGUID && Deleting=true))
+            //If(varDelete_AddDel=true,false,true)
+        Width: =Parent.Width - Self.X * 2 
+        X: =0
+        Y: =0
+        ZIndex: =2
+
+    btnConfirmDelete_4 As Button:
+        Appearance: ='ButtonCanvas.Appearance'.Primary
+        BasePaletteColor: =RGBA(249, 83, 109, 1)
+        BorderColor: =
+        DisplayMode: =
+        Font: =""
+        FontColor: =
+        FontSize: =0
+        FontWeight: =FontWeight.Bold
+        Height: =Parent.Height - Self.Y * 2 
+        Icon: ="Delete"
+        IconStyle: ='ButtonCanvas.IconStyle'.Outline
+        Layout: ='ButtonCanvas.Layout'.TextOnly
+        OnSelect: |-
+            =RemoveIf(colActionConfirmState,Id=confirmAction.ControlGUID);
+            confirmAction.OnActionConfirmed();
+        PaddingBottom: =2
+        PaddingLeft: =0
+        PaddingRight: =0.00
+        PaddingTop: =1
+        Text: ="CONFIRM"
+        VerticalAlign: =VerticalAlign.Middle
+        Visible: |-
+            =Not(IsBlank(LookUp(colActionConfirmState,Id=confirmAction.ControlGUID && Deleting=true)))
+            //varDelete_AddDel
+        Width: =(Parent.Width / 2) - btnConfirmDelete_4.X * 2 
+        X: =1
+        Y: =1
+        ZIndex: =3
+
+    btnCancelDelete_4 As Button:
+        Appearance: ='ButtonCanvas.Appearance'.Secondary
+        BasePaletteColor: =RGBA(249, 83, 109, 1)
+        BorderColor: =
+        DisplayMode: =
+        Font: =""
+        FontColor: =
+        FontSize: =0
+        FontWeight: =FontWeight.Bold
+        Height: =btnConfirmDelete_4.Height
+        Icon: ="Delete"
+        IconStyle: ='ButtonCanvas.IconStyle'.Outline
+        Layout: ='ButtonCanvas.Layout'.TextOnly
+        OnSelect: =RemoveIf(colActionConfirmState,Id=confirmAction.ControlGUID);
+        PaddingBottom: =2
+        PaddingLeft: =2
+        PaddingRight: =2
+        PaddingTop: =2
+        Text: ="CANCEL"
+        Visible: =Not(IsBlank(LookUp(colActionConfirmState,Id=confirmAction.ControlGUID && Deleting=true)))
+        Width: =Parent.Width - Self.X - btnConfirmDelete_4.X 
+        X: =btnConfirmDelete_4.X + btnConfirmDelete_4.Width 
+        Y: =btnConfirmDelete_4.Y 
+        ZIndex: =4
+

@@ -1,0 +1,212 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+ComponentDefinitions:
+  confirmAction:
+    DefinitionType: CanvasComponent
+    AccessAppScope: true
+    CustomProperties:
+      ButtonBorderColor:
+        PropertyKind: Input
+        DisplayName: Button Border Color
+        Description: A custom property
+        DataType: Color
+        Default: =RGBA(214, 221, 214, 1)
+      ButtonColorFill:
+        PropertyKind: Input
+        DisplayName: ButtonColorFill
+        Description: A custom property
+        DataType: Color
+        Default: =RGBA(255,0,0,1)
+      ButtonColorOutline:
+        PropertyKind: Input
+        DisplayName: ButtonColorOutline
+        Description: A custom property
+        DataType: Color
+        Default: =RGBA(0,0,0,0)
+      ButtonEnabled:
+        PropertyKind: Input
+        DisplayName: ButtonEnabled
+        Description: A custom property
+        DataType: Boolean
+        Default: =true
+      ButtonLayout:
+        PropertyKind: Input
+        DisplayName: ButtonLayout
+        Description: A custom property
+        DataType: Text
+        Default: ='ButtonCanvas.Layout'.IconBefore
+      ButtonStyle:
+        PropertyKind: Input
+        DisplayName: ButtonStyle
+        Description: A custom property
+        RaiseOnReset: true
+        DataType: Text
+        Default: ="outline"
+      ButtonText:
+        PropertyKind: Input
+        DisplayName: ButtonText
+        Description: A custom property
+        DataType: Text
+        Default: ="DO SOMETHING"
+      ButtonTextSize:
+        PropertyKind: Input
+        DisplayName: ButtonTextSize
+        Description: A custom property
+        DataType: Number
+        Default: =12
+      ComponentBorderWidth:
+        PropertyKind: Input
+        DisplayName: Component Border Width
+        Description: A custom property
+        DataType: Number
+        Default: '=1   '
+      ControlGUID:
+        PropertyKind: Output
+        DisplayName: ControlGUID
+        Description: A custom property
+        DataType: Text
+      DefaultIcon:
+        PropertyKind: Input
+        DisplayName: DefaultIcon
+        Description: A custom property
+        DataType: Text
+        Default: ="Delete"
+      FontColorFill:
+        PropertyKind: Input
+        DisplayName: FontColorFill
+        Description: A custom property
+        DataType: Color
+        Default: =RGBA(255,255,255,1)
+      FontColorOutline:
+        PropertyKind: Input
+        DisplayName: FontColorOutline
+        Description: A custom property
+        DataType: Color
+        Default: =RGBA(255, 0, 0, 1)
+      FontWeight:
+        PropertyKind: Input
+        DisplayName: FontWeight
+        Description: A custom property
+        DataType: Text
+        Default: ="Text"
+      MinimumHeight:
+        PropertyKind: Output
+        DisplayName: MinimumHeight
+        Description: A custom property
+        DataType: Number
+      MinimumWidth:
+        PropertyKind: Output
+        DisplayName: MinimumWidth
+        Description: A custom property
+        DataType: Number
+      OnActionConfirmed:
+        PropertyKind: Event
+        DisplayName: OnActionConfirmed
+        Description: A custom property
+        ReturnType: None
+        Default: =
+    Properties:
+      ControlGUID: =GUID()
+      Fill: =RGBA(255, 255, 255, 1)
+      Height: =32
+      MinimumHeight: =32
+      MinimumWidth: '=150 '
+      OnReset: =Set(varDelete,false)
+      Width: '=150 '
+    Children:
+      - txtWarning_3:
+          Control: Text@0.0.51
+          Properties:
+            Align: ='TextCanvas.Align'.Center
+            BorderColor: =RGBA(189, 49, 51, 1)
+            BorderStyle: =BorderStyle.Solid
+            BorderThickness: =2
+            Fill: =RGBA(255, 255, 0, 1)
+            FontColor: =RGBA(189, 49, 51, 1)
+            Height: =Parent.Height
+            Size: =10
+            Text: |-
+              ="MIN WIDTH (curr: " & confirmAction.Width & ") = " & confirmAction.MinimumWidth & Char(13) & Char(10) & "MIN HEIGHT (curr: " & confirmAction.Height & ") = " & confirmAction.MinimumHeight
+            VerticalAlign: =VerticalAlign.Middle
+            Visible: =confirmAction.Width < confirmAction.MinimumWidth || confirmAction.Height < confirmAction.MinimumHeight
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =Parent.Width
+      - btnDeleteOutline_4:
+          Control: Button@0.0.45
+          Properties:
+            Appearance: =If(Lower(confirmAction.ButtonStyle)="outline", 'ButtonCanvas.Appearance'.Outline,'ButtonCanvas.Appearance'.Primary)
+            BasePaletteColor: =If(confirmAction.ButtonStyle="Outline",confirmAction.ButtonColorOutline, confirmAction.ButtonColorFill)
+            BorderColor: =confirmAction.ButtonBorderColor
+            DisplayMode: =If(confirmAction.ButtonEnabled,DisplayMode.Edit,DisplayMode.Disabled)
+            FontColor: =If(Lower(confirmAction.ButtonStyle)="outline", confirmAction.FontColorOutline,confirmAction.FontColorFill)
+            FontSize: =If(Len(confirmAction.ButtonText)=0,Parent.Height - 4,If(confirmAction.ButtonTextSize=0,Parent.Height-4,confirmAction.ButtonTextSize))
+            FontWeight: =FontWeight.Bold
+            Height: '=Parent.Height - Self.Y * 2 '
+            Icon: =confirmAction.DefaultIcon
+            IconStyle: "=If(Lower(confirmAction.ButtonStyle)=\"outline\", 'ButtonCanvas.IconStyle'.Filled,'ButtonCanvas.IconStyle'.Outline)  "
+            Layout: =If(Len(confirmAction.ButtonText)=0, 'ButtonCanvas.Layout'.IconOnly, confirmAction.ButtonLayout)
+            OnSelect: |-
+              =RemoveIf(colActionConfirmState,Id=confirmAction.ControlGUID);
+              Collect(colActionConfirmState,{Id:confirmAction.ControlGUID,Deleting:true});
+            PaddingBottom: =2
+            PaddingLeft: =2
+            PaddingRight: =2
+            PaddingTop: =2
+            Text: =If(Len(confirmAction.ButtonText)=0,Blank(),confirmAction.ButtonText)
+            Visible: |-
+              =IsBlank(LookUp(colActionConfirmState,Id=confirmAction.ControlGUID && Deleting=true))
+              //If(varDelete_AddDel=true,false,true)
+            Width: '=Parent.Width - Self.X * 2 '
+      - btnConfirmDelete_4:
+          Control: Button@0.0.45
+          Properties:
+            Appearance: ='ButtonCanvas.Appearance'.Primary
+            BasePaletteColor: =RGBA(249, 83, 109, 1)
+            DisplayMode: =
+            FontWeight: =FontWeight.Bold
+            Height: '=Parent.Height - Self.Y * 2 '
+            Icon: ="Delete"
+            IconStyle: ='ButtonCanvas.IconStyle'.Outline
+            Layout: ='ButtonCanvas.Layout'.TextOnly
+            OnSelect: |-
+              =RemoveIf(colActionConfirmState,Id=confirmAction.ControlGUID);
+              confirmAction.OnActionConfirmed();
+            PaddingBottom: =2
+            PaddingLeft: =0
+            PaddingRight: =0.00
+            PaddingTop: =1
+            Text: ="CONFIRM"
+            VerticalAlign: =VerticalAlign.Middle
+            Visible: |-
+              =Not(IsBlank(LookUp(colActionConfirmState,Id=confirmAction.ControlGUID && Deleting=true)))
+              //varDelete_AddDel
+            Width: '=(Parent.Width / 2) - btnConfirmDelete_4.X * 2 '
+            X: =1
+            Y: =1
+      - btnCancelDelete_4:
+          Control: Button@0.0.45
+          Properties:
+            Appearance: ='ButtonCanvas.Appearance'.Secondary
+            BasePaletteColor: =RGBA(249, 83, 109, 1)
+            DisplayMode: =
+            FontWeight: =FontWeight.Bold
+            Height: =btnConfirmDelete_4.Height
+            Icon: ="Delete"
+            IconStyle: ='ButtonCanvas.IconStyle'.Outline
+            Layout: ='ButtonCanvas.Layout'.TextOnly
+            OnSelect: =RemoveIf(colActionConfirmState,Id=confirmAction.ControlGUID);
+            PaddingBottom: =2
+            PaddingLeft: =2
+            PaddingRight: =2
+            PaddingTop: =2
+            Text: ="CANCEL"
+            Visible: =Not(IsBlank(LookUp(colActionConfirmState,Id=confirmAction.ControlGUID && Deleting=true)))
+            Width: '=Parent.Width - Self.X - btnConfirmDelete_4.X '
+            X: '=btnConfirmDelete_4.X + btnConfirmDelete_4.Width '
+            Y: '=btnConfirmDelete_4.Y '
