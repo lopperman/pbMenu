@@ -122,7 +122,7 @@
     "DocumentType": "App",
     "EnableInstrumentation": false,
     "FileID": "8d0f00cf-2583-4da1-80b5-eec7b406053c",
-    "Id": "8816468b-b70f-42de-968e-3ae321546fb6",
+    "Id": "abe30700-0df2-4237-b0fa-5c7287b2d5b6",
     "LocalDatabaseReferences": "",
     "ManualOfflineProfileId": "",
     "Name": "just-a-Menu.msapp",
@@ -144,7 +144,7 @@
   "ScreenOrder": [
     "pbMenu Demo",
     "Menu Builder",
-    "pbMenu Help",
+    "pbMenu Sandbox",
     "PerformanceLog"
   ]
 }

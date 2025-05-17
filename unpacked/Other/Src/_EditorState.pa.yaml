@@ -10,10 +10,10 @@ EditorState:
   ScreensOrder:
     - pbMenu Demo
     - Menu Builder
-    - pbMenu Help
+    - pbMenu Sandbox
     - PerformanceLog
   ComponentDefinitionsOrder:
     - pbMenu
-    - demoData
+    - pbMenuData
     - compEditControls
     - confirmAction

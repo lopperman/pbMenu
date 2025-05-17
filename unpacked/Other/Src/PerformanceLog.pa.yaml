@@ -30,10 +30,10 @@ Screens:
             CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
             ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
             EnableCollapsedState: =true
-            Height: =Self.MinimumHeight
+            Height: =Self.MinimumHeight()
             IsBusy: '=spin.waiting=true '
             ManageItemStates: =true
-            MenuColorPalette: =PowerAppsTheme.Colors.PrimaryForeground
+            MenuColorPalette: =PowerAppsTheme.Colors.Primary
             MenuItemTextColor: =
             MenuKey: ="pbMenuPerfLog"
             OnBeforeAction: |
@@ -49,6 +49,7 @@ Screens:
               )
             OnRemoveMenuItem: =
             OverrideExpandedWidth: =0
+            OverrideMinHeight: =0
             PerformanceLogging: =pbMenu_LogPerformance
             Reset: =Reset(pbMenu_PerfLog)
             ShowNavBackButton: =true

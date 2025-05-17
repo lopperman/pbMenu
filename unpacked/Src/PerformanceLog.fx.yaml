@@ -41,7 +41,7 @@ PerformanceLog As screen:
                 )
             )
             
-        ConfirmMode: =spin.waiting<>true && CountIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_PerfLog.ControlGUID) && action="confirm")>0
+        ConfirmMode: =spin.waiting<>true && CountIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")>0
         CreateInfoItem: |
             =With({newMenuItem: 
                 //get menu item structure
@@ -132,7 +132,7 @@ PerformanceLog As screen:
                 );
                 If(Self.ConfirmMode() <> true, 
                     If(pbMenu.ManageItemStates = true, 
-                        If(CountIf(pbMenu.MenuItems,ItemDisabled=true)>0, 
+                        If(CountIf(pbMenu.CurrentMenuItems,ItemDisabled=true)>0, 
                             pbMenu.ItemState_UpdateAll(true)
                         );
                         If(mi.disableOnSelect=true, 
@@ -160,7 +160,7 @@ PerformanceLog As screen:
                     );
                 )
             )
-        Height: =Self.MinimumHeight
+        Height: =Self.MinimumHeight()
         Information: |-
             =[
                 {
@@ -177,8 +177,8 @@ PerformanceLog As screen:
                     desc: "Use to get or set the orientation of [pbMenu]"
                 },
                 {
-                    name: "MenuItems", 
-                    valTable: Self.MenuItems, 
+                    name: "CurrentMenuItems", 
+                    valTable: Self.CurrentMenuItems, 
                     dataType: "Table", 
                     externalUse: "Reference Only", 
                     type: "Output Property",
@@ -307,13 +307,6 @@ PerformanceLog As screen:
                     canSet: true 
                 }, 
                 {
-                    name: "MenuData_Filtered", 
-                    valTable: Self.MenuData, 
-                    type: "Table, Out Property", 
-                    desc: "Filtered 'configuration' data, which Uses collection: 'col_pbMenu'. This shows the menu configuration records for the menu items being rendered in the current pbMenu", 
-                    canSet: false 
-                }, 
-                {
                     name: "MenuData_All", 
                     valTable: Self.MenuData_All, 
                     type: "Table, Output Property", 
@@ -358,7 +351,7 @@ PerformanceLog As screen:
             
             ]
         ItemState: |
-            =With({Perf: {id: GUID(), start: Now(), action: $"ITEM STATE CHANGE: {pbMenu_PerfLog.MenuKey}.{p_itemKey} (enabled: {p_enabled})"}}, 
+            =With({Perf: {id: GUID(), start: Now(), action: $"ITEM STATE CHANGE: {pbMenu.MenuKey}.{p_itemKey} (enabled: {p_enabled})"}}, 
                 If(Not(StartsWith(Lower(p_itemKey),"_spacer_")) || Not(p_enabled), 
                     UpdateIf(col_pbMenu,Upper(menuKey)=Upper(Self.MenuKey) && Upper(ItemKey)=Upper(p_itemKey),{ItemDisabled:Not(p_enabled)})        
                 );
@@ -374,14 +367,14 @@ PerformanceLog As screen:
             //            )
             //        )
             //    );
-                If(pbMenu_PerfLog.PerformanceLogging=true && p_enablePerfLog=true, 
+                If(pbMenu.PerformanceLogging=true && p_enablePerfLog=true, 
                     With({endTS: Now()}, 
                         Collect(col_pbMenuPerf,{id: Perf.id, elapsed: DateDiff(Perf.start,endTS,TimeUnit.Milliseconds), start: Perf.start, end: Now(),  action: Perf.action})
                     )
                 )
             )
         ItemState_UpdateAll: |
-            =With({Perf: {id: GUID(), start: Now(), action: $"UPDATE ITEM STATES (ALL): {pbMenu_PerfLog.MenuKey} (Enabled: {p_Enabled})"}}, 
+            =With({Perf: {id: GUID(), start: Now(), action: $"UPDATE ITEM STATES (ALL): {pbMenu.MenuKey} (Enabled: {p_Enabled})"}}, 
                 UpdateIf(col_pbMenu,Upper(menuKey)=Upper(Self.MenuKey),{ItemDisabled:Not(p_Enabled)});
             
             //    ForAll(pbMenu.MenuItems As mItem, 
@@ -395,18 +388,9 @@ PerformanceLog As screen:
             //        )
             //    )
             )
-        MenuItem: =LookUp(pbMenu.MenuData,Upper(menuKey)=Upper(p_menuKey) && Upper(ItemKey)=Upper(p_itemKey))
-        MenuItems: |-
-            =With({fItems: Filter(pbMenu_PerfLog.MenuData,Upper(menuKey)=Upper(pbMenu_PerfLog.MenuKey))}, 
-                If(CountRows(fItems)=0, 
-                    [
-                        pbMenu_PerfLog.MissingMenuRecord
-                    ]
-                    , 
-                    ShowColumns(fItems,ItemKey,ItemDisplayName,ItemIconName, ItemAppearance, ItemIconStyle, ItemTooltip, ItemDisabled)
-                )
-            )
+        MenuItem: =LookUp(col_pbMenu,Upper(menuKey)=Upper(p_menuKey) && Upper(ItemKey)=Upper(p_itemKey))
         MenuKey: ="pbMenuPerfLog"
+        MinimumHeight: =If(Upper(Self.ToolbarOrientation)=Upper(pbMenu_PerfLog.LayoutChoices.Horizontal),If(Self.OverrideMinHeight>0,Self.OverrideMinHeight, 50),140) 
         MinimumWidth: |
             =If(pbMenu.ToolbarOrientation=pbMenu.LayoutChoices.Horizontal,200,
                 If(pbMenu.CollapsedMode()=true,50,

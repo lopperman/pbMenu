@@ -1,0 +1,152 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  pbMenu Sandbox:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
+      OnVisible: |-
+        =UpdateContext({vertMenuKey: "testMenu"});
+    Children:
+      - hdrHelp_2:
+          Control: Header@0.0.44
+          Properties:
+            Height: =40
+            Logo: =stickeromglove
+      - ButtonCanvas2:
+          Control: Button@0.0.45
+          Properties:
+            OnSelect: |
+              =pbMenu_1.CreateInfoItem("testMenu","Test Menu",pbMenu_1.ItemAppearanceChoices.Transparent,"tooltip test 1",true);
+              pbMenu_1.CreateSpacer("testMenu",true);
+              pbMenu_1.CreateMenuItem("testMenu","mi1","MI 1","Add",pbMenu_1.ItemAppearanceChoices.Primary,pbMenu_1.ItemIconStyleChoices.Filled, "mi1 tooltip",true,false,true);
+              pbMenu_1.CreateMenuItem("testMenu","mi2","MI 2","Delete",pbMenu_1.ItemAppearanceChoices.Primary,pbMenu_1.ItemIconStyleChoices.Filled, "mi1 tooltip",true,true,true);
+              pbMenu_1.CreateMenuItem("testMenu","mi3","MI 3","Edit",pbMenu_1.ItemAppearanceChoices.Secondary,pbMenu_1.ItemIconStyleChoices.Filled, "mi1 tooltip",false,false,true);
+
+              pbMenu_1.CreateInfoItem("testMenu2","Test Menu 2",pbMenu_1.ItemAppearanceChoices.Transparent,"tooltip",true);
+              pbMenu_1.CreateSpacer("testMenu2",true);
+              pbMenu_1.CreateMenuItem("testMenu2","mi4","MI 4","Add",pbMenu_1.ItemAppearanceChoices.Primary,pbMenu_1.ItemIconStyleChoices.Filled, "mi1 tooltip",true,false,true);
+              pbMenu_1.CreateMenuItem("testMenu2","mi5","MI 5","Add",pbMenu_1.ItemAppearanceChoices.Primary,pbMenu_1.ItemIconStyleChoices.Filled, "mi1 tooltip",true,true,true);
+              pbMenu_1.CreateMenuItem("testMenu2","mi6","MI 6","Add",pbMenu_1.ItemAppearanceChoices.Primary,pbMenu_1.ItemIconStyleChoices.Filled, "mi1 tooltip",false,false,true);
+            Text: ="Create Menu Items"
+            Width: =200
+            X: =179
+            Y: =155
+      - ButtonCanvas2_1:
+          Control: Button@0.0.45
+          Properties:
+            OnSelect: |
+              =If(vertMenuKey="testMenu",
+                  UpdateContext({vertMenuKey:"testMenu2"}), 
+                  UpdateContext({vertMenuKey:"testMenu"})
+              )
+            Text: ="Switch Vertical Menu"
+            Width: =200
+            X: =179
+            Y: =227
+      - ButtonCanvas2_2:
+          Control: Button@0.0.45
+          Properties:
+            OnSelect: |-
+              =If(IsBlankOrError(spin.waiting) || spin.waiting <> true, Set(spin,{waiting: true,msg: "Please wait"}), Set(spin,Blank()))
+            Text: ="Toggle App Busy"
+            Width: =200
+            X: =179
+            Y: =263
+      - ButtonCanvas2_3:
+          Control: Button@0.0.45
+          Properties:
+            BasePaletteColor: =RGBA(246, 142, 104, 1)
+            OnSelect: =RemoveIf(col_pbMenu,StartsWith(Lower(menuKey),"testmenu"))
+            Text: ="Clear Test Menu Items"
+            Width: =200
+            X: =179
+            Y: =191
+      - pbMenu_1:
+          Control: CanvasComponent
+          ComponentName: pbMenu
+          Properties:
+            BorderColor: =PowerAppsTheme.Colors.Darker20
+            BorderWidth: =1
+            BusyBehavior: =Self.BusyBehaviorChoices.Spinning
+            BusyMessage: =spin.msg
+            CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
+            ConfirmationColorPalette: =Color.Green
+            EnableCollapsedState: =true
+            Height: =Self.MinimumHeight()
+            IsBusy: '=spin.waiting=true '
+            ManageItemStates: =true
+            MenuColorPalette: =Color.Navy
+            MenuItemTextColor: =
+            MenuKey: ="testMenu"
+            OnBeforeAction: |-
+              =Switch(Upper(p_itemKey), 
+                  //Add each menu item key here that you wish to handle from a specific pbMenu component added to a screen
+                  //For menu items that will be rendered on multiple pbMenu components in your app, you can optionall ** not **
+                  "[itemKey]",
+                      //some work;
+                      //some more work;
+                      //return 'true
+                      true, 
+
+                  //always return false for unhandled menu item selections, so control can be passed back to [pbMenu].DoMenu()
+                  false
+              )
+            OnRemoveMenuItem: =
+            OverrideExpandedWidth: =0
+            OverrideMinHeight: =0
+            PerformanceLogging: =true
+            Reset: =Reset(pbMenu_1)
+            ShowNavBackButton: =true
+            ToolbarOrientation: =pbMenu_1.LayoutChoices.Horizontal
+            ToolbarPadding: =""
+            VerticalDefaultCollapsed: =true
+            Width: =Parent.Width
+            Y: =40
+      - pbMenu_2:
+          Control: CanvasComponent
+          ComponentName: pbMenu
+          Properties:
+            BorderColor: =PowerAppsTheme.Colors.Darker20
+            BorderWidth: =1
+            BusyBehavior: =Self.BusyBehaviorChoices.Spinning
+            BusyMessage: =spin.msg
+            CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
+            ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
+            EnableCollapsedState: =true
+            Height: =603
+            IsBusy: '=spin.waiting=true '
+            ManageItemStates: =true
+            MenuColorPalette: =PowerAppsTheme.Colors.Primary
+            MenuItemTextColor: =
+            MenuKey: =vertMenuKey
+            OnBeforeAction: |-
+              =Switch(Upper(p_itemKey), 
+                  //Add each menu item key here that you wish to handle from a specific pbMenu component added to a screen
+                  //For menu items that will be rendered on multiple pbMenu components in your app, you can optionall ** not **
+                  "[itemKey]",
+                      //some work;
+                      //some more work;
+                      //return 'true
+                      true, 
+
+                  //always return false for unhandled menu item selections, so control can be passed back to [pbMenu].DoMenu()
+                  false
+              )
+            OnRemoveMenuItem: =
+            OverrideExpandedWidth: =150
+            OverrideMinHeight: =0
+            PerformanceLogging: =false
+            Reset: =Reset(pbMenu_2)
+            ShowNavBackButton: =false
+            ToolbarOrientation: =Self.LayoutChoices.Vertical
+            ToolbarPadding: =""
+            VerticalDefaultCollapsed: =true
+            Width: =Self.MinimumWidth()
+            Y: =155

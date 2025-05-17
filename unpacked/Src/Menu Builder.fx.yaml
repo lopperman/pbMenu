@@ -60,7 +60,8 @@
                 )
             )
             
-        ConfirmMode: =spin.waiting<>true && CountIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_MenuBuilder.ControlGUID) && action="confirm")>0
+        ConfirmationColorPalette: =RGBA(160, 64, 8, 1)
+        ConfirmMode: =spin.waiting<>true && CountIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")>0
         CreateInfoItem: |
             =With({newMenuItem: 
                 //get menu item structure
@@ -151,7 +152,7 @@
                 );
                 If(Self.ConfirmMode() <> true, 
                     If(pbMenu.ManageItemStates = true, 
-                        If(CountIf(pbMenu.MenuItems,ItemDisabled=true)>0, 
+                        If(CountIf(pbMenu.CurrentMenuItems,ItemDisabled=true)>0, 
                             pbMenu.ItemState_UpdateAll(true)
                         );
                         If(mi.disableOnSelect=true, 
@@ -179,7 +180,7 @@
                     );
                 )
             )
-        Height: =Self.MinimumHeight
+        Height: =Self.MinimumHeight()
         Information: |-
             =[
                 {
@@ -196,8 +197,8 @@
                     desc: "Use to get or set the orientation of [pbMenu]"
                 },
                 {
-                    name: "MenuItems", 
-                    valTable: Self.MenuItems, 
+                    name: "CurrentMenuItems", 
+                    valTable: Self.CurrentMenuItems, 
                     dataType: "Table", 
                     externalUse: "Reference Only", 
                     type: "Output Property",
@@ -326,13 +327,6 @@
                     canSet: true 
                 }, 
                 {
-                    name: "MenuData_Filtered", 
-                    valTable: Self.MenuData, 
-                    type: "Table, Out Property", 
-                    desc: "Filtered 'configuration' data, which Uses collection: 'col_pbMenu'. This shows the menu configuration records for the menu items being rendered in the current pbMenu", 
-                    canSet: false 
-                }, 
-                {
                     name: "MenuData_All", 
                     valTable: Self.MenuData_All, 
                     type: "Table, Output Property", 
@@ -377,7 +371,7 @@
             
             ]
         ItemState: |
-            =With({Perf: {id: GUID(), start: Now(), action: $"ITEM STATE CHANGE: {pbMenu_MenuBuilder.MenuKey}.{p_itemKey} (enabled: {p_enabled})"}}, 
+            =With({Perf: {id: GUID(), start: Now(), action: $"ITEM STATE CHANGE: {pbMenu.MenuKey}.{p_itemKey} (enabled: {p_enabled})"}}, 
                 If(Not(StartsWith(Lower(p_itemKey),"_spacer_")) || Not(p_enabled), 
                     UpdateIf(col_pbMenu,Upper(menuKey)=Upper(Self.MenuKey) && Upper(ItemKey)=Upper(p_itemKey),{ItemDisabled:Not(p_enabled)})        
                 );
@@ -393,14 +387,14 @@
             //            )
             //        )
             //    );
-                If(pbMenu_MenuBuilder.PerformanceLogging=true && p_enablePerfLog=true, 
+                If(pbMenu.PerformanceLogging=true && p_enablePerfLog=true, 
                     With({endTS: Now()}, 
                         Collect(col_pbMenuPerf,{id: Perf.id, elapsed: DateDiff(Perf.start,endTS,TimeUnit.Milliseconds), start: Perf.start, end: Now(),  action: Perf.action})
                     )
                 )
             )
         ItemState_UpdateAll: |
-            =With({Perf: {id: GUID(), start: Now(), action: $"UPDATE ITEM STATES (ALL): {pbMenu_MenuBuilder.MenuKey} (Enabled: {p_Enabled})"}}, 
+            =With({Perf: {id: GUID(), start: Now(), action: $"UPDATE ITEM STATES (ALL): {pbMenu.MenuKey} (Enabled: {p_Enabled})"}}, 
                 UpdateIf(col_pbMenu,Upper(menuKey)=Upper(Self.MenuKey),{ItemDisabled:Not(p_Enabled)});
             
             //    ForAll(pbMenu.MenuItems As mItem, 
@@ -414,18 +408,9 @@
             //        )
             //    )
             )
-        MenuItem: =LookUp(pbMenu.MenuData,Upper(menuKey)=Upper(p_menuKey) && Upper(ItemKey)=Upper(p_itemKey))
-        MenuItems: |-
-            =With({fItems: Filter(pbMenu_MenuBuilder.MenuData,Upper(menuKey)=Upper(pbMenu_MenuBuilder.MenuKey))}, 
-                If(CountRows(fItems)=0, 
-                    [
-                        pbMenu_MenuBuilder.MissingMenuRecord
-                    ]
-                    , 
-                    ShowColumns(fItems,ItemKey,ItemDisplayName,ItemIconName, ItemAppearance, ItemIconStyle, ItemTooltip, ItemDisabled)
-                )
-            )
+        MenuItem: =LookUp(col_pbMenu,Upper(menuKey)=Upper(p_menuKey) && Upper(ItemKey)=Upper(p_itemKey))
         MenuKey: ="MenuBuilder"
+        MinimumHeight: =If(Upper(Self.ToolbarOrientation)=Upper(pbMenu_MenuBuilder.LayoutChoices.Horizontal),If(Self.OverrideMinHeight>0,Self.OverrideMinHeight, 50),140) 
         MinimumWidth: |
             =If(pbMenu.ToolbarOrientation=pbMenu.LayoutChoices.Horizontal,200,
                 If(pbMenu.CollapsedMode()=true,50,
@@ -556,7 +541,7 @@
                             ,JSONFormat.IndentFour
                         ), 
                     Upper("menuitemsjson"), 
-                        JSON(pbMenu_Build.MenuItems,JSONFormat.IndentFour)
+                        JSON(pbMenu_Build.CurrentMenuItems,JSONFormat.IndentFour)
                 )
             Width: =Parent.Width - Self.X - 10 
             X: =10
@@ -649,7 +634,7 @@
                 )
                 
             ConfirmationColorPalette: =confirmColorPalette
-            ConfirmMode: =spin.waiting<>true && CountIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_Build.ControlGUID) && action="confirm")>0
+            ConfirmMode: =spin.waiting<>true && CountIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")>0
             CreateInfoItem: |
                 =With({newMenuItem: 
                     //get menu item structure
@@ -740,7 +725,7 @@
                     );
                     If(Self.ConfirmMode() <> true, 
                         If(pbMenu.ManageItemStates = true, 
-                            If(CountIf(pbMenu.MenuItems,ItemDisabled=true)>0, 
+                            If(CountIf(pbMenu.CurrentMenuItems,ItemDisabled=true)>0, 
                                 pbMenu.ItemState_UpdateAll(true)
                             );
                             If(mi.disableOnSelect=true, 
@@ -770,7 +755,7 @@
                 )
             EnableCollapsedState: =toggEnableCollapsedState.Checked
             Fill: =RGBA(255, 255, 219, 1)
-            Height: =If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal, Self.MinimumHeight,Parent.Height - Self.Y * 2 ) 
+            Height: =If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal, Self.MinimumHeight(),Parent.Height - Self.Y * 2 ) 
             Information: |-
                 =[
                     {
@@ -787,8 +772,8 @@
                         desc: "Use to get or set the orientation of [pbMenu]"
                     },
                     {
-                        name: "MenuItems", 
-                        valTable: Self.MenuItems, 
+                        name: "CurrentMenuItems", 
+                        valTable: Self.CurrentMenuItems, 
                         dataType: "Table", 
                         externalUse: "Reference Only", 
                         type: "Output Property",
@@ -917,13 +902,6 @@
                         canSet: true 
                     }, 
                     {
-                        name: "MenuData_Filtered", 
-                        valTable: Self.MenuData, 
-                        type: "Table, Out Property", 
-                        desc: "Filtered 'configuration' data, which Uses collection: 'col_pbMenu'. This shows the menu configuration records for the menu items being rendered in the current pbMenu", 
-                        canSet: false 
-                    }, 
-                    {
                         name: "MenuData_All", 
                         valTable: Self.MenuData_All, 
                         type: "Table, Output Property", 
@@ -968,7 +946,7 @@
                 
                 ]
             ItemState: |
-                =With({Perf: {id: GUID(), start: Now(), action: $"ITEM STATE CHANGE: {pbMenu_Build.MenuKey}.{p_itemKey} (enabled: {p_enabled})"}}, 
+                =With({Perf: {id: GUID(), start: Now(), action: $"ITEM STATE CHANGE: {pbMenu.MenuKey}.{p_itemKey} (enabled: {p_enabled})"}}, 
                     If(Not(StartsWith(Lower(p_itemKey),"_spacer_")) || Not(p_enabled), 
                         UpdateIf(col_pbMenu,Upper(menuKey)=Upper(Self.MenuKey) && Upper(ItemKey)=Upper(p_itemKey),{ItemDisabled:Not(p_enabled)})        
                     );
@@ -984,14 +962,14 @@
                 //            )
                 //        )
                 //    );
-                    If(pbMenu_Build.PerformanceLogging=true && p_enablePerfLog=true, 
+                    If(pbMenu.PerformanceLogging=true && p_enablePerfLog=true, 
                         With({endTS: Now()}, 
                             Collect(col_pbMenuPerf,{id: Perf.id, elapsed: DateDiff(Perf.start,endTS,TimeUnit.Milliseconds), start: Perf.start, end: Now(),  action: Perf.action})
                         )
                     )
                 )
             ItemState_UpdateAll: |
-                =With({Perf: {id: GUID(), start: Now(), action: $"UPDATE ITEM STATES (ALL): {pbMenu_Build.MenuKey} (Enabled: {p_Enabled})"}}, 
+                =With({Perf: {id: GUID(), start: Now(), action: $"UPDATE ITEM STATES (ALL): {pbMenu.MenuKey} (Enabled: {p_Enabled})"}}, 
                     UpdateIf(col_pbMenu,Upper(menuKey)=Upper(Self.MenuKey),{ItemDisabled:Not(p_Enabled)});
                 
                 //    ForAll(pbMenu.MenuItems As mItem, 
@@ -1007,18 +985,9 @@
                 )
             ManageItemStates: =toggManageItemStates.Checked
             MenuColorPalette: =miPrimaryColorPalette
-            MenuItem: =LookUp(pbMenu.MenuData,Upper(menuKey)=Upper(p_menuKey) && Upper(ItemKey)=Upper(p_itemKey))
-            MenuItems: |-
-                =With({fItems: Filter(pbMenu_Build.MenuData,Upper(menuKey)=Upper(pbMenu_Build.MenuKey))}, 
-                    If(CountRows(fItems)=0, 
-                        [
-                            pbMenu_Build.MissingMenuRecord
-                        ]
-                        , 
-                        ShowColumns(fItems,ItemKey,ItemDisplayName,ItemIconName, ItemAppearance, ItemIconStyle, ItemTooltip, ItemDisabled)
-                    )
-                )
+            MenuItem: =LookUp(col_pbMenu,Upper(menuKey)=Upper(p_menuKey) && Upper(ItemKey)=Upper(p_itemKey))
             MenuKey: =Coalesce(ddMenuKey.Selected.Value,"exampleMenu")
+            MinimumHeight: =If(Upper(Self.ToolbarOrientation)=Upper(pbMenu_Build.LayoutChoices.Horizontal),If(Self.OverrideMinHeight>0,Self.OverrideMinHeight, 50),140) 
             MinimumWidth: |
                 =If(pbMenu.ToolbarOrientation=pbMenu.LayoutChoices.Horizontal,200,
                     If(pbMenu.CollapsedMode()=true,50,
@@ -1374,7 +1343,7 @@
                 Items: =ColumnNames(ParseJSON((JSON(pbMenu_BuildHelper.LayoutChoices))))
                 Width: =120
                 X: =ddMenuKey.X + ddMenuKey.Width + 5 
-                Y: =iconMenuArrow.Y
+                Y: =ddMenuKey.Y 
                 ZIndex: =23
 
             TextCanvas3_8 As Text:
@@ -1466,51 +1435,6 @@
                 Y: =txtMIJson.Y 
                 ZIndex: =27
 
-                confirmItemAction1 As PowerAppsOneGridTemplate_dataField.textualColumn:
-                    FieldDisplayName: ="confirmItemAction"
-                    FieldName: ="confirmItemAction"
-                    FieldType: ="b"
-                    FieldVariantName: ="textualColumn"
-                    Order: =4
-                    Width: =0
-                    ZIndex: =0
-
-                disableOnSelect1 As PowerAppsOneGridTemplate_dataField.textualColumn:
-                    FieldDisplayName: ="disableOnSelect"
-                    FieldName: ="disableOnSelect"
-                    FieldType: ="b"
-                    FieldVariantName: ="textualColumn"
-                    Order: =5
-                    Width: =0
-                    ZIndex: =0
-
-                ItemAppearance1 As PowerAppsOneGridTemplate_dataField.textualColumn:
-                    FieldDisplayName: ="ItemAppearance"
-                    FieldName: ="ItemAppearance"
-                    FieldType: ="s"
-                    FieldVariantName: ="textualColumn"
-                    Order: =6
-                    Width: =0
-                    ZIndex: =0
-
-                ItemIconName1 As PowerAppsOneGridTemplate_dataField.textualColumn:
-                    FieldDisplayName: ="ItemIconName"
-                    FieldName: ="ItemIconName"
-                    FieldType: ="s"
-                    FieldVariantName: ="textualColumn"
-                    Order: =7
-                    Width: =0
-                    ZIndex: =0
-
-                ItemIconStyle1 As PowerAppsOneGridTemplate_dataField.textualColumn:
-                    FieldDisplayName: ="ItemIconStyle"
-                    FieldName: ="ItemIconStyle"
-                    FieldType: ="s"
-                    FieldVariantName: ="textualColumn"
-                    Order: =8
-                    Width: =0
-                    ZIndex: =0
-
                 menuKey3 As PowerAppsOneGridTemplate_dataField.textualColumn:
                     FieldDisplayName: ="menuKey"
                     FieldName: ="menuKey"
@@ -1538,32 +1462,50 @@
                     Width: =0
                     ZIndex: =31
 
-            iconMenuArrow As Icon:
-                DisplayMode: =DisplayMode.Edit
-                Height: =40
-                Icon: =If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical","ArrowLeft","ArrowUp")
-                IconColor: =RGBA(255, 0, 0, 1)
-                IconStyle: ='Icon.IconStyle'.Filled
-                Width: =40
-                X: =8
-                Y: =8
-                ZIndex: =28
+                ItemIconStyle1 As PowerAppsOneGridTemplate_dataField.textualColumn:
+                    FieldDisplayName: ="ItemIconStyle"
+                    FieldName: ="ItemIconStyle"
+                    FieldType: ="s"
+                    FieldVariantName: ="textualColumn"
+                    Order: =8
+                    Width: =0
+                    ZIndex: =73
 
-            txtBuildingThisMenu As Text:
-                BorderColor: =RGBA(214, 221, 224, 1)
-                BorderStyle: =BorderStyle.Solid
-                BorderThickness: =1
-                DisplayMode: =DisplayMode.Edit
-                FontColor: =clr_BLUEBERRY
-                Height: =iconMenuArrow.Height
-                PaddingLeft: =10
-                Text: ="CURRENTLY BUILDING THIS MENU"
-                VerticalAlign: =VerticalAlign.Middle
-                Weight: ='TextCanvas.Weight'.Bold
-                Width: =180
-                X: =52
-                Y: =8
-                ZIndex: =29
+                ItemIconName1 As PowerAppsOneGridTemplate_dataField.textualColumn:
+                    FieldDisplayName: ="ItemIconName"
+                    FieldName: ="ItemIconName"
+                    FieldType: ="s"
+                    FieldVariantName: ="textualColumn"
+                    Order: =7
+                    Width: =0
+                    ZIndex: =74
+
+                ItemAppearance1 As PowerAppsOneGridTemplate_dataField.textualColumn:
+                    FieldDisplayName: ="ItemAppearance"
+                    FieldName: ="ItemAppearance"
+                    FieldType: ="s"
+                    FieldVariantName: ="textualColumn"
+                    Order: =6
+                    Width: =0
+                    ZIndex: =75
+
+                disableOnSelect1 As PowerAppsOneGridTemplate_dataField.textualColumn:
+                    FieldDisplayName: ="disableOnSelect"
+                    FieldName: ="disableOnSelect"
+                    FieldType: ="b"
+                    FieldVariantName: ="textualColumn"
+                    Order: =5
+                    Width: =0
+                    ZIndex: =76
+
+                confirmItemAction1 As PowerAppsOneGridTemplate_dataField.textualColumn:
+                    FieldDisplayName: ="confirmItemAction"
+                    FieldName: ="confirmItemAction"
+                    FieldType: ="b"
+                    FieldVariantName: ="textualColumn"
+                    Order: =4
+                    Width: =0
+                    ZIndex: =77
 
             Rectangle1 As rectangle:
                 BorderColor: =RGBA(160, 64, 8, 1)
@@ -1575,8 +1517,8 @@
                 HoverFill: =RGBA(0, 120, 212, 1)
                 PressedFill: =RGBA(0, 120, 212, 1)
                 Width: =Parent.Width - Self.X * 2 
-                X: =iconMenuArrow.X 
-                Y: =iconMenuArrow.Y + iconMenuArrow.Height + 50
+                X: =10
+                Y: =98
                 ZIndex: =30
 
             ddBusyBehavior As Dropdown.pcfdataset:
@@ -1590,7 +1532,7 @@
                 Items: =ColumnNames(ParseJSON((JSON(pbMenu_BuildHelper.BusyBehaviorChoices))))
                 Width: =110
                 X: =ddMenuOrientation.X + ddMenuOrientation.Width + 5 
-                Y: =ddMenuOrientation.Y
+                Y: =ddMenuKey.Y 
                 ZIndex: =31
 
             TextCanvas3_4 As Text:
@@ -1623,7 +1565,7 @@
                     =Set(spin, {waiting: false, msg: "Please Wait ..."})
                 ToggleSize: =14
                 Width: =180
-                X: =txtBuildingThisMenu.X 
+                X: =10
                 Y: =68
                 ZIndex: =33
 
@@ -1645,7 +1587,7 @@
                         Reset(txtMenuName)
                     )
                 Width: =150
-                X: =245
+                X: =10
                 Y: =8
                 ZIndex: =35
 
@@ -1710,7 +1652,7 @@
                     =ColumnNames(ParseJSON((JSON({Default: "Default", Small: 'Toolbar.Padding'.Small,Medium: 'Toolbar.Padding'.Medium,Large: 'Toolbar.Padding'.Large}))))
                 Width: =100
                 X: =ddBusyBehavior.X + ddBusyBehavior.Width + 5 
-                Y: =ddBusyBehavior.Y
+                Y: =ddMenuKey.Y 
                 ZIndex: =39
 
             TextCanvas3_11 As Text:
@@ -1911,6 +1853,7 @@
                 Align: ="Start"
                 AutoHeight: =true
                 BorderColor: =RGBA(106, 122, 127, 1)
+                BorderRadius: =4
                 BorderStyle: =BorderStyle.Solid
                 BorderThickness: =1
                 ContentLanguage: =""
@@ -2157,6 +2100,7 @@
                 Align: ='TextCanvas.Align'.Center
                 AutoHeight: =false
                 BorderColor: =RGBA(214, 221, 224, 1)
+                BorderRadius: =4
                 BorderStyle: =BorderStyle.Solid
                 BorderThickness: =1
                 ContentLanguage: =""
@@ -2166,7 +2110,7 @@
                 FontItalic: =false
                 FontStrikethrough: =false
                 FontUnderline: =false
-                Height: =iconMenuArrow.Height
+                Height: =40
                 PaddingLeft: =10
                 Size: =11
                 TabIndex: =0
@@ -2185,6 +2129,7 @@
                 Align: ='TextCanvas.Align'.Center
                 AutoHeight: =false
                 BorderColor: =RGBA(214, 221, 224, 1)
+                BorderRadius: =4
                 BorderStyle: =BorderStyle.Solid
                 BorderThickness: =1
                 ContentLanguage: =""
@@ -2194,7 +2139,7 @@
                 FontItalic: =false
                 FontStrikethrough: =false
                 FontUnderline: =false
-                Height: =iconMenuArrow.Height
+                Height: =40
                 PaddingLeft: =10
                 Size: =11
                 TabIndex: =0
@@ -2214,6 +2159,7 @@
                 Align: ='TextCanvas.Align'.Center
                 AutoHeight: =false
                 BorderColor: =RGBA(214, 221, 224, 1)
+                BorderRadius: =4
                 BorderStyle: =BorderStyle.Solid
                 BorderThickness: =1
                 ContentLanguage: =""
@@ -2223,7 +2169,7 @@
                 FontItalic: =false
                 FontStrikethrough: =false
                 FontUnderline: =false
-                Height: =iconMenuArrow.Height
+                Height: =40
                 PaddingLeft: =10
                 Size: =11
                 TabIndex: =0
@@ -2359,6 +2305,7 @@
             Align: ="Start"
             AutoHeight: =true
             BorderColor: =RGBA(106, 122, 127, 1)
+            BorderRadius: =4
             BorderStyle: =BorderStyle.Solid
             BorderThickness: =1
             ContentLanguage: =""
@@ -2369,7 +2316,7 @@
             FontItalic: =false
             FontStrikethrough: =false
             FontUnderline: =false
-            Height: =
+            Height: =42
             PaddingLeft: =10
             Size: =14
             TabIndex: =0
@@ -2380,9 +2327,54 @@
             Weight: ='TextCanvas.Weight'.Bold
             Width: =Parent.Width - Self.X - 10 
             Wrap: =true
-            X: =If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical", pbMenu_Build.X + pbMenu_Build.Width + 10,10)
+            X: =txtBuildingThisMenu_1.X + txtBuildingThisMenu_1.Width + 10 
             Y: =If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical",10, pbMenu_Build.X + pbMenu_Build.Height + 10)
             ZIndex: =31
+
+        iconMenuArrow_1 As Icon:
+            ContentLanguage: =""
+            DisplayMode: =DisplayMode.Edit
+            Height: =42
+            Icon: =If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical","ArrowLeft","ArrowUp")
+            IconColor: =RGBA(255, 0, 0, 1)
+            IconStyle: ='Icon.IconStyle'.Filled
+            Rotation: =0
+            TabIndex: =0
+            Tooltip: =""
+            Visible: =true
+            Width: =40
+            X: =If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical", pbMenu_Build.X + pbMenu_Build.Width + 10,10)
+            Y: =If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical",10, pbMenu_Build.X + pbMenu_Build.Height + 10)
+            ZIndex: =32
+
+        txtBuildingThisMenu_1 As Text:
+            Align: ="Start"
+            AutoHeight: =false
+            BorderColor: =RGBA(214, 221, 224, 1)
+            BorderRadius: =4
+            BorderStyle: =BorderStyle.Solid
+            BorderThickness: =1
+            ContentLanguage: =""
+            DisplayMode: =DisplayMode.Edit
+            Font: =""
+            FontColor: =clr_BLUEBERRY
+            FontItalic: =false
+            FontStrikethrough: =false
+            FontUnderline: =false
+            Height: =42
+            PaddingLeft: =10
+            Size: =14
+            TabIndex: =0
+            Text: ="CURRENTLY BUILDING THIS MENU"
+            Tooltip: =""
+            VerticalAlign: =VerticalAlign.Middle
+            Visible: =true
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =180
+            Wrap: =true
+            X: =iconMenuArrow_1.X + iconMenuArrow_1.Width + 5 
+            Y: =If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical",10, pbMenu_Build.X + pbMenu_Build.Height + 10)
+            ZIndex: =33
 
     pbMenu_BuildHelper As pbMenu:
         BusyBehavior: =Self.BusyBehaviorChoices.Disabled
@@ -2407,7 +2399,7 @@
                 )
             )
             
-        ConfirmMode: =spin.waiting<>true && CountIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_BuildHelper.ControlGUID) && action="confirm")>0
+        ConfirmMode: =spin.waiting<>true && CountIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")>0
         CreateInfoItem: |
             =With({newMenuItem: 
                 //get menu item structure
@@ -2498,7 +2490,7 @@
                 );
                 If(Self.ConfirmMode() <> true, 
                     If(pbMenu.ManageItemStates = true, 
-                        If(CountIf(pbMenu.MenuItems,ItemDisabled=true)>0, 
+                        If(CountIf(pbMenu.CurrentMenuItems,ItemDisabled=true)>0, 
                             pbMenu.ItemState_UpdateAll(true)
                         );
                         If(mi.disableOnSelect=true, 
@@ -2545,8 +2537,8 @@
                     desc: "Use to get or set the orientation of [pbMenu]"
                 },
                 {
-                    name: "MenuItems", 
-                    valTable: Self.MenuItems, 
+                    name: "CurrentMenuItems", 
+                    valTable: Self.CurrentMenuItems, 
                     dataType: "Table", 
                     externalUse: "Reference Only", 
                     type: "Output Property",
@@ -2675,13 +2667,6 @@
                     canSet: true 
                 }, 
                 {
-                    name: "MenuData_Filtered", 
-                    valTable: Self.MenuData, 
-                    type: "Table, Out Property", 
-                    desc: "Filtered 'configuration' data, which Uses collection: 'col_pbMenu'. This shows the menu configuration records for the menu items being rendered in the current pbMenu", 
-                    canSet: false 
-                }, 
-                {
                     name: "MenuData_All", 
                     valTable: Self.MenuData_All, 
                     type: "Table, Output Property", 
@@ -2726,7 +2711,7 @@
             
             ]
         ItemState: |
-            =With({Perf: {id: GUID(), start: Now(), action: $"ITEM STATE CHANGE: {pbMenu_BuildHelper.MenuKey}.{p_itemKey} (enabled: {p_enabled})"}}, 
+            =With({Perf: {id: GUID(), start: Now(), action: $"ITEM STATE CHANGE: {pbMenu.MenuKey}.{p_itemKey} (enabled: {p_enabled})"}}, 
                 If(Not(StartsWith(Lower(p_itemKey),"_spacer_")) || Not(p_enabled), 
                     UpdateIf(col_pbMenu,Upper(menuKey)=Upper(Self.MenuKey) && Upper(ItemKey)=Upper(p_itemKey),{ItemDisabled:Not(p_enabled)})        
                 );
@@ -2742,14 +2727,14 @@
             //            )
             //        )
             //    );
-                If(pbMenu_BuildHelper.PerformanceLogging=true && p_enablePerfLog=true, 
+                If(pbMenu.PerformanceLogging=true && p_enablePerfLog=true, 
                     With({endTS: Now()}, 
                         Collect(col_pbMenuPerf,{id: Perf.id, elapsed: DateDiff(Perf.start,endTS,TimeUnit.Milliseconds), start: Perf.start, end: Now(),  action: Perf.action})
                     )
                 )
             )
         ItemState_UpdateAll: |
-            =With({Perf: {id: GUID(), start: Now(), action: $"UPDATE ITEM STATES (ALL): {pbMenu_BuildHelper.MenuKey} (Enabled: {p_Enabled})"}}, 
+            =With({Perf: {id: GUID(), start: Now(), action: $"UPDATE ITEM STATES (ALL): {pbMenu.MenuKey} (Enabled: {p_Enabled})"}}, 
                 UpdateIf(col_pbMenu,Upper(menuKey)=Upper(Self.MenuKey),{ItemDisabled:Not(p_Enabled)});
             
             //    ForAll(pbMenu.MenuItems As mItem, 
@@ -2764,18 +2749,9 @@
             //    )
             )
         MenuColorPalette: =If(mbMode="View", PowerAppsTheme.Colors.Darker30,Color.Green)
-        MenuItem: =LookUp(pbMenu.MenuData,Upper(menuKey)=Upper(p_menuKey) && Upper(ItemKey)=Upper(p_itemKey))
-        MenuItems: |-
-            =With({fItems: Filter(pbMenu_BuildHelper.MenuData,Upper(menuKey)=Upper(pbMenu_BuildHelper.MenuKey))}, 
-                If(CountRows(fItems)=0, 
-                    [
-                        pbMenu_BuildHelper.MissingMenuRecord
-                    ]
-                    , 
-                    ShowColumns(fItems,ItemKey,ItemDisplayName,ItemIconName, ItemAppearance, ItemIconStyle, ItemTooltip, ItemDisabled)
-                )
-            )
+        MenuItem: =LookUp(col_pbMenu,Upper(menuKey)=Upper(p_menuKey) && Upper(ItemKey)=Upper(p_itemKey))
         MenuKey: =helperMenu
+        MinimumHeight: =If(Upper(Self.ToolbarOrientation)=Upper(pbMenu_BuildHelper.LayoutChoices.Horizontal),If(Self.OverrideMinHeight>0,Self.OverrideMinHeight, 50),140) 
         MinimumWidth: |
             =If(pbMenu.ToolbarOrientation=pbMenu.LayoutChoices.Horizontal,200,
                 If(pbMenu.CollapsedMode()=true,50,

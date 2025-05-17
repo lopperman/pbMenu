@@ -169,7 +169,7 @@ pbMenu As CanvasComponent:
                     );
                     If(Self.ConfirmMode() <> true, 
                         If(pbMenu.ManageItemStates = true, 
-                            If(CountIf(pbMenu.MenuItems,ItemDisabled=true)>0, 
+                            If(CountIf(pbMenu.CurrentMenuItems,ItemDisabled=true)>0, 
                                 pbMenu.ItemState_UpdateAll(true)
                             );
                             If(mi.disableOnSelect=true, 
@@ -215,8 +215,8 @@ pbMenu As CanvasComponent:
                         desc: "Use to get or set the orientation of [pbMenu]"
                     },
                     {
-                        name: "MenuItems", 
-                        valTable: Self.MenuItems, 
+                        name: "CurrentMenuItems", 
+                        valTable: Self.CurrentMenuItems, 
                         dataType: "Table", 
                         externalUse: "Reference Only", 
                         type: "Output Property",
@@ -345,13 +345,6 @@ pbMenu As CanvasComponent:
                         canSet: true 
                     }, 
                     {
-                        name: "MenuData_Filtered", 
-                        valTable: Self.MenuData, 
-                        type: "Table, Out Property", 
-                        desc: "Filtered 'configuration' data, which Uses collection: 'col_pbMenu'. This shows the menu configuration records for the menu items being rendered in the current pbMenu", 
-                        canSet: false 
-                    }, 
-                    {
                         name: "MenuData_All", 
                         valTable: Self.MenuData_All, 
                         type: "Table, Output Property", 
@@ -451,7 +444,10 @@ pbMenu As CanvasComponent:
         p_itemKey:
             Default: ="Text"
         ThisProperty:
-            Default: =LookUp(pbMenu.MenuData,Upper(menuKey)=Upper(p_menuKey) && Upper(ItemKey)=Upper(p_itemKey))
+            Default: =LookUp(col_pbMenu,Upper(menuKey)=Upper(p_menuKey) && Upper(ItemKey)=Upper(p_itemKey))
+    MinimumHeight():
+        ThisProperty:
+            Default: =If(Upper(Self.ToolbarOrientation)=Upper(pbMenu.LayoutChoices.Horizontal),If(Self.OverrideMinHeight>0,Self.OverrideMinHeight, 50),140) 
     MinimumWidth():
         ThisProperty:
             Default: |
@@ -467,7 +463,19 @@ pbMenu As CanvasComponent:
         p_itemKey:
             Default: ="Text"
         ThisProperty:
-            Default: =false
+            Default: |-
+                =Switch(Upper(p_itemKey), 
+                    //Add each menu item key here that you wish to handle from a specific pbMenu component added to a screen
+                    //For menu items that will be rendered on multiple pbMenu components in your app, you can optionall ** not **
+                    "[itemKey]",
+                        //some work;
+                        //some more work;
+                        //return 'true
+                        true, 
+                
+                    //always return false for unhandled menu item selections, so control can be passed back to [pbMenu].DoMenu()
+                    false
+                )
     OnRemoveMenuItem(p_menuKey As String, p_menuItemKey As String):
         p_menuKey:
             Default: ="Text"
@@ -496,6 +504,16 @@ pbMenu As CanvasComponent:
     CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
     ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
     ControlGUID: =GUID()
+    CurrentMenuItems: |-
+        =With({fItems: Filter(col_pbMenu,Upper(menuKey)=Upper(pbMenu.MenuKey))}, 
+            If(CountRows(fItems)=0, 
+                [
+                    pbMenu.MissingMenuRecord
+                ]
+                , 
+                ShowColumns(fItems,ItemKey,ItemDisplayName,ItemIconName, ItemAppearance, ItemIconStyle, ItemTooltip, ItemDisabled)
+            )
+        )
     EnableCollapsedState: =true
     Fill: =RGBA(0, 0, 0, 0)
     Height: =140
@@ -507,22 +525,10 @@ pbMenu As CanvasComponent:
     LayoutChoices: |-
         ={Horizontal: "Horizontal", Vertical: "Vertical"}
     ManageItemStates: =true
-    MenuColorPalette: =PowerAppsTheme.Colors.PrimaryForeground
-    MenuData: =Filter(col_pbMenu,Upper(menuKey)=Upper(pbMenu.MenuKey))
+    MenuColorPalette: =PowerAppsTheme.Colors.Primary
     MenuData_All: =col_pbMenu
-    MenuItems: |-
-        =With({fItems: Filter(pbMenu.MenuData,Upper(menuKey)=Upper(pbMenu.MenuKey))}, 
-            If(CountRows(fItems)=0, 
-                [
-                    pbMenu.MissingMenuRecord
-                ]
-                , 
-                ShowColumns(fItems,ItemKey,ItemDisplayName,ItemIconName, ItemAppearance, ItemIconStyle, ItemTooltip, ItemDisabled)
-            )
-        )
     MenuItemTextColor: =
     MenuKey: ="Main"
-    MinimumHeight: =If(Upper(Self.ToolbarOrientation)=Upper(pbMenu.LayoutChoices.Horizontal),50,140)
     MissingMenuRecord: |-
         ={            
             ItemKey: Upper("_MISSING"), 
@@ -535,6 +541,7 @@ pbMenu As CanvasComponent:
         }
     OnReset: =
     OverrideExpandedWidth: =0
+    OverrideMinHeight: =0
     PerformanceLogging: =false
     ShowNavBackButton: =false
     StaticBackMenuItem: |-
@@ -644,7 +651,7 @@ pbMenu As CanvasComponent:
 
         tbMain As Toolbar.pcfdataset:
             Alignment: =pbMenu.ToolbarOrientation
-            BasePaletteColor: =If(CountIf(pbMenu.MenuItems,true)=0, Color.Red, pbMenu.MenuColorPalette)
+            BasePaletteColor: =If(CountIf(pbMenu.CurrentMenuItems,true)=0, Color.Red, pbMenu.MenuColorPalette)
             DisplayMode: =If(pbMenu.IsBusy,DisplayMode.Disabled, DisplayMode.Edit)
             FontColor: =pbMenu.MenuItemTextColor
             Height: =contMenu.Height
@@ -652,18 +659,18 @@ pbMenu As CanvasComponent:
                 =If(Upper(pbMenu.ToolbarOrientation)=Upper(pbMenu.LayoutChoices.Vertical), 
                     If(pbMenu.ShowNavBackButton,     
                         If(pbMenu.EnableCollapsedState, 
-                            Table(pbMenu.StaticCollapseMenuRecord, pbMenu.StaticBackMenuItem,pbMenu.MenuItems), 
-                            Table(pbMenu.StaticBackMenuItem,pbMenu.MenuItems)
+                            Table(pbMenu.StaticCollapseMenuRecord, pbMenu.StaticBackMenuItem,pbMenu.CurrentMenuItems), 
+                            Table(pbMenu.StaticBackMenuItem,pbMenu.CurrentMenuItems)
                         ), 
                         If(pbMenu.EnableCollapsedState, 
-                            Table(pbMenu.StaticCollapseMenuRecord, pbMenu.MenuItems), 
-                            Table(pbMenu.MenuItems)
+                            Table(pbMenu.StaticCollapseMenuRecord, pbMenu.CurrentMenuItems), 
+                            Table(pbMenu.CurrentMenuItems)
                         )
                     )
                     ,
                     If(pbMenu.ShowNavBackButton, 
-                        Table(pbMenu.StaticBackMenuItem,pbMenu.MenuItems), 
-                        pbMenu.MenuItems
+                        Table(pbMenu.StaticBackMenuItem,pbMenu.CurrentMenuItems), 
+                        pbMenu.CurrentMenuItems
                     )
                 )
             Layout: |-
@@ -711,7 +718,7 @@ pbMenu As CanvasComponent:
                 )
                 
             Padding: =If(IsBlank(pbMenu.ToolbarPadding) || Upper(pbMenu.ToolbarPadding)="DEFAULT",If(pbMenu.ToolbarOrientation=pbMenu.LayoutChoices.Horizontal,'Toolbar.Padding'.Medium,'Toolbar.Padding'.Small),pbMenu.ToolbarPadding)
-            Visible: =pbMenu.Height >= pbMenu.MinimumHeight
+            Visible: =pbMenu.Height >= pbMenu.MinimumHeight()
             Width: =contMenu.Width
             X: =0
             Y: =0
@@ -724,8 +731,8 @@ pbMenu As CanvasComponent:
             Height: =contMenu.Height
             Size: =10
             Text: |-
-                ="pbMenu control size (H:" & pbMenu.Height & ", W:" & pbMenu.Width &  ") is less than minimum required size (MinHeight: " & pbMenu.MinimumHeight & ", MinWidth: " & pbMenu.MinimumWidth() & ")"
-            Visible: =pbMenu.Height < pbMenu.MinimumHeight || pbMenu.Width < pbMenu.MinimumWidth()
+                ="pbMenu control size (H:" & pbMenu.Height & ", W:" & pbMenu.Width &  ") is less than minimum required size (MinHeight: " & pbMenu.MinimumHeight() & ", MinWidth: " & pbMenu.MinimumWidth() & ")"
+            Visible: =pbMenu.Height < pbMenu.MinimumHeight() || pbMenu.Width < pbMenu.MinimumWidth()
             Width: =contMenu.Width
             X: =0
             Y: =0

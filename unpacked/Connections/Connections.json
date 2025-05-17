@@ -40,7 +40,7 @@
     "connectionRef": {
       "apiTier": "Standard",
       "displayName": "Office 365 Outlook",
-      "iconUri": "https://conn-afd-prod-endpoint-bmc9bqahasf3grgk.b01.azurefd.net/v1.0.1751/1.0.1751.4213/office365/icon.png",
+      "iconUri": "https://conn-afd-prod-endpoint-bmc9bqahasf3grgk.b01.azurefd.net/v1.0.1751/1.0.1751.4216/office365/icon.png",
       "id": "/providers/microsoft.powerapps/apis/shared_office365",
       "parameterHints": {},
       "parameterHintsV2": {}

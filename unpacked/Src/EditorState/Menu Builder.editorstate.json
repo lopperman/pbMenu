@@ -574,7 +574,7 @@
       "MetaDataIDKey": "",
       "Name": "btnConfirmColor",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 7,
+      "ParentIndex": 5,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -705,7 +705,7 @@
       "MetaDataIDKey": "",
       "Name": "btnMenuItemColor",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 6,
+      "ParentIndex": 4,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -814,7 +814,7 @@
       "MetaDataIDKey": "",
       "Name": "btnSelectedColor",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 46,
+      "ParentIndex": 44,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -891,7 +891,7 @@
       "MetaDataIDKey": "",
       "Name": "confirmItemAction1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 0,
+      "ParentIndex": 7,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -922,22 +922,22 @@
         {
           "Category": "Design",
           "PropertyName": "X",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
           "PropertyName": "Y",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
           "PropertyName": "Width",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
           "PropertyName": "Height",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
@@ -1695,7 +1695,7 @@
       "MetaDataIDKey": "",
       "Name": "contSubBuild",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 3,
+      "ParentIndex": 5,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -1912,7 +1912,7 @@
       "MetaDataIDKey": "",
       "Name": "ddBusyBehavior",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 4,
+      "ParentIndex": 2,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -1958,7 +1958,7 @@
         {
           "Category": "Design",
           "PropertyName": "Width",
-          "RuleProviderType": "User"
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Design",
@@ -2061,7 +2061,7 @@
       "MetaDataIDKey": "",
       "Name": "ddIconName",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 26,
+      "ParentIndex": 24,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -2102,7 +2102,7 @@
         {
           "Category": "Design",
           "PropertyName": "Width",
-          "RuleProviderType": "User"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
@@ -2205,7 +2205,7 @@
       "MetaDataIDKey": "",
       "Name": "ddIconStyle",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 25,
+      "ParentIndex": 23,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -2349,7 +2349,7 @@
       "MetaDataIDKey": "",
       "Name": "ddItemAppearance",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 24,
+      "ParentIndex": 22,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -2422,7 +2422,14 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "X",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "85",
+          "InvariantPropertyName": "X",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "Y",
         {
           "AFDDataSourceName": "",
@@ -2502,7 +2509,7 @@
       "MetaDataIDKey": "",
       "Name": "ddMenuKey",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 2,
+      "ParentIndex": 0,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -2538,7 +2545,7 @@
         {
           "Category": "Design",
           "PropertyName": "X",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -2664,7 +2671,7 @@
       "MetaDataIDKey": "",
       "Name": "ddMenuOrientation",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 3,
+      "ParentIndex": 1,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -2821,7 +2828,7 @@
       "MetaDataIDKey": "",
       "Name": "ddToolbarPadding",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 5,
+      "ParentIndex": 3,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -2913,7 +2920,7 @@
       "MetaDataIDKey": "",
       "Name": "disableOnSelect1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 1,
+      "ParentIndex": 6,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -2944,22 +2951,22 @@
         {
           "Category": "Design",
           "PropertyName": "X",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
           "PropertyName": "Y",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
           "PropertyName": "Width",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
           "PropertyName": "Height",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
@@ -3126,7 +3133,7 @@
       "MetaDataIDKey": "",
       "Name": "galSelectColor",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 41,
+      "ParentIndex": 39,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -3298,7 +3305,7 @@
       "MetaDataIDKey": "",
       "Name": "Group1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 53,
+      "ParentIndex": 51,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -3350,7 +3357,7 @@
       "MetaDataIDKey": "",
       "Name": "Group1_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 54,
+      "ParentIndex": 52,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -3402,7 +3409,7 @@
       "MetaDataIDKey": "",
       "Name": "Group1_2",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 55,
+      "ParentIndex": 53,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -3454,7 +3461,7 @@
       "MetaDataIDKey": "",
       "Name": "Group1_4",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 56,
+      "ParentIndex": 54,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -3506,7 +3513,7 @@
       "MetaDataIDKey": "",
       "Name": "Group2",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 57,
+      "ParentIndex": 55,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -3558,7 +3565,7 @@
       "MetaDataIDKey": "",
       "Name": "Group2_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 58,
+      "ParentIndex": 56,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -3878,7 +3885,7 @@
       "MetaDataIDKey": "",
       "Name": "Icon1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 27,
+      "ParentIndex": 25,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -3920,53 +3927,44 @@
       "StyleName": "",
       "Type": "ControlInfo"
     },
-    "iconMenuArrow": {
+    "iconMenuArrow_1": {
       "AllowAccessToGlobals": true,
       "ControlPropertyState": [
-        "X",
-        "Y",
+        "Icon",
+        "IconStyle",
+        "Rotation",
+        "IconColor",
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "",
-          "InvariantPropertyName": "Width",
+          "AutoRuleBindingString": "10",
+          "InvariantPropertyName": "X",
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "",
+          "AutoRuleBindingString": "70",
+          "InvariantPropertyName": "Y",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
+        "Width",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "40",
           "InvariantPropertyName": "Height",
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
+        "Visible",
         "DisplayMode",
-        "ZIndex",
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "\"Add\"",
-          "InvariantPropertyName": "Icon",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "",
-          "InvariantPropertyName": "IconStyle",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "",
-          "InvariantPropertyName": "IconColor",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        }
+        "TabIndex",
+        "Tooltip",
+        "ContentLanguage",
+        "ZIndex"
       ],
       "HasDynamicProperties": false,
       "IsAutoGenerated": false,
@@ -3977,15 +3975,15 @@
       "IsLocked": false,
       "LayoutName": "",
       "MetaDataIDKey": "",
-      "Name": "iconMenuArrow",
+      "Name": "iconMenuArrow_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 0,
+      "ParentIndex": 2,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
           "Category": "Data",
           "PropertyName": "Icon",
-          "RuleProviderType": "User"
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Data",
@@ -3994,7 +3992,22 @@
         },
         {
           "Category": "Data",
+          "PropertyName": "Rotation",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Data",
           "PropertyName": "IconColor",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "Tooltip",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "ContentLanguage",
           "RuleProviderType": "Unknown"
         },
         {
@@ -4015,11 +4028,21 @@
         {
           "Category": "Design",
           "PropertyName": "Height",
+          "RuleProviderType": "User"
+        },
+        {
+          "Category": "Design",
+          "PropertyName": "Visible",
           "RuleProviderType": "Unknown"
         },
         {
           "Category": "Design",
           "PropertyName": "DisplayMode",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Design",
+          "PropertyName": "TabIndex",
           "RuleProviderType": "Unknown"
         },
         {
@@ -4280,7 +4303,7 @@
       "MetaDataIDKey": "",
       "Name": "ItemAppearance1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 2,
+      "ParentIndex": 5,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -4311,22 +4334,22 @@
         {
           "Category": "Design",
           "PropertyName": "X",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
           "PropertyName": "Y",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
           "PropertyName": "Width",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
           "PropertyName": "Height",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
@@ -4362,7 +4385,7 @@
       "MetaDataIDKey": "",
       "Name": "ItemDisplayName2",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 7,
+      "ParentIndex": 2,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -4444,7 +4467,7 @@
       "MetaDataIDKey": "",
       "Name": "ItemIconName1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 3,
+      "ParentIndex": 4,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -4475,22 +4498,22 @@
         {
           "Category": "Design",
           "PropertyName": "X",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
           "PropertyName": "Y",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
           "PropertyName": "Width",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
           "PropertyName": "Height",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
@@ -4526,7 +4549,7 @@
       "MetaDataIDKey": "",
       "Name": "ItemIconStyle1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 4,
+      "ParentIndex": 3,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -4557,22 +4580,22 @@
         {
           "Category": "Design",
           "PropertyName": "X",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
           "PropertyName": "Y",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
           "PropertyName": "Width",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
           "PropertyName": "Height",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
@@ -4615,7 +4638,7 @@
       "MetaDataIDKey": "",
       "Name": "ItemKey2",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 6,
+      "ParentIndex": 1,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -4656,7 +4679,7 @@
         {
           "Category": "Design",
           "PropertyName": "Width",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -5113,7 +5136,7 @@
       "MetaDataIDKey": "",
       "Name": "menuKey3",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 5,
+      "ParentIndex": 0,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -5154,7 +5177,7 @@
         {
           "Category": "Design",
           "PropertyName": "Width",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -5259,14 +5282,6 @@
         "CreateMenuItem_p_ItemDisplayName",
         "CreateMenuItem_p_ItemKey",
         "CreateMenuItem_p_menuKey",
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "col",
-          "InvariantPropertyName": "MenuData",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
         "CreateMenuItem_p_ItemIconStyle",
         "CreateMenuItem_p_ItemTooltip",
         "CreateMenuItem_p_disableOnSelect",
@@ -5304,14 +5319,7 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "With({fItems: Filter(pbMenu_1.MenuData,Upper(menuKey)=Upper(pbMenu_1.MenuKey))}, \n    If(CountRows(fItems)=0, \n        [\n            pbMenu_1.MissingMenuRecord\n        ]\n        , \n        ForAll(fItems As mi, \n            {            \n                ItemKey: mi.ItemKey, \n                ItemDisplayName:  mi.ItemDisplayName, \n                ItemIconName: mi.ItemIconName, \n                ItemAppearance: mi.ItemAppearance, \n                ItemIconStyle: mi.ItemIconStyle, \n                ItemTooltip: mi.too, \n                ItemDisabled: mi.ItemDisabled\n            }\n\n        )\n    )\n)",
-          "InvariantPropertyName": "MenuItems",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
+        "CurrentMenuItems",
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
@@ -5421,14 +5429,7 @@
           "NameMapSourceSchema": "?"
         },
         "OnReset",
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "100",
-          "InvariantPropertyName": "MinimumHeight",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
+        "MinimumHeight",
         "MinimumWidth",
         {
           "AFDDataSourceName": "",
@@ -5519,7 +5520,8 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "ItemState_p_enablePerfLog"
+        "ItemState_p_enablePerfLog",
+        "OverrideMinHeight"
       ],
       "HasDynamicProperties": false,
       "IsAutoGenerated": false,
@@ -5587,12 +5589,7 @@
         },
         {
           "Category": "Data",
-          "PropertyName": "MenuData",
-          "RuleProviderType": "System"
-        },
-        {
-          "Category": "Data",
-          "PropertyName": "MenuItems",
+          "PropertyName": "CurrentMenuItems",
           "RuleProviderType": "System"
         },
         {
@@ -5653,7 +5650,7 @@
         {
           "Category": "Data",
           "PropertyName": "MenuItem",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Data",
@@ -5763,7 +5760,7 @@
         {
           "Category": "Data",
           "PropertyName": "MinimumHeight",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Data",
@@ -5883,6 +5880,11 @@
         {
           "Category": "Data",
           "PropertyName": "ItemState_p_enablePerfLog",
+          "RuleProviderType": "System"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "OverrideMinHeight",
           "RuleProviderType": "System"
         },
         {
@@ -6059,7 +6061,6 @@
         "CreateMenuItem_p_ItemDisplayName",
         "CreateMenuItem_p_ItemKey",
         "CreateMenuItem_p_menuKey",
-        "MenuData",
         "CreateMenuItem_p_ItemIconStyle",
         "CreateMenuItem_p_ItemTooltip",
         "CreateMenuItem_p_disableOnSelect",
@@ -6097,14 +6098,7 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "With({fItems: Filter(pbMenu_1.MenuData,Upper(menuKey)=Upper(pbMenu_1.MenuKey))}, \n    If(CountRows(fItems)=0, \n        [\n            pbMenu_1.MissingMenuRecord\n        ]\n        , \n        ForAll(fItems As mi, \n            {            \n                ItemKey: mi.ItemKey, \n                ItemDisplayName:  mi.ItemDisplayName, \n                ItemIconName: mi.ItemIconName, \n                ItemAppearance: mi.ItemAppearance, \n                ItemIconStyle: mi.ItemIconStyle, \n                ItemTooltip: mi.too, \n                ItemDisabled: mi.ItemDisabled\n            }\n\n        )\n    )\n)",
-          "InvariantPropertyName": "MenuItems",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
+        "CurrentMenuItems",
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
@@ -6207,14 +6201,7 @@
           "NameMapSourceSchema": "?"
         },
         "OnReset",
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "100",
-          "InvariantPropertyName": "MinimumHeight",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
+        "MinimumHeight",
         "MinimumWidth",
         {
           "AFDDataSourceName": "",
@@ -6297,7 +6284,8 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "ItemState_p_enablePerfLog"
+        "ItemState_p_enablePerfLog",
+        "OverrideMinHeight"
       ],
       "HasDynamicProperties": false,
       "IsAutoGenerated": false,
@@ -6361,11 +6349,6 @@
         {
           "Category": "Data",
           "PropertyName": "CreateMenuItem_p_ItemKey",
-          "RuleProviderType": "System"
-        },
-        {
-          "Category": "Data",
-          "PropertyName": "MenuData",
           "RuleProviderType": "System"
         },
         {
@@ -6441,7 +6424,7 @@
         {
           "Category": "Data",
           "PropertyName": "MinimumHeight",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Data",
@@ -6501,7 +6484,7 @@
         {
           "Category": "Data",
           "PropertyName": "MenuItem",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Data",
@@ -6530,7 +6513,7 @@
         },
         {
           "Category": "Data",
-          "PropertyName": "MenuItems",
+          "PropertyName": "CurrentMenuItems",
           "RuleProviderType": "System"
         },
         {
@@ -6661,6 +6644,11 @@
         {
           "Category": "Data",
           "PropertyName": "ItemState_p_enablePerfLog",
+          "RuleProviderType": "System"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "OverrideMinHeight",
           "RuleProviderType": "System"
         },
         {
@@ -6796,7 +6784,14 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "ConfirmationColorPalette",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "",
+          "InvariantPropertyName": "ConfirmationColorPalette",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "CancelMenuColorPalette",
         {
           "AFDDataSourceName": "",
@@ -6811,7 +6806,6 @@
         "CreateMenuItem_p_ItemDisplayName",
         "CreateMenuItem_p_ItemKey",
         "CreateMenuItem_p_menuKey",
-        "MenuData",
         "CreateMenuItem_p_ItemIconStyle",
         "CreateMenuItem_p_ItemTooltip",
         "CreateMenuItem_p_disableOnSelect",
@@ -6849,14 +6843,7 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "With({fItems: Filter(pbMenu_2.MenuData,Upper(menuKey)=Upper(pbMenu_2.MenuKey))}, \n    If(CountRows(fItems)=0, \n        [\n            pbMenu_2.MissingMenuRecord\n        ]\n        , \n        ForAll(fItems As mi, \n            {            \n                ItemKey: mi.ItemKey, \n                ItemDisplayName:  mi.ItemDisplayName, \n                ItemIconName: mi.ItemIconName, \n                ItemAppearance: mi.ItemAppearance, \n                ItemIconStyle: mi.ItemIconStyle, \n                ItemTooltip: mi.too, \n                ItemDisabled: mi.ItemDisabled\n            }\n\n        )\n    )\n)",
-          "InvariantPropertyName": "MenuItems",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
+        "CurrentMenuItems",
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
@@ -6912,7 +6899,7 @@
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "100",
+          "AutoRuleBindingString": "",
           "InvariantPropertyName": "BorderWidth",
           "IsLockable": false,
           "NameMapSourceSchema": "?"
@@ -6959,14 +6946,7 @@
           "NameMapSourceSchema": "?"
         },
         "OnReset",
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "100",
-          "InvariantPropertyName": "MinimumHeight",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
+        "MinimumHeight",
         "MinimumWidth",
         {
           "AFDDataSourceName": "",
@@ -7028,7 +7008,15 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "ItemState_p_enablePerfLog"
+        "ItemState_p_enablePerfLog",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "",
+          "InvariantPropertyName": "OverrideMinHeight",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        }
       ],
       "HasDynamicProperties": false,
       "IsAutoGenerated": false,
@@ -7052,12 +7040,12 @@
         {
           "Category": "Data",
           "PropertyName": "MenuColorPalette",
-          "RuleProviderType": "System"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Data",
           "PropertyName": "ConfirmationColorPalette",
-          "RuleProviderType": "System"
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Data",
@@ -7082,11 +7070,6 @@
         {
           "Category": "Data",
           "PropertyName": "CreateMenuItem_p_ItemKey",
-          "RuleProviderType": "System"
-        },
-        {
-          "Category": "Data",
-          "PropertyName": "MenuData",
           "RuleProviderType": "System"
         },
         {
@@ -7167,7 +7150,7 @@
         {
           "Category": "Data",
           "PropertyName": "BorderWidth",
-          "RuleProviderType": "System"
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Data",
@@ -7192,7 +7175,7 @@
         {
           "Category": "Data",
           "PropertyName": "MinimumHeight",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Data",
@@ -7232,7 +7215,7 @@
         {
           "Category": "Data",
           "PropertyName": "MenuItem",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Data",
@@ -7261,7 +7244,7 @@
         },
         {
           "Category": "Data",
-          "PropertyName": "MenuItems",
+          "PropertyName": "CurrentMenuItems",
           "RuleProviderType": "System"
         },
         {
@@ -7395,9 +7378,14 @@
           "RuleProviderType": "System"
         },
         {
+          "Category": "Data",
+          "PropertyName": "OverrideMinHeight",
+          "RuleProviderType": "Unknown"
+        },
+        {
           "Category": "Design",
           "PropertyName": "Height",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -7567,7 +7555,7 @@
       "MetaDataIDKey": "",
       "Name": "Rectangle1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 18,
+      "ParentIndex": 16,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -7618,7 +7606,7 @@
         {
           "Category": "Design",
           "PropertyName": "X",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -7704,7 +7692,7 @@
       "MetaDataIDKey": "",
       "Name": "Rectangle1_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 37,
+      "ParentIndex": 35,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -8066,7 +8054,7 @@
       "MetaDataIDKey": "",
       "Name": "Rectangle4",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 45,
+      "ParentIndex": 43,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -8408,7 +8396,7 @@
       "MetaDataIDKey": "",
       "Name": "tblTempMenuItems",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 43,
+      "ParentIndex": 41,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -8641,7 +8629,7 @@
       "MetaDataIDKey": "",
       "Name": "TextCanvas3",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 28,
+      "ParentIndex": 26,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -8824,7 +8812,7 @@
       "MetaDataIDKey": "",
       "Name": "TextCanvas3_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 29,
+      "ParentIndex": 27,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -9007,7 +8995,7 @@
       "MetaDataIDKey": "",
       "Name": "TextCanvas3_11",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 12,
+      "ParentIndex": 10,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -9190,7 +9178,7 @@
       "MetaDataIDKey": "",
       "Name": "TextCanvas3_13",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 34,
+      "ParentIndex": 32,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -9373,7 +9361,7 @@
       "MetaDataIDKey": "",
       "Name": "TextCanvas3_2",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 30,
+      "ParentIndex": 28,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -9556,7 +9544,7 @@
       "MetaDataIDKey": "",
       "Name": "TextCanvas3_3",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 32,
+      "ParentIndex": 30,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -9739,7 +9727,7 @@
       "MetaDataIDKey": "",
       "Name": "TextCanvas3_4",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 11,
+      "ParentIndex": 9,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -9922,7 +9910,7 @@
       "MetaDataIDKey": "",
       "Name": "TextCanvas3_6",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 31,
+      "ParentIndex": 29,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -10105,7 +10093,7 @@
       "MetaDataIDKey": "",
       "Name": "TextCanvas3_7",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 33,
+      "ParentIndex": 31,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -10288,7 +10276,7 @@
       "MetaDataIDKey": "",
       "Name": "TextCanvas3_8",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 10,
+      "ParentIndex": 8,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -10471,7 +10459,7 @@
       "MetaDataIDKey": "",
       "Name": "TextCanvas3_9",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 9,
+      "ParentIndex": 7,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -10640,7 +10628,7 @@
       "MetaDataIDKey": "",
       "Name": "toggDisableItemOnSelect",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 36,
+      "ParentIndex": 34,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -10845,7 +10833,7 @@
       "MetaDataIDKey": "",
       "Name": "toggEnableCollapsedState",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 14,
+      "ParentIndex": 12,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -11048,7 +11036,7 @@
       "MetaDataIDKey": "",
       "Name": "toggIgnoreUnhandled",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 17,
+      "ParentIndex": 15,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -11251,7 +11239,7 @@
       "MetaDataIDKey": "",
       "Name": "toggManageItemStates",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 16,
+      "ParentIndex": 14,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -11417,7 +11405,7 @@
       "MetaDataIDKey": "",
       "Name": "toggRequireConfirmation",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 35,
+      "ParentIndex": 33,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -11602,7 +11590,7 @@
       "MetaDataIDKey": "",
       "Name": "toggShowNavBack",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 15,
+      "ParentIndex": 13,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -11792,7 +11780,7 @@
       "MetaDataIDKey": "",
       "Name": "toggSimulateBusy",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 13,
+      "ParentIndex": 11,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -12451,6 +12439,14 @@
           "InvariantPropertyName": "Fill",
           "IsLockable": false,
           "NameMapSourceSchema": "?"
+        },
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "",
+          "InvariantPropertyName": "BorderRadius",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
         }
       ],
       "HasDynamicProperties": false,
@@ -12464,7 +12460,7 @@
       "MetaDataIDKey": "",
       "Name": "txtBuildCustomMenuItem",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 19,
+      "ParentIndex": 17,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -12556,6 +12552,11 @@
           "Category": "Data",
           "PropertyName": "Fill",
           "RuleProviderType": "User"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "BorderRadius",
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Design",
@@ -12606,90 +12607,61 @@
       "StyleName": "",
       "Type": "ControlInfo"
     },
-    "txtBuildingThisMenu": {
+    "txtBuildingThisMenu_1": {
       "AllowAccessToGlobals": true,
       "ControlPropertyState": [
+        "Text",
+        "Size",
+        "Weight",
+        "Align",
+        "VerticalAlign",
+        "AutoHeight",
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "32",
+          "AutoRuleBindingString": "iconMenuArrow_1.Height",
           "InvariantPropertyName": "Height",
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "X",
-        "Y",
+        "Font",
+        "FontColor",
+        "FontItalic",
+        "FontStrikethrough",
+        "FontUnderline",
+        "Wrap",
+        "BorderStyle",
+        "BorderThickness",
+        "BorderColor",
+        "PaddingLeft",
+        "TabIndex",
+        "Tooltip",
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "96",
-          "InvariantPropertyName": "Width",
+          "AutoRuleBindingString": "54",
+          "InvariantPropertyName": "X",
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "70",
+          "InvariantPropertyName": "Y",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
+        "Width",
+        "Visible",
         "DisplayMode",
+        "ContentLanguage",
         "ZIndex",
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
           "AutoRuleBindingString": "",
-          "InvariantPropertyName": "Text",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "",
-          "InvariantPropertyName": "VerticalAlign",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "",
-          "InvariantPropertyName": "Weight",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "",
-          "InvariantPropertyName": "PaddingLeft",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "",
-          "InvariantPropertyName": "FontColor",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "",
-          "InvariantPropertyName": "BorderStyle",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "",
-          "InvariantPropertyName": "BorderThickness",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "",
-          "InvariantPropertyName": "BorderColor",
+          "InvariantPropertyName": "BorderRadius",
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         }
@@ -12703,19 +12675,19 @@
       "IsLocked": false,
       "LayoutName": "",
       "MetaDataIDKey": "",
-      "Name": "txtBuildingThisMenu",
+      "Name": "txtBuildingThisMenu_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 1,
+      "ParentIndex": 3,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
           "Category": "Data",
           "PropertyName": "Text",
-          "RuleProviderType": "User"
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Data",
-          "PropertyName": "VerticalAlign",
+          "PropertyName": "Size",
           "RuleProviderType": "Unknown"
         },
         {
@@ -12725,13 +12697,48 @@
         },
         {
           "Category": "Data",
-          "PropertyName": "PaddingLeft",
+          "PropertyName": "Align",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "VerticalAlign",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "AutoHeight",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "Font",
           "RuleProviderType": "Unknown"
         },
         {
           "Category": "Data",
           "PropertyName": "FontColor",
-          "RuleProviderType": "User"
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "FontItalic",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "FontStrikethrough",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "FontUnderline",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "Wrap",
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Data",
@@ -12749,14 +12756,39 @@
           "RuleProviderType": "Unknown"
         },
         {
+          "Category": "Data",
+          "PropertyName": "PaddingLeft",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "ContentLanguage",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "BorderRadius",
+          "RuleProviderType": "Unknown"
+        },
+        {
           "Category": "Design",
           "PropertyName": "Height",
+          "RuleProviderType": "User"
+        },
+        {
+          "Category": "Design",
+          "PropertyName": "TabIndex",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Design",
+          "PropertyName": "Tooltip",
           "RuleProviderType": "Unknown"
         },
         {
           "Category": "Design",
           "PropertyName": "X",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -12766,7 +12798,12 @@
         {
           "Category": "Design",
           "PropertyName": "Width",
-          "RuleProviderType": "User"
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Design",
+          "PropertyName": "Visible",
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Design",
@@ -12805,7 +12842,14 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "Height",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "",
+          "InvariantPropertyName": "Height",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "Font",
         "FontColor",
         "FontItalic",
@@ -12853,6 +12897,14 @@
           "InvariantPropertyName": "Fill",
           "IsLockable": false,
           "NameMapSourceSchema": "?"
+        },
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "",
+          "InvariantPropertyName": "BorderRadius",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
         }
       ],
       "HasDynamicProperties": false,
@@ -12866,7 +12918,7 @@
       "MetaDataIDKey": "",
       "Name": "txtBuildScreenInfo",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 2,
+      "ParentIndex": 4,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -12960,9 +13012,14 @@
           "RuleProviderType": "Unknown"
         },
         {
+          "Category": "Data",
+          "PropertyName": "BorderRadius",
+          "RuleProviderType": "Unknown"
+        },
+        {
           "Category": "Design",
           "PropertyName": "Height",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -13038,7 +13095,14 @@
         },
         "VerticalAlign",
         "AutoHeight",
-        "Height",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "iconMenuArrow.Height",
+          "InvariantPropertyName": "Height",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "Font",
         "FontColor",
         "FontItalic",
@@ -13078,7 +13142,15 @@
         "Visible",
         "DisplayMode",
         "ContentLanguage",
-        "ZIndex"
+        "ZIndex",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "",
+          "InvariantPropertyName": "BorderRadius",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        }
       ],
       "HasDynamicProperties": false,
       "IsAutoGenerated": false,
@@ -13091,7 +13163,7 @@
       "MetaDataIDKey": "",
       "Name": "txtColorPaleteLabel",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 38,
+      "ParentIndex": 36,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -13180,9 +13252,14 @@
           "RuleProviderType": "Unknown"
         },
         {
+          "Category": "Data",
+          "PropertyName": "BorderRadius",
+          "RuleProviderType": "Unknown"
+        },
+        {
           "Category": "Design",
           "PropertyName": "Height",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -13244,7 +13321,14 @@
         "Align",
         "VerticalAlign",
         "AutoHeight",
-        "Height",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "iconMenuArrow.Height",
+          "InvariantPropertyName": "Height",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "Font",
         "FontColor",
         "FontItalic",
@@ -13284,7 +13368,15 @@
         "Visible",
         "DisplayMode",
         "ContentLanguage",
-        "ZIndex"
+        "ZIndex",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "",
+          "InvariantPropertyName": "BorderRadius",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        }
       ],
       "HasDynamicProperties": false,
       "IsAutoGenerated": false,
@@ -13297,7 +13389,7 @@
       "MetaDataIDKey": "",
       "Name": "txtCurrentSelectedMenu",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 40,
+      "ParentIndex": 38,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -13386,9 +13478,14 @@
           "RuleProviderType": "Unknown"
         },
         {
+          "Category": "Data",
+          "PropertyName": "BorderRadius",
+          "RuleProviderType": "Unknown"
+        },
+        {
           "Category": "Design",
           "PropertyName": "Height",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -13509,7 +13606,7 @@
       "MetaDataIDKey": "",
       "Name": "txtCustomColorValid",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 52,
+      "ParentIndex": 50,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -13743,7 +13840,7 @@
       "MetaDataIDKey": "",
       "Name": "txtEnterOwnColor",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 47,
+      "ParentIndex": 45,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -13893,7 +13990,14 @@
         "Align",
         "VerticalAlign",
         "AutoHeight",
-        "Height",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "iconMenuArrow.Height",
+          "InvariantPropertyName": "Height",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "Font",
         "FontColor",
         "FontItalic",
@@ -13926,7 +14030,15 @@
         "Visible",
         "DisplayMode",
         "ContentLanguage",
-        "ZIndex"
+        "ZIndex",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "",
+          "InvariantPropertyName": "BorderRadius",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        }
       ],
       "HasDynamicProperties": false,
       "IsAutoGenerated": false,
@@ -13939,7 +14051,7 @@
       "MetaDataIDKey": "",
       "Name": "txtJSONLabel",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 39,
+      "ParentIndex": 37,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -14028,9 +14140,14 @@
           "RuleProviderType": "Unknown"
         },
         {
+          "Category": "Data",
+          "PropertyName": "BorderRadius",
+          "RuleProviderType": "Unknown"
+        },
+        {
           "Category": "Design",
           "PropertyName": "Height",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -14150,7 +14267,7 @@
       "MetaDataIDKey": "",
       "Name": "txtMenuItemDisplay",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 22,
+      "ParentIndex": 20,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -14274,7 +14391,7 @@
       "MetaDataIDKey": "",
       "Name": "txtMenuItemKey",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 21,
+      "ParentIndex": 19,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -14405,7 +14522,7 @@
       "MetaDataIDKey": "",
       "Name": "txtMenuItemTooltip",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 23,
+      "ParentIndex": 21,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -14441,7 +14558,7 @@
         {
           "Category": "Design",
           "PropertyName": "Width",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -14553,7 +14670,7 @@
       "MetaDataIDKey": "",
       "Name": "txtMenuName",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 20,
+      "ParentIndex": 18,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -14599,7 +14716,7 @@
         {
           "Category": "Design",
           "PropertyName": "Width",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -14722,7 +14839,7 @@
       "MetaDataIDKey": "",
       "Name": "txtMIJson",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 42,
+      "ParentIndex": 40,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -14913,7 +15030,7 @@
       "MetaDataIDKey": "",
       "Name": "txtOwnA",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 51,
+      "ParentIndex": 49,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -15204,7 +15321,7 @@
       "MetaDataIDKey": "",
       "Name": "txtOwnB",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 50,
+      "ParentIndex": 48,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -15495,7 +15612,7 @@
       "MetaDataIDKey": "",
       "Name": "txtOwnG",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 49,
+      "ParentIndex": 47,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -15793,7 +15910,7 @@
       "MetaDataIDKey": "",
       "Name": "txtOwnR",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 48,
+      "ParentIndex": 46,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -15996,7 +16113,7 @@
       "MetaDataIDKey": "",
       "Name": "txtSelectedColor",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 44,
+      "ParentIndex": 42,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -16203,7 +16320,7 @@
       "MetaDataIDKey": "",
       "Name": "txtSelectedColor_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 8,
+      "ParentIndex": 6,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {

@@ -173,6 +173,11 @@ ComponentDefinitions:
               IsOptional: true
               DataType: Boolean
               Default: =true
+      CurrentMenuItems:
+        PropertyKind: Output
+        DisplayName: CurrentMenuItems
+        Description: A custom property
+        DataType: Table
       DoMenu:
         PropertyKind: Action
         DisplayName: DoMenu
@@ -260,12 +265,7 @@ ComponentDefinitions:
         DisplayName: MenuColorPalette
         Description: A custom property
         DataType: Color
-        Default: =PowerAppsTheme.Colors.PrimaryForeground
-      MenuData:
-        PropertyKind: Output
-        DisplayName: MenuData
-        Description: A custom property
-        DataType: Table
+        Default: =PowerAppsTheme.Colors.Primary
       MenuData_All:
         PropertyKind: Output
         DisplayName: MenuData_All
@@ -291,11 +291,6 @@ ComponentDefinitions:
         Description: A custom property
         DataType: Color
         Default: =
-      MenuItems:
-        PropertyKind: Output
-        DisplayName: MenuItems
-        Description: A custom property
-        DataType: Table
       MenuKey:
         PropertyKind: Input
         DisplayName: MenuKey
@@ -304,7 +299,7 @@ ComponentDefinitions:
         DataType: Text
         Default: ="Main"
       MinimumHeight:
-        PropertyKind: Output
+        PropertyKind: OutputFunction
         DisplayName: MinimumHeight
         Description: A custom property
         DataType: Number
@@ -323,7 +318,19 @@ ComponentDefinitions:
         DisplayName: OnBeforeAction
         Description: Enables selection of a menu item to be handled from the screen which contains pbMenu.   Custom handling shouldd return true if handled on screen, otherwise false
         ReturnType: Boolean
-        Default: =false
+        Default: |-
+          =Switch(Upper(p_itemKey), 
+              //Add each menu item key here that you wish to handle from a specific pbMenu component added to a screen
+              //For menu items that will be rendered on multiple pbMenu components in your app, you can optionall ** not **
+              "[itemKey]",
+                  //some work;
+                  //some more work;
+                  //return 'true
+                  true, 
+
+              //always return false for unhandled menu item selections, so control can be passed back to [pbMenu].DoMenu()
+              false
+          )
         Parameters:
           - p_itemKey:
               Description: A parameter
@@ -348,6 +355,13 @@ ComponentDefinitions:
         PropertyKind: Input
         DisplayName: OverrideExpandedWidth
         Description: "Applies to vertical layout only.  Overrides the 'MinimumWidth' output property when menu is in expanded state.  ** NOTE:  Component width on screen must always be control on screen.  To automatically adjust menu width, Set the 'Width' property of the placed component to 'Self.MinimumWidth'"
+        DataType: Number
+        Default: =0
+      OverrideMinHeight:
+        PropertyKind: Input
+        DisplayName: OverrideMinHeight
+        Description: When in horizontal mode, force Self.MinimumHeight value
+        RaiseOnReset: true
         DataType: Number
         Default: =0
       PerformanceLogging:
@@ -517,6 +531,16 @@ ComponentDefinitions:
                 newSpacer
             )
         )
+      CurrentMenuItems: |-
+        =With({fItems: Filter(col_pbMenu,Upper(menuKey)=Upper(pbMenu.MenuKey))}, 
+            If(CountRows(fItems)=0, 
+                [
+                    pbMenu.MissingMenuRecord
+                ]
+                , 
+                ShowColumns(fItems,ItemKey,ItemDisplayName,ItemIconName, ItemAppearance, ItemIconStyle, ItemTooltip, ItemDisabled)
+            )
+        )
       DoMenu: |-
         =With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
             If(mi.confirmItemAction=true, 
@@ -533,7 +557,7 @@ ComponentDefinitions:
             );
             If(Self.ConfirmMode() <> true, 
                 If(pbMenu.ManageItemStates = true, 
-                    If(CountIf(pbMenu.MenuItems,ItemDisabled=true)>0, 
+                    If(CountIf(pbMenu.CurrentMenuItems,ItemDisabled=true)>0, 
                         pbMenu.ItemState_UpdateAll(true)
                     );
                     If(mi.disableOnSelect=true, 
@@ -578,8 +602,8 @@ ComponentDefinitions:
                 desc: "Use to get or set the orientation of [pbMenu]"
             },
             {
-                name: "MenuItems", 
-                valTable: Self.MenuItems, 
+                name: "CurrentMenuItems", 
+                valTable: Self.CurrentMenuItems, 
                 dataType: "Table", 
                 externalUse: "Reference Only", 
                 type: "Output Property",
@@ -708,13 +732,6 @@ ComponentDefinitions:
                 canSet: true 
             }, 
             {
-                name: "MenuData_Filtered", 
-                valTable: Self.MenuData, 
-                type: "Table, Out Property", 
-                desc: "Filtered 'configuration' data, which Uses collection: 'col_pbMenu'. This shows the menu configuration records for the menu items being rendered in the current pbMenu", 
-                canSet: false 
-            }, 
-            {
                 name: "MenuData_All", 
                 valTable: Self.MenuData_All, 
                 type: "Table, Output Property", 
@@ -802,20 +819,9 @@ ComponentDefinitions:
         )
       LayoutChoices: |-
         ={Horizontal: "Horizontal", Vertical: "Vertical"}
-      MenuData: =Filter(col_pbMenu,Upper(menuKey)=Upper(pbMenu.MenuKey))
       MenuData_All: =col_pbMenu
-      MenuItem: =LookUp(pbMenu.MenuData,Upper(menuKey)=Upper(p_menuKey) && Upper(ItemKey)=Upper(p_itemKey))
-      MenuItems: |-
-        =With({fItems: Filter(pbMenu.MenuData,Upper(menuKey)=Upper(pbMenu.MenuKey))}, 
-            If(CountRows(fItems)=0, 
-                [
-                    pbMenu.MissingMenuRecord
-                ]
-                , 
-                ShowColumns(fItems,ItemKey,ItemDisplayName,ItemIconName, ItemAppearance, ItemIconStyle, ItemTooltip, ItemDisabled)
-            )
-        )
-      MinimumHeight: =If(Upper(Self.ToolbarOrientation)=Upper(pbMenu.LayoutChoices.Horizontal),50,140)
+      MenuItem: =LookUp(col_pbMenu,Upper(menuKey)=Upper(p_menuKey) && Upper(ItemKey)=Upper(p_itemKey))
+      MinimumHeight: '=If(Upper(Self.ToolbarOrientation)=Upper(pbMenu.LayoutChoices.Horizontal),If(Self.OverrideMinHeight>0,Self.OverrideMinHeight, 50),140) '
       MinimumWidth: |
         =If(pbMenu.ToolbarOrientation=pbMenu.LayoutChoices.Horizontal,200,
             If(pbMenu.CollapsedMode()=true,50,
@@ -934,7 +940,7 @@ ComponentDefinitions:
                 Control: Toolbar@2.0.5
                 Properties:
                   Alignment: =pbMenu.ToolbarOrientation
-                  BasePaletteColor: =If(CountIf(pbMenu.MenuItems,true)=0, Color.Red, pbMenu.MenuColorPalette)
+                  BasePaletteColor: =If(CountIf(pbMenu.CurrentMenuItems,true)=0, Color.Red, pbMenu.MenuColorPalette)
                   DisplayMode: =If(pbMenu.IsBusy,DisplayMode.Disabled, DisplayMode.Edit)
                   FontColor: =pbMenu.MenuItemTextColor
                   Height: =contMenu.Height
@@ -942,18 +948,18 @@ ComponentDefinitions:
                     =If(Upper(pbMenu.ToolbarOrientation)=Upper(pbMenu.LayoutChoices.Vertical), 
                         If(pbMenu.ShowNavBackButton,     
                             If(pbMenu.EnableCollapsedState, 
-                                Table(pbMenu.StaticCollapseMenuRecord, pbMenu.StaticBackMenuItem,pbMenu.MenuItems), 
-                                Table(pbMenu.StaticBackMenuItem,pbMenu.MenuItems)
+                                Table(pbMenu.StaticCollapseMenuRecord, pbMenu.StaticBackMenuItem,pbMenu.CurrentMenuItems), 
+                                Table(pbMenu.StaticBackMenuItem,pbMenu.CurrentMenuItems)
                             ), 
                             If(pbMenu.EnableCollapsedState, 
-                                Table(pbMenu.StaticCollapseMenuRecord, pbMenu.MenuItems), 
-                                Table(pbMenu.MenuItems)
+                                Table(pbMenu.StaticCollapseMenuRecord, pbMenu.CurrentMenuItems), 
+                                Table(pbMenu.CurrentMenuItems)
                             )
                         )
                         ,
                         If(pbMenu.ShowNavBackButton, 
-                            Table(pbMenu.StaticBackMenuItem,pbMenu.MenuItems), 
-                            pbMenu.MenuItems
+                            Table(pbMenu.StaticBackMenuItem,pbMenu.CurrentMenuItems), 
+                            pbMenu.CurrentMenuItems
                         )
                     )
                   Layout: |-
@@ -1001,7 +1007,7 @@ ComponentDefinitions:
                     )
 
                   Padding: =If(IsBlank(pbMenu.ToolbarPadding) || Upper(pbMenu.ToolbarPadding)="DEFAULT",If(pbMenu.ToolbarOrientation=pbMenu.LayoutChoices.Horizontal,'Toolbar.Padding'.Medium,'Toolbar.Padding'.Small),pbMenu.ToolbarPadding)
-                  Visible: =pbMenu.Height >= pbMenu.MinimumHeight
+                  Visible: =pbMenu.Height >= pbMenu.MinimumHeight()
                   Width: =contMenu.Width
             - lblHeightWarning:
                 Control: Text@0.0.51
@@ -1011,8 +1017,8 @@ ComponentDefinitions:
                   Height: =contMenu.Height
                   Size: =10
                   Text: |-
-                    ="pbMenu control size (H:" & pbMenu.Height & ", W:" & pbMenu.Width &  ") is less than minimum required size (MinHeight: " & pbMenu.MinimumHeight & ", MinWidth: " & pbMenu.MinimumWidth() & ")"
-                  Visible: =pbMenu.Height < pbMenu.MinimumHeight || pbMenu.Width < pbMenu.MinimumWidth()
+                    ="pbMenu control size (H:" & pbMenu.Height & ", W:" & pbMenu.Width &  ") is less than minimum required size (MinHeight: " & pbMenu.MinimumHeight() & ", MinWidth: " & pbMenu.MinimumWidth() & ")"
+                  Visible: =pbMenu.Height < pbMenu.MinimumHeight() || pbMenu.Width < pbMenu.MinimumWidth()
                   Width: =contMenu.Width
       - contSpinner:
           Control: GroupContainer@1.3.0

@@ -47,12 +47,12 @@ Screens:
             BusyBehavior: =Self.BusyBehaviorChoices.Spinning
             BusyMessage: =spin.msg
             CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
-            ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
+            ConfirmationColorPalette: =RGBA(160, 64, 8, 1)
             EnableCollapsedState: =true
-            Height: =Self.MinimumHeight
+            Height: =Self.MinimumHeight()
             IsBusy: '=spin.waiting=true '
             ManageItemStates: =true
-            MenuColorPalette: =PowerAppsTheme.Colors.PrimaryForeground
+            MenuColorPalette: =PowerAppsTheme.Colors.Primary
             MenuItemTextColor: =
             MenuKey: ="MenuBuilder"
             OnBeforeAction: |-
@@ -117,6 +117,7 @@ Screens:
               )
             OnRemoveMenuItem: =
             OverrideExpandedWidth: =0
+            OverrideMinHeight: =0
             PerformanceLogging: =pbMenu_LogPerformance
             Reset: =Reset(pbMenu_MenuBuilder)
             ShowNavBackButton: =true
@@ -169,7 +170,7 @@ Screens:
                                 ,JSONFormat.IndentFour
                             ), 
                         Upper("menuitemsjson"), 
-                            JSON(pbMenu_Build.MenuItems,JSONFormat.IndentFour)
+                            JSON(pbMenu_Build.CurrentMenuItems,JSONFormat.IndentFour)
                     )
                   Width: '=Parent.Width - Self.X - 10 '
                   X: =10
@@ -235,7 +236,7 @@ Screens:
                   ConfirmationColorPalette: =confirmColorPalette
                   EnableCollapsedState: =toggEnableCollapsedState.Checked
                   Fill: =RGBA(255, 255, 219, 1)
-                  Height: '=If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal, Self.MinimumHeight,Parent.Height - Self.Y * 2 ) '
+                  Height: '=If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal, Self.MinimumHeight(),Parent.Height - Self.Y * 2 ) '
                   IsBusy: '=spin.waiting=true '
                   ManageItemStates: =toggManageItemStates.Checked
                   MenuColorPalette: =miPrimaryColorPalette
@@ -259,6 +260,7 @@ Screens:
                     )
                   OnRemoveMenuItem: =
                   OverrideExpandedWidth: =160
+                  OverrideMinHeight: =0
                   PerformanceLogging: =pbMenu_LogPerformance
                   Reset: =Reset(pbMenu_Build)
                   ShowNavBackButton: =toggShowNavBack.Checked
@@ -523,7 +525,7 @@ Screens:
                         Items: =ColumnNames(ParseJSON((JSON(pbMenu_BuildHelper.LayoutChoices))))
                         Width: =120
                         X: '=ddMenuKey.X + ddMenuKey.Width + 5 '
-                        Y: =iconMenuArrow.Y
+                        Y: '=ddMenuKey.Y '
                   - TextCanvas3_8:
                       Control: Text@0.0.51
                       Properties:
@@ -597,51 +599,6 @@ Screens:
                         X: '=txtMIJson.X + txtMIJson.Width + 10 '
                         Y: '=txtMIJson.Y '
                       Children:
-                        - confirmItemAction1:
-                            Control: TableDataField@1.5.0
-                            Variant: textualColumn
-                            IsLocked: true
-                            Properties:
-                              FieldDisplayName: ="confirmItemAction"
-                              FieldName: ="confirmItemAction"
-                              FieldType: ="b"
-                              Order: =4
-                        - disableOnSelect1:
-                            Control: TableDataField@1.5.0
-                            Variant: textualColumn
-                            IsLocked: true
-                            Properties:
-                              FieldDisplayName: ="disableOnSelect"
-                              FieldName: ="disableOnSelect"
-                              FieldType: ="b"
-                              Order: =5
-                        - ItemAppearance1:
-                            Control: TableDataField@1.5.0
-                            Variant: textualColumn
-                            IsLocked: true
-                            Properties:
-                              FieldDisplayName: ="ItemAppearance"
-                              FieldName: ="ItemAppearance"
-                              FieldType: ="s"
-                              Order: =6
-                        - ItemIconName1:
-                            Control: TableDataField@1.5.0
-                            Variant: textualColumn
-                            IsLocked: true
-                            Properties:
-                              FieldDisplayName: ="ItemIconName"
-                              FieldName: ="ItemIconName"
-                              FieldType: ="s"
-                              Order: =7
-                        - ItemIconStyle1:
-                            Control: TableDataField@1.5.0
-                            Variant: textualColumn
-                            IsLocked: true
-                            Properties:
-                              FieldDisplayName: ="ItemIconStyle"
-                              FieldName: ="ItemIconStyle"
-                              FieldType: ="s"
-                              Order: =8
                         - menuKey3:
                             Control: TableDataField@1.5.0
                             Variant: textualColumn
@@ -671,31 +628,51 @@ Screens:
                               FieldName: ="ItemDisplayName"
                               FieldType: ="s"
                               Order: =3
-                  - iconMenuArrow:
-                      Control: Icon@0.0.7
-                      Properties:
-                        Height: =40
-                        Icon: =If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical","ArrowLeft","ArrowUp")
-                        IconColor: =RGBA(255, 0, 0, 1)
-                        IconStyle: ='Icon.IconStyle'.Filled
-                        Width: =40
-                        X: =8
-                        Y: =8
-                  - txtBuildingThisMenu:
-                      Control: Text@0.0.51
-                      Properties:
-                        BorderColor: =RGBA(214, 221, 224, 1)
-                        BorderStyle: =BorderStyle.Solid
-                        BorderThickness: =1
-                        FontColor: =clr_BLUEBERRY
-                        Height: =iconMenuArrow.Height
-                        PaddingLeft: =10
-                        Text: ="CURRENTLY BUILDING THIS MENU"
-                        VerticalAlign: =VerticalAlign.Middle
-                        Weight: ='TextCanvas.Weight'.Bold
-                        Width: =180
-                        X: =52
-                        Y: =8
+                        - ItemIconStyle1:
+                            Control: TableDataField@1.5.0
+                            Variant: textualColumn
+                            IsLocked: true
+                            Properties:
+                              FieldDisplayName: ="ItemIconStyle"
+                              FieldName: ="ItemIconStyle"
+                              FieldType: ="s"
+                              Order: =8
+                        - ItemIconName1:
+                            Control: TableDataField@1.5.0
+                            Variant: textualColumn
+                            IsLocked: true
+                            Properties:
+                              FieldDisplayName: ="ItemIconName"
+                              FieldName: ="ItemIconName"
+                              FieldType: ="s"
+                              Order: =7
+                        - ItemAppearance1:
+                            Control: TableDataField@1.5.0
+                            Variant: textualColumn
+                            IsLocked: true
+                            Properties:
+                              FieldDisplayName: ="ItemAppearance"
+                              FieldName: ="ItemAppearance"
+                              FieldType: ="s"
+                              Order: =6
+                        - disableOnSelect1:
+                            Control: TableDataField@1.5.0
+                            Variant: textualColumn
+                            IsLocked: true
+                            Properties:
+                              FieldDisplayName: ="disableOnSelect"
+                              FieldName: ="disableOnSelect"
+                              FieldType: ="b"
+                              Order: =5
+                        - confirmItemAction1:
+                            Control: TableDataField@1.5.0
+                            Variant: textualColumn
+                            IsLocked: true
+                            Properties:
+                              FieldDisplayName: ="confirmItemAction"
+                              FieldName: ="confirmItemAction"
+                              FieldType: ="b"
+                              Order: =4
                   - Rectangle1:
                       Control: Rectangle@2.3.0
                       Properties:
@@ -708,8 +685,8 @@ Screens:
                         HoverFill: =RGBA(0, 120, 212, 1)
                         PressedFill: =RGBA(0, 120, 212, 1)
                         Width: '=Parent.Width - Self.X * 2 '
-                        X: '=iconMenuArrow.X '
-                        Y: =iconMenuArrow.Y + iconMenuArrow.Height + 50
+                        X: =10
+                        Y: =98
                   - ddBusyBehavior:
                       Control: DropDown@0.0.45
                       Properties:
@@ -720,7 +697,7 @@ Screens:
                         Items: =ColumnNames(ParseJSON((JSON(pbMenu_BuildHelper.BusyBehaviorChoices))))
                         Width: =110
                         X: '=ddMenuOrientation.X + ddMenuOrientation.Width + 5 '
-                        Y: =ddMenuOrientation.Y
+                        Y: '=ddMenuKey.Y '
                   - TextCanvas3_4:
                       Control: Text@0.0.51
                       Properties:
@@ -750,7 +727,7 @@ Screens:
                           =Set(spin, {waiting: false, msg: "Please Wait ..."})
                         ToggleSize: =14
                         Width: =180
-                        X: '=txtBuildingThisMenu.X '
+                        X: =10
                         Y: =68
                   - ddMenuKey:
                       Control: DropDown@0.0.45
@@ -768,7 +745,7 @@ Screens:
                               Reset(txtMenuName)
                           )
                         Width: =150
-                        X: =245
+                        X: =10
                         Y: =8
                   - TextCanvas3_9:
                       Control: Text@0.0.51
@@ -826,7 +803,7 @@ Screens:
                           =ColumnNames(ParseJSON((JSON({Default: "Default", Small: 'Toolbar.Padding'.Small,Medium: 'Toolbar.Padding'.Medium,Large: 'Toolbar.Padding'.Large}))))
                         Width: =100
                         X: '=ddBusyBehavior.X + ddBusyBehavior.Width + 5 '
-                        Y: =ddBusyBehavior.Y
+                        Y: '=ddMenuKey.Y '
                   - TextCanvas3_11:
                       Control: Text@0.0.51
                       Properties:
@@ -1006,6 +983,7 @@ Screens:
                       Properties:
                         AutoHeight: =true
                         BorderColor: =RGBA(106, 122, 127, 1)
+                        BorderRadius: =4
                         BorderStyle: =BorderStyle.Solid
                         BorderThickness: =1
                         Fill: =RGBA(232, 233, 235, 1)
@@ -1159,10 +1137,11 @@ Screens:
                       Properties:
                         Align: ='TextCanvas.Align'.Center
                         BorderColor: =RGBA(214, 221, 224, 1)
+                        BorderRadius: =4
                         BorderStyle: =BorderStyle.Solid
                         BorderThickness: =1
                         FontColor: =clr_BLUEBERRY
-                        Height: =iconMenuArrow.Height
+                        Height: =40
                         PaddingLeft: =10
                         Size: =11
                         Text: ="DEMO COLOR PALETTE"
@@ -1176,10 +1155,11 @@ Screens:
                       Properties:
                         Align: ='TextCanvas.Align'.Center
                         BorderColor: =RGBA(214, 221, 224, 1)
+                        BorderRadius: =4
                         BorderStyle: =BorderStyle.Solid
                         BorderThickness: =1
                         FontColor: =clr_BLUEBERRY
-                        Height: =iconMenuArrow.Height
+                        Height: =40
                         PaddingLeft: =10
                         Size: =11
                         Text: |-
@@ -1194,10 +1174,11 @@ Screens:
                       Properties:
                         Align: ='TextCanvas.Align'.Center
                         BorderColor: =RGBA(214, 221, 224, 1)
+                        BorderRadius: =4
                         BorderStyle: =BorderStyle.Solid
                         BorderThickness: =1
                         FontColor: =clr_BLUEBERRY
-                        Height: =iconMenuArrow.Height
+                        Height: =40
                         PaddingLeft: =10
                         Size: =11
                         Text: |-
@@ -1313,17 +1294,44 @@ Screens:
                 Properties:
                   AutoHeight: =true
                   BorderColor: =RGBA(106, 122, 127, 1)
+                  BorderRadius: =4
                   BorderStyle: =BorderStyle.Solid
                   BorderThickness: =1
                   Fill: =RGBA(232, 233, 235, 1)
                   FontColor: =clr_BLUEBERRY
-                  Height: =
+                  Height: =42
                   PaddingLeft: =10
                   Text: ="TO GET STARTED, click the 'CREATE EXAMPLE MENU' menu item (above), or fill out 'CREATE MENU ITEM' section below, and click the Save button on the far left vertical menu.  See 'ABOUT EXAMPLE MENU' for more info"
                   VerticalAlign: =VerticalAlign.Middle
                   Weight: ='TextCanvas.Weight'.Bold
                   Width: '=Parent.Width - Self.X - 10 '
+                  X: '=txtBuildingThisMenu_1.X + txtBuildingThisMenu_1.Width + 10 '
+                  Y: =If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical",10, pbMenu_Build.X + pbMenu_Build.Height + 10)
+            - iconMenuArrow_1:
+                Control: Icon@0.0.7
+                Properties:
+                  Height: =42
+                  Icon: =If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical","ArrowLeft","ArrowUp")
+                  IconColor: =RGBA(255, 0, 0, 1)
+                  IconStyle: ='Icon.IconStyle'.Filled
+                  Width: =40
                   X: =If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical", pbMenu_Build.X + pbMenu_Build.Width + 10,10)
+                  Y: =If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical",10, pbMenu_Build.X + pbMenu_Build.Height + 10)
+            - txtBuildingThisMenu_1:
+                Control: Text@0.0.51
+                Properties:
+                  BorderColor: =RGBA(214, 221, 224, 1)
+                  BorderRadius: =4
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =1
+                  FontColor: =clr_BLUEBERRY
+                  Height: =42
+                  PaddingLeft: =10
+                  Text: ="CURRENTLY BUILDING THIS MENU"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Weight: ='TextCanvas.Weight'.Bold
+                  Width: =180
+                  X: '=iconMenuArrow_1.X + iconMenuArrow_1.Width + 5 '
                   Y: =If(Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)="Vertical",10, pbMenu_Build.X + pbMenu_Build.Height + 10)
       - pbMenu_BuildHelper:
           Control: CanvasComponent
@@ -1346,6 +1354,7 @@ Screens:
             OnBeforeAction: "=Switch(Upper(p_itemKey), \n    \"MBHJSON\", \n        UpdateContext({helperView: \"menuItemsJSON\"});\n        true, \n    \"MBHMENUPROPS\", \n        UpdateContext({helperView: \"menuProps\"});\n        true, \n\n        \n    \"MBBSAVE\", \n        With({newMenuItem: \n            pbMenu_Build.CreateMenuItem(\n                $\"{Coalesce(txtMenuName.Value,\"menu name\")}\", \n                txtMenuItemKey.Value, \n                $\"{Coalesce(txtMenuItemDisplay.Value,\"[display name]\")}\", \n                $\"{Coalesce(ddIconName.Selected.Value,\"GridDots\")}\", \n                $\"{Coalesce(ddItemAppearance.Selected.Value, \"Primary\")}\", \n                $\"{ddIconStyle.Selected.Value}\",\n                $\"{txtMenuItemTooltip.Value}\", \n                toggDisableItemOnSelect.Checked, \n                toggRequireConfirmation.Checked, \n                true\n            )\n            }, \n            If(CountIf(col_BuildMenu,Upper(menuKey)=Upper(newMenuItem.menuKey))=0, \n                Collect(col_BuildMenu,newMenuItem.menuKey)\n            );\n        );\n        true, \n    \"MBBDELETE\", \n        If(CountIf(tblTempMenuItems.SelectedItems,true)=0, \n            Notify(\"To Delete, Please select 1 or more saved menu items from table\",NotificationType.Warning,3000), \n            With({deleteKeys: ForAll(tblTempMenuItems.SelectedItems As del, {key: del.ItemKey})}, \n                ForAll(deleteKeys As dk, \n                    With({tmpMenuKey: ddMenuKey.Selected.Value}, \n                        RemoveIf(col_pbMenu,Upper(menuKey)=Upper(ddMenuKey.Selected.Value) && Upper(ItemKey)=Upper(dk.key));\n                        If(CountIf(col_pbMenu,Upper(menuKey)=Upper(tmpMenuKey))=0, \n                            RemoveIf(col_BuildMenu,Upper(menuKey)=Upper(tmpMenuKey));\n                        )\n                    )\n                )\n            )\n        );\n        true, \n    \"REBUILDDEMOMENUS\", dData.BuildDemoMenus(); true, \n    Upper(\"mbbCreateSpacer\"), \n        If(Len(TrimEnds(txtMenuName.Value))=0, \n            Notify(\"Menu Key is required to create spacer.  Please enter menu name in the Menu Name ('Menu Key') Textbox\",NotificationType.Error,2000)\n            , \n            pbMenu_Build.CreateSpacer(txtMenuName.Value,true);\n            Notify($\"A new spacer was added for the {txtMenuName.Value} menu\" ,NotificationType.Success,3000)\n        );\n        true, \n    \n    false\n)"
             OnRemoveMenuItem: =
             OverrideExpandedWidth: =115
+            OverrideMinHeight: =0
             PerformanceLogging: =pbMenu_LogPerformance
             Reset: =Reset(pbMenu_BuildHelper)
             ShowNavBackButton: =false

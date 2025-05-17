@@ -15,12 +15,16 @@ Screens:
         =If(CountIf(col_pbMenu,true)=0,dData.BuildDemoMenus());
         UpdateContext({vert1Menu: "mainVert1"});
         UpdateContext({vert2Menu: "mainVert2"});
+        If(IsBlank(fromScreen), 
+            UpdateContext({fromScreen: 'pbMenu Demo'})
+        );
     Children:
       - Header1:
           Control: Header@0.0.44
           Properties:
             Height: =40
             Logo: =stickeromglove
+            OnSelectLogo: =Navigate('pbMenu Sandbox',ScreenTransition.Fade)
       - MM:
           Control: CanvasComponent
           ComponentName: pbMenu
@@ -32,10 +36,10 @@ Screens:
             CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
             ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
             EnableCollapsedState: =true
-            Height: =Self.MinimumHeight
+            Height: =Self.MinimumHeight()
             IsBusy: '=spin.waiting=true '
             ManageItemStates: =true
-            MenuColorPalette: =PowerAppsTheme.Colors.PrimaryForeground
+            MenuColorPalette: =PowerAppsTheme.Colors.Primary
             MenuItemTextColor: =
             MenuKey: ="Main"
             OnBeforeAction: |-
@@ -50,9 +54,10 @@ Screens:
               )
             OnRemoveMenuItem: =
             OverrideExpandedWidth: =0
+            OverrideMinHeight: =0
             PerformanceLogging: =pbMenu_LogPerformance
             Reset: =Reset(MM)
-            ShowNavBackButton: =false
+            ShowNavBackButton: =fromScreen.Name <> 'pbMenu Demo'.Name
             ToolbarOrientation: =MM.LayoutChoices.Horizontal
             ToolbarPadding: =If(Upper(MM.ToolbarOrientation)=Upper(MM.LayoutChoices.Horizontal), 'Toolbar.Padding'.Medium,  'Toolbar.Padding'.Small)
             VerticalDefaultCollapsed: =true
@@ -79,6 +84,7 @@ Screens:
             OnBeforeAction: "=Set(spin,{waiting: true,msg: $\"Busy, please wait: {Text(Now(),\"hh:mm:ss am/pm\")}\"});\nWith({handled: \n    Switch(Upper(p_itemKey), \n        Upper(\"useMenu_mainVert1\"), UpdateContext({vert1Menu:\"mainVert1\"}); Self.ItemState_UpdateAll(true); true, \n        Upper(\"useMenu_mainVert2\"), UpdateContext({vert1Menu:\"mainVert2\"}); Self.ItemState_UpdateAll(true); true, \n        Upper(\"disableOtherMenus\"), MM.ItemState_UpdateAll(false); pbMenu_Vert_1.ItemState_UpdateAll(false); true, \n        Upper(\"enableOtherMenus\"), MM.ItemState_UpdateAll(true); pbMenu_Vert_1.ItemState_UpdateAll(true); true, \n\n        false\n    )},\n//    If(Not(handled), \n//        Notify($\"Normally, this menu item ({Self.MenuKey}.{p_itemKey}) would be wired up to something!\",NotificationType.Information,2000)\n//    );\n    //add false here to route request back to pbMenu action handler\n    handled  \n);\nSet(spin,Blank());\n\n        \n"
             OnRemoveMenuItem: =
             OverrideExpandedWidth: =160
+            OverrideMinHeight: =0
             PerformanceLogging: =pbMenu_LogPerformance
             Reset: =Reset(pbMenu_Vert)
             ShowNavBackButton: =false
@@ -108,6 +114,7 @@ Screens:
             OnBeforeAction: "=With({handled: \n    Switch(Upper(p_itemKey), \n        Upper(\"useMenu_mainVert1\"), UpdateContext({vert2Menu:\"mainVert1\"}); Self.ItemState_UpdateAll(true); true, \n        Upper(\"useMenu_mainVert2\"), UpdateContext({vert2Menu:\"mainVert2\"}); Self.ItemState_UpdateAll(true); true, \n        false\n    )},\n    If(Not(handled), \n        Notify($\"Normally, this menu item ({Self.MenuKey}.{p_itemKey}) would be wired up to something!\",NotificationType.Information,2000)\n    );\n    //add false here to route request back to pbMenu action handler\n    true \n)\n\n        \n"
             OnRemoveMenuItem: =
             OverrideExpandedWidth: =150
+            OverrideMinHeight: =0
             PerformanceLogging: =pbMenu_LogPerformance
             Reset: =Reset(pbMenu_Vert_1)
             ShowNavBackButton: =false
@@ -252,7 +259,7 @@ Screens:
             Y: =MM.Y + MM.Height + 10
       - dData:
           Control: CanvasComponent
-          ComponentName: demoData
+          ComponentName: pbMenuData
           Properties:
             Height: =105
             Width: =310
