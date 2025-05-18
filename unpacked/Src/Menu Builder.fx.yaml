@@ -10,6 +10,7 @@
         UpdateContext({ignoreUnhandled:true}); Reset(toggIgnoreUnhandled);
         UpdateContext({manageItemStates:true}); Reset(toggManageItemStates);
         UpdateContext({enableCollapse:true}); Reset(toggEnableCollapsedState);
+        UpdateContext({enableIsBusyResponse: true}); Reset(toggIsBusyEnabled);
         UpdateContext({showAboutExMenu: false});
         UpdateContext({ownR:Blank()}); Reset(txtOwnR);
         UpdateContext({ownG:Blank()}); Reset(txtOwnG);
@@ -40,11 +41,36 @@
         ZIndex: =1
 
     pbMenu_MenuBuilder As pbMenu:
+        Collapse: |-
+            =If(Lower(Self.ToolbarOrientation)=Lower(Self.LayoutChoices.Vertical), 
+                //determine if current state is expanded
+                With({collapseRec: LookUp(col_pbMenuUtil,menuGuid=GUID(Self.ControlGUID) && action="collapse")}, 
+                    With({isCollapsed: 
+                        If(IsBlank(collapseRec), 
+                            If(Self.EnableUserCollapse=false, 
+                                false, 
+                                pbMenu_MenuBuilder.DefaultCollapsedState
+                            )
+                            , 
+                            collapseRec.boolValue
+                        )}, 
+                        If(isCollapsed=false, 
+                            If(IsBlank(collapseRec), 
+                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu_MenuBuilder.ControlGUID), menuKey: pbMenu_MenuBuilder.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: true,  desc: ""})
+                                , 
+                                Patch(col_pbMenuUtil, collapseRec, {boolValue:true})
+                            )
+                        )
+                    )
+            
+                )    
+            )
         CollapsedMode: |-
-            =If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal || Self.EnableCollapsedState<>true, false,     
+            =//If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal || Self.EnableCollapsedState<>true, false,     
+            If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal, false,     
                 With({collapseRec: LookUp(col_pbMenuUtil,menuGuid=GUID(Self.ControlGUID) && action="collapse")}, 
                     If(IsBlank(collapseRec), 
-                        pbMenu.VerticalDefaultCollapsed
+                        pbMenu_MenuBuilder.DefaultCollapsedState
                         , 
                         collapseRec.boolValue
                     )       
@@ -188,6 +214,26 @@
             
                 );
             )
+        Expand: |-
+            =If(Lower(Self.ToolbarOrientation)=Lower(Self.LayoutChoices.Vertical), 
+                //determine if current state is expanded
+                With({collapseRec: LookUp(col_pbMenuUtil,menuGuid=GUID(Self.ControlGUID) && action="collapse")}, 
+                    With({isCollapsed: 
+                        If(IsBlank(collapseRec), 
+                            pbMenu_MenuBuilder.DefaultCollapsedState
+                            , 
+                            collapseRec.boolValue
+                        )}, 
+                        If(isCollapsed=true, 
+                            If(IsBlank(collapseRec), 
+                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu_MenuBuilder.ControlGUID), menuKey: pbMenu_MenuBuilder.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: false,  desc: ""})
+                                , 
+                                Patch(col_pbMenuUtil, collapseRec, {boolValue:false})
+                            )
+                        )
+                    )
+                )    
+            )
         Height: =Self.MinimumHeight()
         Information: |-
             =[
@@ -245,8 +291,16 @@
                     desc: "Returns true when 'ToolbarOrientation' is Vertical and menu is collapsed"
                 },
                 {
-                    name: "EnableCollapsedState", 
-                    valBoolean: Self.EnableCollapsedState, 
+                    name: "DefaultCollapsedState", 
+                    valBoolean: Self.DefaultCollapsedState, 
+                    dataType: "Boolean", 
+                    externalUse: "Use to set default collapsed state (true=collapsed, false=expanded)", 
+                    type: "Input Property", 
+                    desc: "When true, default state of menu will be collapsed, when menu is configured for vertical layout"
+                }, 
+                {
+                    name: "EnableUserCollapse", 
+                    valBoolean: Self.EnableUserCollapse, 
                     dataType: "Boolean", 
                     externalUse: "Set to 'false' to prevent vertical menu from ever displaying in collapsed/icon-only mode", 
                     type: "Input Property", 
@@ -317,7 +371,6 @@
                 }, 
                 {
                     name: "DoMenu", 
-                    dataType: "n/a", 
                     externalUse: "Optionally use to trigger a menu item selection (see desc)", 
                     type: "Component Action", 
                     desc: "Called when user selects a menu item which was rendered from [pbMenu].MenuData data source. Can also be called externally. When a menu item that requires user confirmation is selected, 'DoMenu' is not called until user also selects the confirmation button. When 'DoMenu' is called externally, the item key property is NOT required to correlate to a menu item currently available, as long as the pbMenu being called is able to process the 'p_ItemKey' argument in the [pbMenu].OnBeforeAction event on the current screen."
@@ -332,7 +385,6 @@
                 }, 
                 {
                     name: "ItemState", 
-                    dataType: "n/a", 
                     externalUse: "can be used to manually enable/disable menu items (when [pbMenu].ManageItemStates is false)", 
                     type: "Component Action", 
                     desc: "Used internally by pbMenu to enable/disable a menu item.  Can be called externally to enable/disable a menu item at any time.  Note:  When 'ManageItemStates' is set to true, pbMenu will allways re-enable all menu items when any menu item is selected."
@@ -346,50 +398,66 @@
                 {
                     name: "MenuColorPalette", 
                     valColor: Self.MenuColorPalette, 
-                    type: "Color, Input Property", 
+                    dataType: "Color", 
+                    type: "Input Property", 
                     desc: "Color pallete used for menu items.  Defaults to 'PowerAppsTheme.Colors.Primary'", 
                     canSet: true 
                 }, 
                 {
                     name: "MenuData_All", 
                     valTable: Self.MenuData_All, 
-                    type: "Table, Output Property", 
+                    dataType: "Table", 
+                    type: "Output Property", 
                     desc: "Unfiltered records from col_pbMenu. This Table/collection contains configuration records for all menu items in all defined menus"
                 }, 
                 {
                     name: "IsBusy", 
                     valBoolean: Self.IsBusy, 
-                    type: "Boolean, Input Property", 
+                    dataType: "Boolean", 
+                    type: "Input Property", 
                     desc: "A boolean value indicated the app is currency busy. Recommend setting to global boolean variable that is always turned on when an action (e.g. getting or editing data, complex operations, etc) begins, and turned off when the action completes. Indicating the app is busy will either cause pbMenu to display a spinner and message, or will disabled display menu, depending on pbMenu.BusyBehavior setting"
                 }, 
                 {
+                    name: "IsBusyEnabled", 
+                    valBoolean: Self.IsBusyEnabled, 
+                    dataType: "Boolean", 
+                    type: "Input Property", 
+                    desc: "A boolean value indicated the app is currency busy. Recommend setting to global boolean variable that is always turned on when an action (e.g. getting or editing data, complex operations, etc) begins, and turned off when the action completes. Indicating the app is busy will either cause pbMenu to display a spinner and message, or will disabled display menu, depending on pbMenu.BusyBehavior setting"
+                }, 
+            
+                {
                     name: "BusyMessage", 
                     valText: Self.BusyMessage, 
-                    type: "Text, Input Property", 
+                    dataType: "Text", 
+                    type: "Input Property", 
                     desc: "The message that is displayed in the pbMenu container, when pbMenu.IsBusy=true, and pbMenu.BusyBehavior='Spinner'."
                 }, 
                 {
                     name: "BusyBehavior", 
                     valText: Self.BusyBehavior, 
-                    type: "Text, Input Property", 
+                    dataType: "Text", 
+                    type: "Input Property", 
                     desc: "Text value to indicate pbMenu behavior when pbMenu.IsBusy=true.  A helper property (pbMenu.BusyBehaviorChoices) can be use to set this property.  Valid value are either 'BusyBehaviorChoices.Spinning' ('Spinning'), or 'BusyBehaviorChoices.Disabled' ('Disabled').  When this property is missing or contains an invalid value, the default value ('Spinning') will be used."
                 }, 
                 {
                     name: "BusyBehaviorChoices", 
                     valRecord: Self.BusyBehaviorChoices, 
-                    type: "Record, Output Property", 
+                    dataType: "Record", 
+                    type: "Output Property", 
                     desc: "Helper property which contains valid choices for the pbMenu.BusyBehavior input property"
                 }, 
                 {
                     name: "ToolbarPadding", 
                     valText: Self.ToolbarPadding, 
-                    type: "Text, Input Property (with default)", 
+                    dataType: "Text", 
+                    type: "Input Property", 
                     desc: "Toolbar padding is managed automatically ('Medium' for Horizontal Layout, 'Small' for Vertical Layout.)  If adjustment is necessary, can be overridden ('Small', 'Medium', 'Large').  A helper property exists to select choices (ToolbarPaddingChoices).  For example, if the name of your on-screen pbMenu component was 'myMenu' and you wanted to force 'Large' padding, you would set the 'ToolbarPadding' property to: myMenu.ToolbarPaddingChoices.Large"
                 }, 
                 {
                     name: "ToolbarPaddingChoices", 
                     valRecord: Self.ToolbarPaddingChoices, 
-                    type: "Record, Output Property", 
+                    dataType: "Record", 
+                    type: "Output Property", 
                     desc: "Helper property which provides valid 'ToolbarPadding' choices"
                 }
             
@@ -646,11 +714,36 @@
             BorderWidth: =2
             BusyBehavior: =ddBusyBehavior.Selected.Value
             CancelMenuColorPalette: =cancelColorPalette
+            Collapse: |-
+                =If(Lower(Self.ToolbarOrientation)=Lower(Self.LayoutChoices.Vertical), 
+                    //determine if current state is expanded
+                    With({collapseRec: LookUp(col_pbMenuUtil,menuGuid=GUID(Self.ControlGUID) && action="collapse")}, 
+                        With({isCollapsed: 
+                            If(IsBlank(collapseRec), 
+                                If(Self.EnableUserCollapse=false, 
+                                    false, 
+                                    pbMenu_Build.DefaultCollapsedState
+                                )
+                                , 
+                                collapseRec.boolValue
+                            )}, 
+                            If(isCollapsed=false, 
+                                If(IsBlank(collapseRec), 
+                                    Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu_Build.ControlGUID), menuKey: pbMenu_Build.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: true,  desc: ""})
+                                    , 
+                                    Patch(col_pbMenuUtil, collapseRec, {boolValue:true})
+                                )
+                            )
+                        )
+                
+                    )    
+                )
             CollapsedMode: |-
-                =If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal || Self.EnableCollapsedState<>true, false,     
+                =//If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal || Self.EnableCollapsedState<>true, false,     
+                If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal, false,     
                     With({collapseRec: LookUp(col_pbMenuUtil,menuGuid=GUID(Self.ControlGUID) && action="collapse")}, 
                         If(IsBlank(collapseRec), 
-                            pbMenu.VerticalDefaultCollapsed
+                            pbMenu_Build.DefaultCollapsedState
                             , 
                             collapseRec.boolValue
                         )       
@@ -794,7 +887,27 @@
                 
                     );
                 )
-            EnableCollapsedState: =toggEnableCollapsedState.Checked
+            EnableUserCollapse: =toggEnableCollapsedState.Checked
+            Expand: |-
+                =If(Lower(Self.ToolbarOrientation)=Lower(Self.LayoutChoices.Vertical), 
+                    //determine if current state is expanded
+                    With({collapseRec: LookUp(col_pbMenuUtil,menuGuid=GUID(Self.ControlGUID) && action="collapse")}, 
+                        With({isCollapsed: 
+                            If(IsBlank(collapseRec), 
+                                pbMenu_Build.DefaultCollapsedState
+                                , 
+                                collapseRec.boolValue
+                            )}, 
+                            If(isCollapsed=true, 
+                                If(IsBlank(collapseRec), 
+                                    Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu_Build.ControlGUID), menuKey: pbMenu_Build.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: false,  desc: ""})
+                                    , 
+                                    Patch(col_pbMenuUtil, collapseRec, {boolValue:false})
+                                )
+                            )
+                        )
+                    )    
+                )
             Fill: =RGBA(255, 255, 219, 1)
             Height: =If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal, Self.MinimumHeight(),Parent.Height - Self.Y * 2 ) 
             Information: |-
@@ -853,8 +966,16 @@
                         desc: "Returns true when 'ToolbarOrientation' is Vertical and menu is collapsed"
                     },
                     {
-                        name: "EnableCollapsedState", 
-                        valBoolean: Self.EnableCollapsedState, 
+                        name: "DefaultCollapsedState", 
+                        valBoolean: Self.DefaultCollapsedState, 
+                        dataType: "Boolean", 
+                        externalUse: "Use to set default collapsed state (true=collapsed, false=expanded)", 
+                        type: "Input Property", 
+                        desc: "When true, default state of menu will be collapsed, when menu is configured for vertical layout"
+                    }, 
+                    {
+                        name: "EnableUserCollapse", 
+                        valBoolean: Self.EnableUserCollapse, 
                         dataType: "Boolean", 
                         externalUse: "Set to 'false' to prevent vertical menu from ever displaying in collapsed/icon-only mode", 
                         type: "Input Property", 
@@ -925,7 +1046,6 @@
                     }, 
                     {
                         name: "DoMenu", 
-                        dataType: "n/a", 
                         externalUse: "Optionally use to trigger a menu item selection (see desc)", 
                         type: "Component Action", 
                         desc: "Called when user selects a menu item which was rendered from [pbMenu].MenuData data source. Can also be called externally. When a menu item that requires user confirmation is selected, 'DoMenu' is not called until user also selects the confirmation button. When 'DoMenu' is called externally, the item key property is NOT required to correlate to a menu item currently available, as long as the pbMenu being called is able to process the 'p_ItemKey' argument in the [pbMenu].OnBeforeAction event on the current screen."
@@ -940,7 +1060,6 @@
                     }, 
                     {
                         name: "ItemState", 
-                        dataType: "n/a", 
                         externalUse: "can be used to manually enable/disable menu items (when [pbMenu].ManageItemStates is false)", 
                         type: "Component Action", 
                         desc: "Used internally by pbMenu to enable/disable a menu item.  Can be called externally to enable/disable a menu item at any time.  Note:  When 'ManageItemStates' is set to true, pbMenu will allways re-enable all menu items when any menu item is selected."
@@ -954,54 +1073,71 @@
                     {
                         name: "MenuColorPalette", 
                         valColor: Self.MenuColorPalette, 
-                        type: "Color, Input Property", 
+                        dataType: "Color", 
+                        type: "Input Property", 
                         desc: "Color pallete used for menu items.  Defaults to 'PowerAppsTheme.Colors.Primary'", 
                         canSet: true 
                     }, 
                     {
                         name: "MenuData_All", 
                         valTable: Self.MenuData_All, 
-                        type: "Table, Output Property", 
+                        dataType: "Table", 
+                        type: "Output Property", 
                         desc: "Unfiltered records from col_pbMenu. This Table/collection contains configuration records for all menu items in all defined menus"
                     }, 
                     {
                         name: "IsBusy", 
                         valBoolean: Self.IsBusy, 
-                        type: "Boolean, Input Property", 
+                        dataType: "Boolean", 
+                        type: "Input Property", 
                         desc: "A boolean value indicated the app is currency busy. Recommend setting to global boolean variable that is always turned on when an action (e.g. getting or editing data, complex operations, etc) begins, and turned off when the action completes. Indicating the app is busy will either cause pbMenu to display a spinner and message, or will disabled display menu, depending on pbMenu.BusyBehavior setting"
                     }, 
                     {
+                        name: "IsBusyEnabled", 
+                        valBoolean: Self.IsBusyEnabled, 
+                        dataType: "Boolean", 
+                        type: "Input Property", 
+                        desc: "A boolean value indicated the app is currency busy. Recommend setting to global boolean variable that is always turned on when an action (e.g. getting or editing data, complex operations, etc) begins, and turned off when the action completes. Indicating the app is busy will either cause pbMenu to display a spinner and message, or will disabled display menu, depending on pbMenu.BusyBehavior setting"
+                    }, 
+                
+                    {
                         name: "BusyMessage", 
                         valText: Self.BusyMessage, 
-                        type: "Text, Input Property", 
+                        dataType: "Text", 
+                        type: "Input Property", 
                         desc: "The message that is displayed in the pbMenu container, when pbMenu.IsBusy=true, and pbMenu.BusyBehavior='Spinner'."
                     }, 
                     {
                         name: "BusyBehavior", 
                         valText: Self.BusyBehavior, 
-                        type: "Text, Input Property", 
+                        dataType: "Text", 
+                        type: "Input Property", 
                         desc: "Text value to indicate pbMenu behavior when pbMenu.IsBusy=true.  A helper property (pbMenu.BusyBehaviorChoices) can be use to set this property.  Valid value are either 'BusyBehaviorChoices.Spinning' ('Spinning'), or 'BusyBehaviorChoices.Disabled' ('Disabled').  When this property is missing or contains an invalid value, the default value ('Spinning') will be used."
                     }, 
                     {
                         name: "BusyBehaviorChoices", 
                         valRecord: Self.BusyBehaviorChoices, 
-                        type: "Record, Output Property", 
+                        dataType: "Record", 
+                        type: "Output Property", 
                         desc: "Helper property which contains valid choices for the pbMenu.BusyBehavior input property"
                     }, 
                     {
                         name: "ToolbarPadding", 
                         valText: Self.ToolbarPadding, 
-                        type: "Text, Input Property (with default)", 
+                        dataType: "Text", 
+                        type: "Input Property", 
                         desc: "Toolbar padding is managed automatically ('Medium' for Horizontal Layout, 'Small' for Vertical Layout.)  If adjustment is necessary, can be overridden ('Small', 'Medium', 'Large').  A helper property exists to select choices (ToolbarPaddingChoices).  For example, if the name of your on-screen pbMenu component was 'myMenu' and you wanted to force 'Large' padding, you would set the 'ToolbarPadding' property to: myMenu.ToolbarPaddingChoices.Large"
                     }, 
                     {
                         name: "ToolbarPaddingChoices", 
                         valRecord: Self.ToolbarPaddingChoices, 
-                        type: "Record, Output Property", 
+                        dataType: "Record", 
+                        type: "Output Property", 
                         desc: "Helper property which provides valid 'ToolbarPadding' choices"
                     }
                 
                 ]
+            IsBusyEnabled: =toggIsBusyEnabled.Checked
             ItemState: |
                 =With({Perf: {id: GUID(), start: Now(), action: $"ITEM STATE CHANGE: {pbMenu.MenuKey}.{p_itemKey} (enabled: {p_enabled})"}}, 
                     If(Not(StartsWith(Lower(p_itemKey),"_spacer_")) || Not(p_enabled), 
@@ -1654,7 +1790,7 @@
                     FieldType: ="s"
                     FieldVariantName: ="textualColumn"
                     Order: =1
-                    ZIndex: =0
+                    ZIndex: =78
 
             TextCanvas3_9 As Text:
                 Align: ='TextCanvas.Align'.Center
@@ -2250,6 +2386,36 @@
                 Y: =txtJSONLabel.Y 
                 ZIndex: =72
 
+            toggIsBusyEnabled As Toggle:
+                AccessibleLabel: =""
+                BasePaletteColor: =RGBA(246, 142, 104, 1)
+                Checked: =enableIsBusyResponse
+                ContentLanguage: =""
+                DisplayMode: =DisplayMode.Edit
+                Font: =""
+                FontColor: =RGBA(160, 64, 8, 1)
+                FontItalic: =false
+                FontSize: =12
+                FontStrikethrough: =false
+                FontUnderline: =false
+                FontWeight: =FontWeight.Bold
+                Height: =26  
+                Label: ="Respond to IsBusy"
+                LabelPosition: ="After"
+                OnCheck: |-
+                    =UpdateContext({enableIsBusyResponse: true}); 
+                OnSelect: =false
+                OnUncheck: |-
+                    =UpdateContext({enableIsBusyResponse: false}); 
+                TabIndex: =0
+                ToggleSize: =14
+                Tooltip: =""
+                Visible: =true
+                Width: =220
+                X: =toggIgnoreUnhandled.X + toggIgnoreUnhandled.Width
+                Y: =68
+                ZIndex: =73
+
         Container2 As groupContainer.manualLayoutContainer:
             BorderColor: =pbMenu_Build.BorderColor
             BorderThickness: =2
@@ -2443,11 +2609,36 @@
 
     pbMenu_BuildHelper As pbMenu:
         BusyBehavior: =Self.BusyBehaviorChoices.Disabled
+        Collapse: |-
+            =If(Lower(Self.ToolbarOrientation)=Lower(Self.LayoutChoices.Vertical), 
+                //determine if current state is expanded
+                With({collapseRec: LookUp(col_pbMenuUtil,menuGuid=GUID(Self.ControlGUID) && action="collapse")}, 
+                    With({isCollapsed: 
+                        If(IsBlank(collapseRec), 
+                            If(Self.EnableUserCollapse=false, 
+                                false, 
+                                pbMenu_BuildHelper.DefaultCollapsedState
+                            )
+                            , 
+                            collapseRec.boolValue
+                        )}, 
+                        If(isCollapsed=false, 
+                            If(IsBlank(collapseRec), 
+                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu_BuildHelper.ControlGUID), menuKey: pbMenu_BuildHelper.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: true,  desc: ""})
+                                , 
+                                Patch(col_pbMenuUtil, collapseRec, {boolValue:true})
+                            )
+                        )
+                    )
+            
+                )    
+            )
         CollapsedMode: |-
-            =If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal || Self.EnableCollapsedState<>true, false,     
+            =//If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal || Self.EnableCollapsedState<>true, false,     
+            If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal, false,     
                 With({collapseRec: LookUp(col_pbMenuUtil,menuGuid=GUID(Self.ControlGUID) && action="collapse")}, 
                     If(IsBlank(collapseRec), 
-                        pbMenu.VerticalDefaultCollapsed
+                        pbMenu_BuildHelper.DefaultCollapsedState
                         , 
                         collapseRec.boolValue
                     )       
@@ -2590,7 +2781,27 @@
             
                 );
             )
-        EnableCollapsedState: =false
+        EnableUserCollapse: =false
+        Expand: |-
+            =If(Lower(Self.ToolbarOrientation)=Lower(Self.LayoutChoices.Vertical), 
+                //determine if current state is expanded
+                With({collapseRec: LookUp(col_pbMenuUtil,menuGuid=GUID(Self.ControlGUID) && action="collapse")}, 
+                    With({isCollapsed: 
+                        If(IsBlank(collapseRec), 
+                            pbMenu_BuildHelper.DefaultCollapsedState
+                            , 
+                            collapseRec.boolValue
+                        )}, 
+                        If(isCollapsed=true, 
+                            If(IsBlank(collapseRec), 
+                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu_BuildHelper.ControlGUID), menuKey: pbMenu_BuildHelper.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: false,  desc: ""})
+                                , 
+                                Patch(col_pbMenuUtil, collapseRec, {boolValue:false})
+                            )
+                        )
+                    )
+                )    
+            )
         Fill: =RGBA(232, 233, 235, 1)
         Height: =Parent.Height - Self.Y - 10 
         Information: |-
@@ -2649,8 +2860,16 @@
                     desc: "Returns true when 'ToolbarOrientation' is Vertical and menu is collapsed"
                 },
                 {
-                    name: "EnableCollapsedState", 
-                    valBoolean: Self.EnableCollapsedState, 
+                    name: "DefaultCollapsedState", 
+                    valBoolean: Self.DefaultCollapsedState, 
+                    dataType: "Boolean", 
+                    externalUse: "Use to set default collapsed state (true=collapsed, false=expanded)", 
+                    type: "Input Property", 
+                    desc: "When true, default state of menu will be collapsed, when menu is configured for vertical layout"
+                }, 
+                {
+                    name: "EnableUserCollapse", 
+                    valBoolean: Self.EnableUserCollapse, 
                     dataType: "Boolean", 
                     externalUse: "Set to 'false' to prevent vertical menu from ever displaying in collapsed/icon-only mode", 
                     type: "Input Property", 
@@ -2721,7 +2940,6 @@
                 }, 
                 {
                     name: "DoMenu", 
-                    dataType: "n/a", 
                     externalUse: "Optionally use to trigger a menu item selection (see desc)", 
                     type: "Component Action", 
                     desc: "Called when user selects a menu item which was rendered from [pbMenu].MenuData data source. Can also be called externally. When a menu item that requires user confirmation is selected, 'DoMenu' is not called until user also selects the confirmation button. When 'DoMenu' is called externally, the item key property is NOT required to correlate to a menu item currently available, as long as the pbMenu being called is able to process the 'p_ItemKey' argument in the [pbMenu].OnBeforeAction event on the current screen."
@@ -2736,7 +2954,6 @@
                 }, 
                 {
                     name: "ItemState", 
-                    dataType: "n/a", 
                     externalUse: "can be used to manually enable/disable menu items (when [pbMenu].ManageItemStates is false)", 
                     type: "Component Action", 
                     desc: "Used internally by pbMenu to enable/disable a menu item.  Can be called externally to enable/disable a menu item at any time.  Note:  When 'ManageItemStates' is set to true, pbMenu will allways re-enable all menu items when any menu item is selected."
@@ -2750,50 +2967,66 @@
                 {
                     name: "MenuColorPalette", 
                     valColor: Self.MenuColorPalette, 
-                    type: "Color, Input Property", 
+                    dataType: "Color", 
+                    type: "Input Property", 
                     desc: "Color pallete used for menu items.  Defaults to 'PowerAppsTheme.Colors.Primary'", 
                     canSet: true 
                 }, 
                 {
                     name: "MenuData_All", 
                     valTable: Self.MenuData_All, 
-                    type: "Table, Output Property", 
+                    dataType: "Table", 
+                    type: "Output Property", 
                     desc: "Unfiltered records from col_pbMenu. This Table/collection contains configuration records for all menu items in all defined menus"
                 }, 
                 {
                     name: "IsBusy", 
                     valBoolean: Self.IsBusy, 
-                    type: "Boolean, Input Property", 
+                    dataType: "Boolean", 
+                    type: "Input Property", 
                     desc: "A boolean value indicated the app is currency busy. Recommend setting to global boolean variable that is always turned on when an action (e.g. getting or editing data, complex operations, etc) begins, and turned off when the action completes. Indicating the app is busy will either cause pbMenu to display a spinner and message, or will disabled display menu, depending on pbMenu.BusyBehavior setting"
                 }, 
                 {
+                    name: "IsBusyEnabled", 
+                    valBoolean: Self.IsBusyEnabled, 
+                    dataType: "Boolean", 
+                    type: "Input Property", 
+                    desc: "A boolean value indicated the app is currency busy. Recommend setting to global boolean variable that is always turned on when an action (e.g. getting or editing data, complex operations, etc) begins, and turned off when the action completes. Indicating the app is busy will either cause pbMenu to display a spinner and message, or will disabled display menu, depending on pbMenu.BusyBehavior setting"
+                }, 
+            
+                {
                     name: "BusyMessage", 
                     valText: Self.BusyMessage, 
-                    type: "Text, Input Property", 
+                    dataType: "Text", 
+                    type: "Input Property", 
                     desc: "The message that is displayed in the pbMenu container, when pbMenu.IsBusy=true, and pbMenu.BusyBehavior='Spinner'."
                 }, 
                 {
                     name: "BusyBehavior", 
                     valText: Self.BusyBehavior, 
-                    type: "Text, Input Property", 
+                    dataType: "Text", 
+                    type: "Input Property", 
                     desc: "Text value to indicate pbMenu behavior when pbMenu.IsBusy=true.  A helper property (pbMenu.BusyBehaviorChoices) can be use to set this property.  Valid value are either 'BusyBehaviorChoices.Spinning' ('Spinning'), or 'BusyBehaviorChoices.Disabled' ('Disabled').  When this property is missing or contains an invalid value, the default value ('Spinning') will be used."
                 }, 
                 {
                     name: "BusyBehaviorChoices", 
                     valRecord: Self.BusyBehaviorChoices, 
-                    type: "Record, Output Property", 
+                    dataType: "Record", 
+                    type: "Output Property", 
                     desc: "Helper property which contains valid choices for the pbMenu.BusyBehavior input property"
                 }, 
                 {
                     name: "ToolbarPadding", 
                     valText: Self.ToolbarPadding, 
-                    type: "Text, Input Property (with default)", 
+                    dataType: "Text", 
+                    type: "Input Property", 
                     desc: "Toolbar padding is managed automatically ('Medium' for Horizontal Layout, 'Small' for Vertical Layout.)  If adjustment is necessary, can be overridden ('Small', 'Medium', 'Large').  A helper property exists to select choices (ToolbarPaddingChoices).  For example, if the name of your on-screen pbMenu component was 'myMenu' and you wanted to force 'Large' padding, you would set the 'ToolbarPadding' property to: myMenu.ToolbarPaddingChoices.Large"
                 }, 
                 {
                     name: "ToolbarPaddingChoices", 
                     valRecord: Self.ToolbarPaddingChoices, 
-                    type: "Record, Output Property", 
+                    dataType: "Record", 
+                    type: "Output Property", 
                     desc: "Helper property which provides valid 'ToolbarPadding' choices"
                 }
             

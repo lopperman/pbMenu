@@ -21,6 +21,7 @@ Screens:
         UpdateContext({ignoreUnhandled:true}); Reset(toggIgnoreUnhandled);
         UpdateContext({manageItemStates:true}); Reset(toggManageItemStates);
         UpdateContext({enableCollapse:true}); Reset(toggEnableCollapsedState);
+        UpdateContext({enableIsBusyResponse: true}); Reset(toggIsBusyEnabled);
         UpdateContext({showAboutExMenu: false});
         UpdateContext({ownR:Blank()}); Reset(txtOwnR);
         UpdateContext({ownG:Blank()}); Reset(txtOwnG);
@@ -49,9 +50,11 @@ Screens:
             BusyMessage: =spin.msg
             CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
             ConfirmationColorPalette: =RGBA(160, 64, 8, 1)
-            EnableCollapsedState: =true
+            DefaultCollapsedState: =true
+            EnableUserCollapse: =true
             Height: =Self.MinimumHeight()
             IsBusy: '=spin.waiting=true '
+            IsBusyEnabled: =true
             ManageItemStates: =true
             MenuColorPalette: =PowerAppsTheme.Colors.Primary
             MenuItemTextColor: =
@@ -65,7 +68,6 @@ Screens:
             ShowNavBackButton: =true
             ToolbarOrientation: =pbMenu_MenuBuilder.LayoutChoices.Horizontal
             ToolbarPadding: =""
-            VerticalDefaultCollapsed: =true
             Width: =Parent.Width
             Y: =40
       - cont_MenuData:
@@ -180,10 +182,12 @@ Screens:
                   BusyMessage: =spin.msg
                   CancelMenuColorPalette: =cancelColorPalette
                   ConfirmationColorPalette: =confirmColorPalette
-                  EnableCollapsedState: =toggEnableCollapsedState.Checked
+                  DefaultCollapsedState: =true
+                  EnableUserCollapse: =toggEnableCollapsedState.Checked
                   Fill: =RGBA(255, 255, 219, 1)
                   Height: '=If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal, Self.MinimumHeight(),Parent.Height - Self.Y * 2 ) '
                   IsBusy: '=spin.waiting=true '
+                  IsBusyEnabled: =toggIsBusyEnabled.Checked
                   ManageItemStates: =toggManageItemStates.Checked
                   MenuColorPalette: =miPrimaryColorPalette
                   MenuItemTextColor: =
@@ -212,7 +216,6 @@ Screens:
                   ShowNavBackButton: =toggShowNavBack.Checked
                   ToolbarOrientation: =Coalesce(ddMenuOrientation.Selected.Value,pbMenu_BuildHelper.LayoutChoices.Horizontal)
                   ToolbarPadding: =ddToolbarPadding.Selected.Value
-                  VerticalDefaultCollapsed: =true
                   Width: =If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal,  Parent.Width - Self.X * 2 ,Self.MinimumWidth())
                   X: =10
                   Y: =10
@@ -1144,6 +1147,22 @@ Screens:
                         Width: '=Parent.Width - Self.X - 10 '
                         X: '=txtJSONLabel.X + txtJSONLabel.Width + 10 '
                         Y: '=txtJSONLabel.Y '
+                  - toggIsBusyEnabled:
+                      Control: Toggle@1.1.5
+                      Properties:
+                        BasePaletteColor: =RGBA(246, 142, 104, 1)
+                        Checked: =enableIsBusyResponse
+                        FontColor: =RGBA(160, 64, 8, 1)
+                        FontSize: =12
+                        FontWeight: =FontWeight.Bold
+                        Height: '=26  '
+                        Label: ="Respond to IsBusy"
+                        OnCheck: "=UpdateContext({enableIsBusyResponse: true}); "
+                        OnUncheck: "=UpdateContext({enableIsBusyResponse: false}); "
+                        ToggleSize: =14
+                        Width: =220
+                        X: =toggIgnoreUnhandled.X + toggIgnoreUnhandled.Width
+                        Y: =68
             - Container2:
                 Control: GroupContainer@1.3.0
                 Variant: ManualLayout
@@ -1299,10 +1318,12 @@ Screens:
             BusyMessage: =spin.msg
             CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
             ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
-            EnableCollapsedState: =false
+            DefaultCollapsedState: =true
+            EnableUserCollapse: =false
             Fill: =RGBA(232, 233, 235, 1)
             Height: '=Parent.Height - Self.Y - 10 '
             IsBusy: '=spin.waiting=true '
+            IsBusyEnabled: =true
             ManageItemStates: =false
             MenuColorPalette: =If(mbMode="View", PowerAppsTheme.Colors.Darker30,Color.Green)
             MenuItemTextColor: =
@@ -1316,6 +1337,5 @@ Screens:
             ShowNavBackButton: =false
             ToolbarOrientation: =pbMenu_BuildHelper.LayoutChoices.Vertical
             ToolbarPadding: =""
-            VerticalDefaultCollapsed: =true
             Width: =If(Self.CollapsedMode(), Self.MinimumWidth(),Self.MinimumWidth() + 30)
             Y: =pbMenu_MenuBuilder.Y + pbMenu_MenuBuilder.Height + 10

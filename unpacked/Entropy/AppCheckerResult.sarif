@@ -1784,6 +1784,126 @@
             {
               "logicalLocations": [
                 {
+                  "fullyQualifiedName": "'pbMenu Sandbox'.ButtonCanvas2_4.AccessibleLabel"
+                }
+              ],
+              "physicalLocation": {
+                "address": {
+                  "fullyQualifiedName": "'pbMenu Sandbox'.ButtonCanvas2_4.AccessibleLabel",
+                  "relativeAddress": 0
+                }
+              },
+              "properties": {
+                "member": "AccessibleLabel",
+                "module": "pbMenu Sandbox",
+                "type": "'pbMenu Sandbox'.ButtonCanvas2_4"
+              }
+            }
+          ],
+          "message": {
+            "id": "issue"
+          },
+          "properties": {
+            "level": "Medium"
+          },
+          "ruleId": "acc-AccessibleLabelNeeded",
+          "ruleIndex": 0
+        },
+        {
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "'pbMenu Sandbox'.ButtonCanvas2_5.AccessibleLabel"
+                }
+              ],
+              "physicalLocation": {
+                "address": {
+                  "fullyQualifiedName": "'pbMenu Sandbox'.ButtonCanvas2_5.AccessibleLabel",
+                  "relativeAddress": 0
+                }
+              },
+              "properties": {
+                "member": "AccessibleLabel",
+                "module": "pbMenu Sandbox",
+                "type": "'pbMenu Sandbox'.ButtonCanvas2_5"
+              }
+            }
+          ],
+          "message": {
+            "id": "issue"
+          },
+          "properties": {
+            "level": "Medium"
+          },
+          "ruleId": "acc-AccessibleLabelNeeded",
+          "ruleIndex": 0
+        },
+        {
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "'pbMenu Sandbox'.ButtonCanvas2_6.AccessibleLabel"
+                }
+              ],
+              "physicalLocation": {
+                "address": {
+                  "fullyQualifiedName": "'pbMenu Sandbox'.ButtonCanvas2_6.AccessibleLabel",
+                  "relativeAddress": 0
+                }
+              },
+              "properties": {
+                "member": "AccessibleLabel",
+                "module": "pbMenu Sandbox",
+                "type": "'pbMenu Sandbox'.ButtonCanvas2_6"
+              }
+            }
+          ],
+          "message": {
+            "id": "issue"
+          },
+          "properties": {
+            "level": "Medium"
+          },
+          "ruleId": "acc-AccessibleLabelNeeded",
+          "ruleIndex": 0
+        },
+        {
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "'pbMenu Sandbox'.ButtonCanvas2_7.AccessibleLabel"
+                }
+              ],
+              "physicalLocation": {
+                "address": {
+                  "fullyQualifiedName": "'pbMenu Sandbox'.ButtonCanvas2_7.AccessibleLabel",
+                  "relativeAddress": 0
+                }
+              },
+              "properties": {
+                "member": "AccessibleLabel",
+                "module": "pbMenu Sandbox",
+                "type": "'pbMenu Sandbox'.ButtonCanvas2_7"
+              }
+            }
+          ],
+          "message": {
+            "id": "issue"
+          },
+          "properties": {
+            "level": "Medium"
+          },
+          "ruleId": "acc-AccessibleLabelNeeded",
+          "ruleIndex": 0
+        },
+        {
+          "locations": [
+            {
+              "logicalLocations": [
+                {
                   "fullyQualifiedName": "PerformanceLog.tblPerf.AccessibleLabel"
                 }
               ],
@@ -1797,6 +1917,36 @@
                 "member": "AccessibleLabel",
                 "module": "PerformanceLog",
                 "type": "PerformanceLog.tblPerf"
+              }
+            }
+          ],
+          "message": {
+            "id": "issue"
+          },
+          "properties": {
+            "level": "Medium"
+          },
+          "ruleId": "acc-AccessibleLabelNeeded",
+          "ruleIndex": 0
+        },
+        {
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "'Menu Builder'.cont_CreateMenuItems.contSubBuild.toggIsBusyEnabled.AccessibleLabel"
+                }
+              ],
+              "physicalLocation": {
+                "address": {
+                  "fullyQualifiedName": "'Menu Builder'.cont_CreateMenuItems.contSubBuild.toggIsBusyEnabled.AccessibleLabel",
+                  "relativeAddress": 0
+                }
+              },
+              "properties": {
+                "member": "AccessibleLabel",
+                "module": "Menu Builder",
+                "type": "'Menu Builder'.cont_CreateMenuItems.contSubBuild.toggIsBusyEnabled"
               }
             }
           ],

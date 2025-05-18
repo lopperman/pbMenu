@@ -29,9 +29,11 @@ Screens:
             BusyMessage: =spin.msg
             CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
             ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
-            EnableCollapsedState: =true
+            DefaultCollapsedState: =true
+            EnableUserCollapse: =true
             Height: =Self.MinimumHeight()
             IsBusy: '=spin.waiting=true '
+            IsBusyEnabled: =true
             ManageItemStates: =true
             MenuColorPalette: =PowerAppsTheme.Colors.Primary
             MenuItemTextColor: =
@@ -55,7 +57,6 @@ Screens:
             ShowNavBackButton: =true
             ToolbarOrientation: =pbMenu_PerfLog.LayoutChoices.Horizontal
             ToolbarPadding: =""
-            VerticalDefaultCollapsed: =true
             Width: =Parent.Width
             Y: =40
       - tblPerf:

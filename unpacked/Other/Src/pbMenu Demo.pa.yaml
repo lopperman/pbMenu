@@ -35,9 +35,11 @@ Screens:
             BusyMessage: =spin.msg
             CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
             ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
-            EnableCollapsedState: =true
+            DefaultCollapsedState: =true
+            EnableUserCollapse: =true
             Height: =Self.MinimumHeight()
             IsBusy: '=spin.waiting=true '
+            IsBusyEnabled: =true
             ManageItemStates: =true
             MenuColorPalette: =PowerAppsTheme.Colors.Primary
             MenuItemTextColor: =
@@ -60,7 +62,6 @@ Screens:
             ShowNavBackButton: =fromScreen.Name <> 'pbMenu Demo'.Name
             ToolbarOrientation: =MM.LayoutChoices.Horizontal
             ToolbarPadding: =If(Upper(MM.ToolbarOrientation)=Upper(MM.LayoutChoices.Horizontal), 'Toolbar.Padding'.Medium,  'Toolbar.Padding'.Small)
-            VerticalDefaultCollapsed: =true
             Width: =Parent.Width
             Y: =Header1.Y + Header1.Height
       - pbMenu_Vert:
@@ -73,10 +74,12 @@ Screens:
             BusyMessage: =spin.msg
             CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
             ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
-            EnableCollapsedState: =true
+            DefaultCollapsedState: =true
+            EnableUserCollapse: =true
             Fill: =RGBA(214, 221, 224, 1)
             Height: =Parent.Height - Self.Y -8
             IsBusy: '=spin.waiting=true '
+            IsBusyEnabled: =true
             ManageItemStates: =true
             MenuColorPalette: =RGBA(189, 49, 51, 1)
             MenuItemTextColor: =
@@ -90,7 +93,6 @@ Screens:
             ShowNavBackButton: =false
             ToolbarOrientation: =pbMenu_Vert.LayoutChoices.Vertical
             ToolbarPadding: =""
-            VerticalDefaultCollapsed: =true
             Width: =Self.MinimumWidth()
             Y: '=MM.Y + MM.Height + 10 '
       - pbMenu_Vert_1:
@@ -103,10 +105,12 @@ Screens:
             BusyMessage: =spin.msg
             CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
             ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
-            EnableCollapsedState: =true
+            DefaultCollapsedState: =true
+            EnableUserCollapse: =true
             Fill: =RGBA(252, 252, 217, 1)
             Height: =Parent.Height - Self.Y -8
             IsBusy: '=spin.waiting=true '
+            IsBusyEnabled: =true
             ManageItemStates: =true
             MenuColorPalette: =RGBA(45, 128, 40, 1)
             MenuItemTextColor: =
@@ -120,7 +124,6 @@ Screens:
             ShowNavBackButton: =false
             ToolbarOrientation: =pbMenu_Vert_1.LayoutChoices.Vertical
             ToolbarPadding: =""
-            VerticalDefaultCollapsed: =true
             Width: =Self.MinimumWidth()
             X: =pbMenu_Vert.X + pbMenu_Vert.Width
             Y: '=MM.Y + MM.Height + 10 '

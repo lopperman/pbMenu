@@ -13,6 +13,8 @@ Screens:
       LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
       OnVisible: |-
         =UpdateContext({vertMenuKey: "testMenu"});
+        UpdateContext({sb_EnableCollapse: true});
+        UpdateContext({sb_DefaultCollapsed: true});
     Children:
       - hdrHelp_2:
           Control: Header@0.0.44
@@ -78,9 +80,11 @@ Screens:
             BusyMessage: =spin.msg
             CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
             ConfirmationColorPalette: =Color.Green
-            EnableCollapsedState: =true
+            DefaultCollapsedState: =true
+            EnableUserCollapse: =true
             Height: =Self.MinimumHeight()
             IsBusy: '=spin.waiting=true '
+            IsBusyEnabled: =true
             ManageItemStates: =true
             MenuColorPalette: =Color.Navy
             MenuItemTextColor: =
@@ -102,11 +106,11 @@ Screens:
             OverrideExpandedWidth: =0
             OverrideMinHeight: =0
             PerformanceLogging: =true
-            Reset: =Reset(pbMenu_1)
+            Reset: |
+              =Reset(pbMenu_1)
             ShowNavBackButton: =true
             ToolbarOrientation: =pbMenu_1.LayoutChoices.Horizontal
             ToolbarPadding: =""
-            VerticalDefaultCollapsed: =true
             Width: =Parent.Width
             Y: =40
       - pbMenu_2:
@@ -119,9 +123,11 @@ Screens:
             BusyMessage: =spin.msg
             CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
             ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
-            EnableCollapsedState: =true
+            DefaultCollapsedState: =sb_DefaultCollapsed
+            EnableUserCollapse: =sb_EnableCollapse
             Height: =603
             IsBusy: '=spin.waiting=true '
+            IsBusyEnabled: =true
             ManageItemStates: =true
             MenuColorPalette: =PowerAppsTheme.Colors.Primary
             MenuItemTextColor: =
@@ -147,6 +153,55 @@ Screens:
             ShowNavBackButton: =false
             ToolbarOrientation: =Self.LayoutChoices.Vertical
             ToolbarPadding: =""
-            VerticalDefaultCollapsed: =true
             Width: =Self.MinimumWidth()
             Y: =155
+      - ButtonCanvas2_4:
+          Control: Button@0.0.45
+          Properties:
+            OnSelect: =pbMenu_2.Collapse()
+            Text: ="Force Collapse"
+            Width: =200
+            X: =179
+            Y: =337
+      - ButtonCanvas2_5:
+          Control: Button@0.0.45
+          Properties:
+            OnSelect: =pbMenu_2.Expand()
+            Text: ="Force Expand"
+            Width: =200
+            X: =179
+            Y: =374
+      - ButtonCanvas2_6:
+          Control: Button@0.0.45
+          Properties:
+            Height: =50
+            OnSelect: |-
+              =UpdateContext({sb_EnableCollapse: Not(sb_EnableCollapse)});
+            Text: |-
+              =$"Toggle: Enable Collapse{const_CrLf}Currently={pbMenu_2.EnableUserCollapse}"
+            Width: =200
+            X: =179
+            Y: =411
+      - ButtonCanvas2_7:
+          Control: Button@0.0.45
+          Properties:
+            Height: =50
+            OnSelect: |-
+              =UpdateContext({sb_DefaultCollapsed: Not(sb_DefaultCollapsed)});
+            Text: |-
+              =$"Toggle: Default Collapsed{const_CrLf}Currently={pbMenu_2.DefaultCollapsedState}"
+            Width: =200
+            X: =179
+            Y: =466
+      - TextCanvas4:
+          Control: Text@0.0.51
+          Properties:
+            Align: ='TextCanvas.Align'.Center
+            Height: =33
+            Text: |-
+              =$"CollapsedMode: {pbMenu_2.CollapsedMode()}"
+            VerticalAlign: =VerticalAlign.Middle
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =200
+            X: =179
+            Y: =532
