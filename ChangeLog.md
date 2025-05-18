@@ -3,5 +3,6 @@
 18-May-2025: pbMenu.OnReset() is now called anytime the 'DefaultCollapsedstate' property changes, which forces menu collapsed state to match DefaultCollapsedState.
 18-May-2025: Added 'IsBusyEnabled' property (Default=true).   When set to false, 'IsBusy' is completely ignored
 18-May-2025: Additional refinement to pbMenu.Information()
+18-May-2025: Added a 'QuickStart' guide 
 
 

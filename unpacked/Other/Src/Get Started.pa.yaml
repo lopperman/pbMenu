@@ -1,0 +1,141 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  Get Started:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
+      OnVisible: |+
+        =RemoveIf(col_pbMenu,Upper(menuKey)=Upper(pbMenu_GetStarted.MenuKey));
+        pbMenu_GetStarted.CreateInfoItem("mnuGetStarted","Minimum Step-By-Step Guide",pbMenu_GetStarted.ItemAppearanceChoices.Transparent,"",true);
+
+        //CLEAR ITEMS FOR 'MainMenu' - so nothing is duplicated
+        RemoveIf(col_pbMenu,Upper(menuKey)=Upper("MainMenu"));
+        //Build Menu Items for 'MainMenu' menu key
+        //CREATE 'INFO' MENU ITEM
+        pbMenu1.CreateInfoItem("MainMenu","My Menu",pbMenu1.ItemAppearanceChoices.Transparent,"My First Menu",true);
+        //CREATE 'SPACER'
+        pbMenu1.CreateSpacer("MainMenu",true);
+        //CREATE MENU ITEM THAT REQUIRES CONFIRMATION
+        pbMenu1.CreateMenuItem("MainMenu","miConfirm1","Confirm 1","Checkbox",pbMenu1.ItemAppearanceChoices.Primary, pbMenu1.ItemIconStyleChoices.Filled, "Required Confirmation",false,true,true);
+        //CREATE MENU ITEM 
+        pbMenu1.CreateMenuItem("MainMenu","miConfirm2","Confirm 2","Delete",pbMenu1.ItemAppearanceChoices.Primary, pbMenu1.ItemIconStyleChoices.Filled, "Confirmation Not Required",false,false,true);
+        Reset(pbMenu1);
+
+
+    Children:
+      - hdr_GetStarted:
+          Control: Header@0.0.44
+          Properties:
+            Height: =40
+            Logo: =stickeromglove
+      - pbMenu_GetStarted:
+          Control: CanvasComponent
+          ComponentName: pbMenu
+          Properties:
+            BorderColor: =PowerAppsTheme.Colors.Darker20
+            BorderWidth: =1
+            BusyBehavior: =Self.BusyBehaviorChoices.Spinning
+            BusyMessage: =""
+            CancelMenuColorPalette: =
+            ConfirmationColorPalette: =
+            DefaultCollapsedState: =true
+            EnableUserCollapse: =true
+            Height: =Self.MinimumHeight()
+            IsBusy: =spin.waiting=true
+            IsBusyEnabled: =true
+            ManageItemStates: =true
+            MenuColorPalette: =
+            MenuItemTextColor: =
+            MenuKey: ="mnuGetStarted"
+            OnBeforeAction: |
+              =Switch(Upper(p_itemKey), 
+                  Upper("sortStartToggle"), 
+                      UpdateContext({perfSource: SortByColumns(AddColumns(col_pbMenuPerf,StartTm,Text(start,"hh:mm:ss.fff"),EndTm,Text(end,"hh:mm:ss.fff")),"start",SortOrder.Descending)});
+                      true, 
+                  Upper("sortElapsedToggle"), 
+                      UpdateContext({perfSource: SortByColumns(AddColumns(col_pbMenuPerf,StartTm,Text(start,"hh:mm:ss.fff"),EndTm,Text(end,"hh:mm:ss.fff")),"elapsed",SortOrder.Descending)});
+                      true, 
+
+                  false
+              )
+            OnRemoveMenuItem: =
+            OverrideExpandedWidth: =0
+            OverrideMinHeight: =0
+            PerformanceLogging: =pbMenu_LogPerformance
+            Reset: =Reset(pbMenu_GetStarted)
+            ShowNavBackButton: =true
+            ToolbarOrientation: =pbMenu_GetStarted.LayoutChoices.Horizontal
+            ToolbarPadding: =""
+            Width: =Parent.Width
+            Y: =40
+      - RichTextEditor1:
+          Control: RichTextEditor@2.7.0
+          Properties:
+            BorderColor: =RGBA(245, 245, 245, 1)
+            Default: |-
+              =$"<ol><li><p>Download just-a-Menu.msapp</p></li><li><p>In <strong>your canvas app</strong> designer, go to Components and click the import icon (left arrow)</p></li><li><p>Choose <em>Upload File</em>, and select the just-a-Menu.msapp file</p></li><li><p>Delete the component called <em>pbMenuData</em>, which is only used for the Demo App</p></li><li><p>Go to the screen where you want to create the menu, and choose <em>Insert --&gt; Custom --&gt; pbMenu</em></p></li><li><p>Name the pbMenu if desired (should default to 'pbMenu_1')</p></li><li><p><em><strong>For Horizontal Orientation</strong> (default), set the following properties on <strong>pbMenu_1</strong> (use new name if applicable)</em></p><ol><li><p>Set <em><u>Height to:</u> </em><span style={Char(34)}color:#b54b8c{Char(34)}>Self</span><span style={Char(34)}color:#000000{Char(34)}>.</span><span style={Char(34)}color:#295ea3{Char(34)}>MinimumHeight</span><span style={Char(34)}color:#656871{Char(34)}>()</span></p></li><li><p>Set <em><u>X to:</u> 0 (or desired X coordinate)</em></p></li><li><p>Set <em><u>Y to</u>: desired Y coordinate</em></p></li></ol></li><li><p><em><strong>For Vertical Orientation</strong></em>, <em>set the following properties on pbMenu_1 (use new name if applicable)</em></p><ol><li><p>Set <em><u>Width to:</u> </em><span style={Char(34)}color:#b54b8c{Char(34)}>Self</span><span style={Char(34)}color:#000000{Char(34)}>.</span><span style={Char(34)}color:#295ea3{Char(34)}>MinimumWidth()</span></p><ol><li><p><strong>Note:&nbsp; After menu items are created, if additional width is needed, change the value of [pbMenu Name].OverrideExpandedWidth</strong></p></li></ol></li><li><p>Set X, Y, and Height properties as desired.</p></li><li><p>Set <u><em>EnableUserCollapse</em></u><em> to false if you don't want users to be able to expand/collapse menu, otherwise set to true</em></p></li><li><p>Set<em> <u>DefaultCollapsedState</u> to false in order to default to 'Expanded Width', otherwise set to true</em></p></li></ol></li><li><p>Set <u><em>ShowNavBackButton</em></u> to true if you want&nbsp; the 'Navigation 'Back()' displayed on your menu.</p></li><li><p>Determine how you will create menu items.&nbsp; For example, <em>App.OnStart</em> or your screen <em>OnVisible</em><em> </em>are viable choices.&nbsp; Write the following lines of code to populate the menuKey you set on the pbMenu (we'll use 'MainMenu' for these instructions)</p><p style={Char(34)}margin-left:40px{Char(34)}><span style={Char(34)}color:#007200{Char(34)}>//CLEAR ITEMS FOR 'MainMenu' - so nothing is duplicated</span></p><p style={Char(34)}margin-left:40px{Char(34)}><span style={Char(34)}color:#295ea3{Char(34)}>RemoveIf</span><span style={Char(34)}color:#656871{Char(34)}>(</span><span style={Char(34)}color:#007c85{Char(34)}>col_pbMenu</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#295ea3{Char(34)}>Upper</span><span style={Char(34)}color:#656871{Char(34)}>(</span><span style={Char(34)}color:#000000{Char(34)}>menuKey</span><span style={Char(34)}color:#656871{Char(34)}>)</span><span style={Char(34)}color:#656871{Char(34)}>=</span><span style={Char(34)}color:#295ea3{Char(34)}>Upper</span><span style={Char(34)}color:#656871{Char(34)}>(</span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}MainMenu{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>))</span><span style={Char(34)}color:#000000{Char(34)}>;</span></p><p style={Char(34)}margin-left:40px{Char(34)}><span style={Char(34)}color:#007200{Char(34)}>//Build Menu Items for 'MainMenu' menu key</span></p><p style={Char(34)}margin-left:40px{Char(34)}><span style={Char(34)}color:#007200{Char(34)}>//CREATE 'INFO' MENU ITEM</span></p><p style={Char(34)}margin-left:40px{Char(34)}><span style={Char(34)}color:#000000{Char(34)}>pbMenu1.</span><span style={Char(34)}color:#295ea3{Char(34)}>CreateInfoItem</span><span style={Char(34)}color:#656871{Char(34)}>(</span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}MainMenu{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}My Menu{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>,</span><em>pbMenu1</em><span style={Char(34)}color:#000000{Char(34)}>.</span><span style={Char(34)}color:#36383f{Char(34)}>ItemAppearanceChoices</span><span style={Char(34)}color:#000000{Char(34)}>.</span><span style={Char(34)}color:#36383f{Char(34)}>Transparent</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}My First Menu{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#795548{Char(34)}>true</span><span style={Char(34)}color:#656871{Char(34)}>)</span><span style={Char(34)}color:#000000{Char(34)}>;</span></p><p style={Char(34)}margin-left:40px{Char(34)}><span style={Char(34)}color:#007200{Char(34)}>//CREATE 'SPACER'</span></p><p style={Char(34)}margin-left:40px{Char(34)}><span style={Char(34)}color:#000000{Char(34)}>pbMenu1.</span><span style={Char(34)}color:#295ea3{Char(34)}>CreateSpacer</span><span style={Char(34)}color:#656871{Char(34)}>(</span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}MainMenu{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#795548{Char(34)}>true</span><span style={Char(34)}color:#656871{Char(34)}>)</span><span style={Char(34)}color:#000000{Char(34)}>;</span></p><p style={Char(34)}margin-left:40px{Char(34)}><span style={Char(34)}color:#007200{Char(34)}>//CREATE MENU ITEM THAT REQUIRES CONFIRMATION AND GETS DISABLED WHEN SELECTED</span></p><p style={Char(34)}margin-left:40px{Char(34)}><span style={Char(34)}color:#000000{Char(34)}>pbMenu1.</span><span style={Char(34)}color:#295ea3{Char(34)}>CreateMenuItem</span><span style={Char(34)}color:#656871{Char(34)}>(</span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}MainMenu{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}miConfirm1{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}Confirm 1{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}Checkbox{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>,</span><em>pbMenu1</em><span style={Char(34)}color:#000000{Char(34)}>.</span><span style={Char(34)}color:#36383f{Char(34)}>ItemAppearanceChoices</span><span style={Char(34)}color:#000000{Char(34)}>.</span><span style={Char(34)}color:#36383f{Char(34)}>Primary</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#000000{Char(34)}> </span><em>pbMenu1</em><span style={Char(34)}color:#000000{Char(34)}>.</span><span style={Char(34)}color:#36383f{Char(34)}>ItemIconStyleChoices</span><span style={Char(34)}color:#000000{Char(34)}>.</span><span style={Char(34)}color:#36383f{Char(34)}>Filled</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#000000{Char(34)}> </span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}Required Confirmation{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#795548{Char(34)}>true</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#795548{Char(34)}>true</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#795548{Char(34)}>true</span><span style={Char(34)}color:#656871{Char(34)}>)</span><span style={Char(34)}color:#000000{Char(34)}>;</span></p><p style={Char(34)}margin-left:40px{Char(34)}><span style={Char(34)}color:#007200{Char(34)}>//CREATE MENU ITEM THAT GETS DISABLED WHEN SELECTED</span></p><p style={Char(34)}margin-left:40px{Char(34)}><span style={Char(34)}color:#000000{Char(34)}>pbMenu1.</span><span style={Char(34)}color:#295ea3{Char(34)}>CreateMenuItem</span><span style={Char(34)}color:#656871{Char(34)}>(</span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}MainMenu{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}miConfirm2{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}Confirm 2{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}Delete{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>,</span><em>pbMenu1</em><span style={Char(34)}color:#000000{Char(34)}>.</span><span style={Char(34)}color:#36383f{Char(34)}>ItemAppearanceChoices</span><span style={Char(34)}color:#000000{Char(34)}>.</span><span style={Char(34)}color:#36383f{Char(34)}>Primary</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#000000{Char(34)}> </span><em>pbMenu1</em><span style={Char(34)}color:#000000{Char(34)}>.</span><span style={Char(34)}color:#36383f{Char(34)}>ItemIconStyleChoices</span><span style={Char(34)}color:#000000{Char(34)}>.</span><span style={Char(34)}color:#36383f{Char(34)}>Filled</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#000000{Char(34)}> </span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}Confirmation Not Required{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#795548{Char(34)}>true</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#795548{Char(34)}>false</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#795548{Char(34)}>true</span><span style={Char(34)}color:#656871{Char(34)}>)</span><span style={Char(34)}color:#000000{Char(34)}>;</span></p><p> </p></li><li><p>Select your pbMenu component, then go to the <strong><em>OnBeforeAction</em></strong> event and type the following code</p><div><p><span style={Char(34)}color:#295ea3{Char(34)}>Switch</span><span style={Char(34)}color:#656871{Char(34)}>(</span><span style={Char(34)}color:#295ea3{Char(34)}>Upper</span><span style={Char(34)}color:#656871{Char(34)}>(</span><span style={Char(34)}color:#000000{Char(34)}>p_itemKey</span><span style={Char(34)}color:#656871{Char(34)}>),</span><span style={Char(34)}color:#000000{Char(34)}> </span></p><p><span style={Char(34)}color:#295ea3{Char(34)}>&nbsp;&nbsp;&nbsp; Upper</span><span style={Char(34)}color:#656871{Char(34)}>(</span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}miConfirm1{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>),</span></p><p><span style={Char(34)}color:#295ea3{Char(34)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Notify</span><span style={Char(34)}color:#656871{Char(34)}>(</span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}miConfirm1 menu item was clicked{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>)</span><span style={Char(34)}color:#000000{Char(34)}>;</span></p><p><span style={Char(34)}color:#795548{Char(34)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; true</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#000000{Char(34)}> </span></p><p><span style={Char(34)}color:#295ea3{Char(34)}>&nbsp;&nbsp;&nbsp; Upper</span><span style={Char(34)}color:#656871{Char(34)}>(</span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}miConfirm2{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>),</span></p><p><span style={Char(34)}color:#295ea3{Char(34)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Notify</span><span style={Char(34)}color:#656871{Char(34)}>(</span><span style={Char(34)}color:#a21717{Char(34)}>{Char(34)}miConfirm2 menu item was clicked{Char(34)}</span><span style={Char(34)}color:#656871{Char(34)}>)</span><span style={Char(34)}color:#000000{Char(34)}>;</span></p><p><span style={Char(34)}color:#795548{Char(34)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; true</span><span style={Char(34)}color:#656871{Char(34)}>,</span><span style={Char(34)}color:#000000{Char(34)}> </span></p><p><span style={Char(34)}color:#007200{Char(34)}>//always return false for unhandled menu item selections, so control can be passed back to [pbMenu].DoMenu()</span></p><p><span style={Char(34)}color:#795548{Char(34)}>&nbsp;&nbsp;&nbsp; false</span></p><p><span style={Char(34)}color:#656871{Char(34)}>)</span></p></div><p> </p></li></ol>"
+            Height: =Parent.Height - Self.Y - 10
+            Width: '=Parent.Width - Self.X - 10 '
+            X: '=10  '
+            Y: =pbMenu1.Y + pbMenu1.Height + 10
+      - TextInputCanvas1:
+          Control: TextInput@0.0.54
+          Properties:
+            BorderColor: =RGBA(160, 64, 8, 1)
+            BorderStyle: =BorderStyle.Solid
+            BorderThickness: =1
+            Height: '=Parent.Height - Self.Y - 10 '
+            Mode: ='TextInputCanvas.Mode'.Multiline
+            Value: =$"${Char(34)}{Substitute(RichTextEditor1.HtmlText,Char(34),"{Char(34)}")}{Char(34)}"
+            Visible: =false
+            Width: '=Parent.Width - Self.X - 10 '
+            X: =10
+            Y: '=RichTextEditor1.Y + RichTextEditor1.Height + 10 '
+      - pbMenu1:
+          Control: CanvasComponent
+          ComponentName: pbMenu
+          Properties:
+            BorderColor: =PowerAppsTheme.Colors.Darker20
+            BorderWidth: =1
+            BusyBehavior: =Self.BusyBehaviorChoices.Spinning
+            BusyMessage: =""
+            CancelMenuColorPalette: =
+            ConfirmationColorPalette: =
+            DefaultCollapsedState: =true
+            EnableUserCollapse: =true
+            Height: =Self.MinimumHeight()
+            IsBusy: =false
+            IsBusyEnabled: =true
+            ManageItemStates: =true
+            MenuColorPalette: =
+            MenuItemTextColor: =
+            MenuKey: ="MainMenu"
+            OnBeforeAction: |-
+              =Switch(Upper(p_itemKey), 
+                  Upper("miConfirm1"),
+                      Notify("miConfirm1 menu item was clicked");
+                      true, 
+                  Upper("miConfirm2"),
+                      Notify("miConfirm2 menu item was clicked");
+                      true, 
+                  //always return false for unhandled menu item selections, so control can be passed back to [pbMenu].DoMenu()
+                  false
+              )
+            OnRemoveMenuItem: =
+            OverrideExpandedWidth: =0
+            OverrideMinHeight: =0
+            PerformanceLogging: =false
+            Reset: |
+              =Reset(pbMenu1)
+            ShowNavBackButton: =false
+            ToolbarOrientation: =pbMenu1.LayoutChoices.Horizontal
+            ToolbarPadding: =""
+            Width: =Parent.Width
+            Y: =pbMenu_GetStarted.Y + pbMenu_GetStarted.Height

@@ -130,32 +130,24 @@ Screens:
             X: =pbMenu_Vert_1.X + pbMenu_Vert_1.Width + 10
             Y: '=cont_BuildUtil.Y + cont_BuildUtil.Height + 10 '
           Children:
-            - TextCanvas2:
+            - txtEasyStartLabel:
                 Control: Text@0.0.51
                 Properties:
                   AutoHeight: =true
-                  Text: ="GET STARTED WITH 'pbMenu' - select a menu item for additional "
+                  Text: ="STEPS TO QUICKLY GET GOING WITH pbMenu"
                   Weight: ='TextCanvas.Weight'.Bold
                   Width: '=Parent.Width - Self.X * 2 '
                   X: =10
                   Y: =10
-            - TextCanvas2_1:
-                Control: Text@0.0.51
+            - btnEasyStart:
+                Control: Button@0.0.45
                 Properties:
-                  AutoHeight: =true
-                  Text: |-
-                    ="*** 01 Create Menu Items using the 'CreateMenuItem' function on any pbMenu control. " & const_CrLf & "(Optionally, set the 'MenuData' (Table) source to any datasource which contains the following column names / data types:  ItemAppearance: Text, ItemDisabled: Boolean, ItemDisplayName: Text, ItemIconName: Text (Icon Name), ItemIconStyle: Text ('Outline' or 'Filled'), ItemKey: Text, ItemTooltip: Text, confirmItemAction: Boolean, disableOnSelect: Boolean, menuKey: Text)"
-                    & const_CrLf & const_CrLf 
-                    & "*** 02 Set the following properties on the pbMenu component on your screen:" & const_CrLf 
-                    & " - MenuKey: Menu Name that has at least 1 item in menu data (col_pbMenu = default collection)" & const_CrLf  
-                    & " - MenuOrientation: ([component name].LayoutChoices.Horizontal or [component name].LayoutChoices.Vertical)" & const_CrLf
-                    & " - Width: Recommend setting to 'Self.MinimumWidth' for 'Vertial' Layout Orientation" & const_CrLf 
-                    & " - Height: Recommend setting to 'Self.MinimumHeight' for 'Horizontal' Layout Orientation" & const_CrLf 
-                    & const_CrLf & "All other properties are optional"
-                  Weight: ='TextCanvas.Weight'.Semibold
-                  Width: '=Parent.Width - Self.X * 2 '
+                  Height: =80
+                  OnSelect: =Navigate('Get Started',ScreenTransition.Fade)
+                  Text: ="CLICK FOR MINIMUM STEP-BY-STEP INSTRUCTIONS TO START USING THE pbMenu COMPONENT"
+                  Width: =400
                   X: =10
-                  Y: '=TextCanvas2.Y + TextCanvas2.Height + 10 '
+                  Y: =40
       - cont_BuildUtil:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout

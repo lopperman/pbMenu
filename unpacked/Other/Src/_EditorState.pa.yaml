@@ -12,6 +12,7 @@ EditorState:
     - Menu Builder
     - pbMenu Sandbox
     - PerformanceLog
+    - Get Started
   ComponentDefinitionsOrder:
     - pbMenu
     - pbMenuData
