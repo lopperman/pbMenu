@@ -69,6 +69,11 @@ ComponentDefinitions:
 
         MM.CreateMenuItem("mbHelper_View","mbhJSON","MENU JSON","Eye",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Menu JSON",false,false,true);
         MM.CreateMenuItem("mbHelper_View","mbhMenuProps","MENU INFO","Info",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Menu Properties",false,false,true);
+        MM.CreateMenuItem("mbHelper_View","mbhInputProps","INPUT PROPERTIES","Edit",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Input Properties",false,false,true);
+        MM.CreateMenuItem("mbHelper_View","mbhOutputProps","OUTPUT PROPERTIES","Eye",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Output Properties",false,false,true);
+        MM.CreateMenuItem("mbHelper_View","mbhOutputFunctions","OUTPUT FUNCTIONS","Eye",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Output Functions",false,false,true);
+        MM.CreateMenuItem("mbHelper_View","mbhMenuItems","CURRENT MENU ITEMS","List",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Current Menu Items",false,false,true);
+        MM.CreateMenuItem("mbHelper_View","mbhActions","COMPONENT ACTIONS","List",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Component Actions",false,false,true);
 
         //MM.CreateMenuItem("mbHelper_Build","mbbCreate","New Item","Add",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Create Menu Item",true,false,true);
         MM.CreateInfoItem("mbHelper_Build","MENU ITEMS",MM.ItemAppearanceChoices.Transparent,"",true);

@@ -15,6 +15,7 @@
         UpdateContext({ownG:Blank()}); Reset(txtOwnG);
         UpdateContext({ownB:Blank()}); Reset(txtOwnB);
         UpdateContext({ownA:1}); Reset(txtOwnA);
+        UpdateContext({infoSearch: ""});
         
         UpdateContext({helperView: "menuProps"});
         
@@ -61,7 +62,7 @@
             )
             
         ConfirmationColorPalette: =RGBA(160, 64, 8, 1)
-        ConfirmMode: =spin.waiting<>true && CountIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")>0
+        ConfirmMode: =CountIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_MenuBuilder.ControlGUID) && action="confirm")>0
         CreateInfoItem: |
             =With({newMenuItem: 
                 //get menu item structure
@@ -137,48 +138,55 @@
                 )
             )
         DoMenu: |-
-            =With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
-                If(mi.confirmItemAction=true, 
-                    If(Self.ConfirmMode() <> true, 
-                        //Add 'confirm' action and waits for user to confirm or cancel
-                        //cancel clears confirm action
-                        //confirm calls DoMenu again, which can then move forward
-                        Self.ConfirmAction(p_menuKey,p_itemKey,mi.ItemDisplayName)
-                        , 
-                        //clear the 'confirm' action, which is now confirmed, and 
-                        //process menuItem as normal
-                        RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")
-                    )
-                );
-                If(Self.ConfirmMode() <> true, 
-                    If(pbMenu.ManageItemStates = true, 
-                        If(CountIf(pbMenu.CurrentMenuItems,ItemDisabled=true)>0, 
-                            pbMenu.ItemState_UpdateAll(true)
-                        );
-                        If(mi.disableOnSelect=true, 
-                            pbMenu.ItemState(mi.ItemKey,false)
+            =With({spinning: spin.waiting=true, spinningMsg: spin.msg}, 
+                If(Not(spinning), Set(spin, {waiting: true, msg: "Please wait ..."}));
+                With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
+                    If(mi.confirmItemAction=true, 
+                        If(Self.ConfirmMode() <> true, 
+                            //Add 'confirm' action and waits for user to confirm or cancel
+                            //cancel clears confirm action
+                            //confirm calls DoMenu again, which can then move forward
+                            Self.ConfirmAction(p_menuKey,p_itemKey,mi.ItemDisplayName)
+                            , 
+                            //clear the 'confirm' action, which is now confirmed, and 
+                            //process menuItem as normal
+                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_MenuBuilder.ControlGUID) && action="confirm")
                         )
                     );
-                    //Raise 'OnBeforeAction'.  If handled in event on screen ('true' returned), no further action is taken.
-                    //If not handled in the 'OnBeforeAction', will attempt to handle below and show error if was not handled.
-                    If(Self.OnBeforeAction(p_itemKey) = true, 
-                        true
-                        , 
-                        With({handledHere: 
-                            Switch(Upper(p_itemKey), 
-                                "LAUNCHGITHUB", Launch("https://github.com/lopperman"); true, 
-                                "LAUNCHREDDIT", Launch("https://www.reddit.com/user/ITFuture"); true, 
-                                "GOOGLE", Launch("https://www.google.com"); true, 
-                                "MINAVPERF", Navigate(PerformanceLog,ScreenTransition.Fade); true, 
+                    With({doMenuHandled: 
+                        If(Self.ConfirmMode() <> true, 
+                            If(pbMenu_MenuBuilder.ManageItemStates = true, 
+                                pbMenu.ItemState_UpdateAll(true);
+                                If(mi.disableOnSelect=true, 
+                                    pbMenu.ItemState(mi.ItemKey,false)
+                                )
+                            );
+                            //Raise 'OnBeforeAction'.  If handled in event on screen ('true' returned), no further action is taken.
+                            //If not handled in the 'OnBeforeAction', will attempt to handle below and show error if was not handled.
+                            If(Self.OnBeforeAction(p_itemKey) = true, 
+                                true
+                                , 
+                                With({handledHere: 
+                                    Switch(Upper(p_itemKey), 
+                                        "LAUNCHGITHUB", Launch("https://github.com/lopperman"); true, 
+                                        "LAUNCHREDDIT", Launch("https://www.reddit.com/user/ITFuture"); true, 
+                                        "GOOGLE", Launch("https://www.google.com"); true, 
+                                        "MINAVPERF", Navigate(PerformanceLog,ScreenTransition.Fade); true, 
             
-                                //not handled
-                                Notify("NO ACTION WAS TAKEN FOR MENU ITEM: " & p_menuKey & "." & p_itemKey & " (" & mi.ItemDisplayName & ")",NotificationType.Error,5000);
-                                false
-                            )}, 
-                            handledHere
+                                        //not handled
+                                        Notify("NO ACTION WAS TAKEN FOR MENU ITEM: " & p_menuKey & "." & p_itemKey & " (" & mi.ItemDisplayName & ")",NotificationType.Error,5000);
+                                        false
+                                    )}, 
+                                    handledHere
+                                )
+                            );
                         )
-                    );
-                )
+                        }, 
+                        If(Not(spinning), Set(spin,{waiting: false,msg:"Please wait ..."}));
+                        doMenuHandled
+                    )
+            
+                );
             )
         Height: =Self.MinimumHeight()
         Information: |-
@@ -195,6 +203,22 @@
                     externalUse: "[pbMenu].LayoutChoices.Horizontal (default), or [pbMenu].LayoutChoices.Vertical", 
                     type: "Input Property",
                     desc: "Use to get or set the orientation of [pbMenu]"
+                },
+                {
+                    name: "MinimumHeight()", 
+                    valNumber: Self.MinimumHeight(), 
+                    dataType: "Number", 
+                    externalUse: "When in 'Horizontal' layout mode, set the pbMenu component (added to your screen) 'Height' property to be 'Self.MinimumHeight()'", 
+                    type: "Output Function", 
+                    desc: "Provides recommended pbMenu Height, when in Horizontal layout mode.  Note: Property 'OverrideMinHeight can be used to fine tune desired menu height."
+                },
+                {
+                    name: "MinimumWidth()", 
+                    valNumber: Self.MinimumWidth(), 
+                    dataType: "Number", 
+                    externalUse: "When in 'Vertical' layout mode, set the pbMenu component (added to your screen) 'Width' property to be 'Self.MinimumWidth()'.  This will enable the pbMenu control to automatically resize when user collapses or expands the menu.", 
+                    type: "Output Function", 
+                    desc: "Provides recommended pbMenu Width, when in Vertical layout mode,  Note: if you need to adjust the expanded width, use the 'OverrideExpandedWidth' property to set the desired expanded width value"
                 },
                 {
                     name: "CurrentMenuItems", 
@@ -216,9 +240,9 @@
                     name: "CollapseMode()", 
                     valBoolean: Self.CollapsedMode(), 
                     dataType: "Boolean", 
-                    externalUse: "Reference Only (must be called as function)", 
+                    externalUse: "Reference Only, must be called as function", 
                     type: "Output Function",
-                    desc: "Returns true when 'ToolbarOrientation' is Vertical and menu is collapsed and only displaying icons"
+                    desc: "Returns true when 'ToolbarOrientation' is Vertical and menu is collapsed"
                 },
                 {
                     name: "EnableCollapsedState", 
@@ -232,15 +256,15 @@
                     name: "ConfirmationColorPalette", 
                     valColor: Self.ConfirmationColorPalette, 
                     dataType: "Color", 
-                    externalUse: "Use to set color palette of Confirmation 'Confirm' button; Default is 'PowerAppsTheme.Colors.Primary'", 
+                    externalUse: "Use to set color palette of Confirmation 'Confirm' button", 
                     type: "Input Property",
                     desc: "Color Palette used when displaying 'Confirm' button for required user confirmation"
                 }, 
                 {
-                    name: "ConfirmMode", 
+                    name: "ConfirmMode()", 
                     valBoolean: Self.ConfirmMode(), 
                     dataType: "Boolean", 
-                    externalUse: "Reference Only, must call as function", 
+                    externalUse: "Reference Only, must be called as function", 
                     type: "Output Function", 
                     desc: "When user has selected a menu item which requires confirmation, [pbMenu].'ConfirmMode()' will return true until user has selected 'Confirm' or 'Cancel'"
                 }, 
@@ -250,7 +274,7 @@
                     dataType: "Text", 
                     externalUse: "Reference Only.  VALUE WILL CHANGE BETWEEN SESSIONS!", 
                     type: "Output Property", 
-                    desc: "Unique value which can be used at runtime only, and may update each time a screen becomes visible.  The purpose of this property is to manage specific state information when multiple pbMenu components exist on the same screen"
+                    desc: "Unique value which can be used at runtime only, and may update each time a screen becomes visible.  The purpose of this property is to manage specific state information"
                 }, 
                 {
                     name: "ItemAppearanceChoices", 
@@ -288,13 +312,13 @@
                     type: "Component Action", 
                     dataType: "Record", 
                     externalUse: "Returns Menu Item Record data which is also automatically added to collection: col_pbMenu if the 'p_addToCollection' argument is true", 
-                    desc: "Returns a menu item record based on provided parameter values.  By default, new menu item is not added to a data source and therefore will not be available for use.  When called with p_addToCollection=true, the new menu item will be added to col_pbMenu (default data source for [pbMenu]), and becomes available for use by the pbMenu component.  See 'MenuData' for more information.", 
+                    desc: "Returns a menu item record based on provided parameter values.  By default, new menu item is not added to a data source and therefore will not be available for use.  When called with p_addToCollection=true, the new menu item will be added to col_pbMenu (default data source for [pbMenu]), and becomes available for use by any pbMenu component.", 
                     example: $"To get the correct structure (record) of a menu item you wish to add, which will be stored in an external datasource -- like SharePoint or DataVerse -- the following would return that record and NOT add it to the default MenuData datasource ('col_pbMenu'):  [pbMenu].CreateMenuItem({Char(34)}Main{Char(34)},{Char(34)}miNavBuild{Char(34)},{Char(34)}MENU BUILDER{Char(34)},{Char(34)}ArrowRight{Char(34)},[pbMenu].ItemAppearanceChoices.Primary,[pbMenu].ItemIconStyleChoices.Filled,{Char(34)}Build a Menu{Char(34)},false,false,false);, setting the last parameter to 'true' would cause the new menu item to also be added to 'col_pbMenu'"
                 }, 
                 {
                     name: "DoMenu", 
                     dataType: "n/a", 
-                    externalUse: "Optionally usee to trigger a menu item selection (see desc)", 
+                    externalUse: "Optionally use to trigger a menu item selection (see desc)", 
                     type: "Component Action", 
                     desc: "Called when user selects a menu item which was rendered from [pbMenu].MenuData data source. Can also be called externally. When a menu item that requires user confirmation is selected, 'DoMenu' is not called until user also selects the confirmation button. When 'DoMenu' is called externally, the item key property is NOT required to correlate to a menu item currently available, as long as the pbMenu being called is able to process the 'p_ItemKey' argument in the [pbMenu].OnBeforeAction event on the current screen."
                 }, 
@@ -316,7 +340,7 @@
                 {
                     name: "ItemState_UpdateAll", 
                     type: "Component Action", 
-                    desc: "Used internally to re-enable all menu items.  Can be called externally to enable or disable all menu items", 
+                    desc: "Used internally to re-enable all menu items.  Can be called externally to enable or disable all menu items.  Please remember that when 'ManageItemStates' is set to true, all menu items are enabled any time a menu item is selected.", 
                     canCall: true 
                 }, 
                 {
@@ -410,7 +434,7 @@
             )
         MenuItem: =LookUp(col_pbMenu,Upper(menuKey)=Upper(p_menuKey) && Upper(ItemKey)=Upper(p_itemKey))
         MenuKey: ="MenuBuilder"
-        MinimumHeight: =If(Upper(Self.ToolbarOrientation)=Upper(pbMenu_MenuBuilder.LayoutChoices.Horizontal),If(Self.OverrideMinHeight>0,Self.OverrideMinHeight, 50),140) 
+        MinimumHeight: =If(Upper(Self.ToolbarOrientation)=Upper(pbMenu.LayoutChoices.Horizontal),If(Self.OverrideMinHeight>0,Self.OverrideMinHeight, 50),140) 
         MinimumWidth: |
             =If(pbMenu.ToolbarOrientation=pbMenu.LayoutChoices.Horizontal,200,
                 If(pbMenu.CollapsedMode()=true,50,
@@ -429,13 +453,18 @@
                 "MBVIEWDATA", 
                     UpdateContext({mbMode: "View"}); 
                     UpdateContext({helperMenu: "mbHelper_View"});    
+                    pbMenu_BuildHelper.ItemState_UpdateAll(true);
+                    pbMenu_BuildHelper.DoMenu("mbHelper_View", "mbhMenuProps");
+                    pbMenu_BuildHelper.ItemState("mbhMenuProps",false);
                     true, 
                 "MBEXAMPLEMENUABOUT",
                     UpdateContext({showAboutExMenu: true});
                     true,  
                 "MBRESET", 
-                    RemoveIf(col_pbMenu, Upper(menuKey) = Upper("exampleMenu"));
-                    RemoveIf(col_BuildMenu, Upper(menuKey) = Upper("exampleMenu"));
+                    ForAll(col_BuildMenu As custom, 
+                        RemoveIf(col_pbMenu,Lower(menuKey)=Lower(custom.menuKey));
+                    );
+                    Clear(col_BuildMenu);
                     true,
                 "MBEXAMPLEMENU", 
                     //Note:  the code below creates the menu items, which can be rendered in any pbMenu control.   Additional properties, which affect behavior of the menu and menu items, are set on each pbMenu control placed on your screen(s).  For this demo, most of the customizable pbMenu properties are linked to on screen controls (like 'MenuOrientation') near the top of the current screen. Try changing those properties to view how it affect the layout and function of the pbMenu.
@@ -446,6 +475,7 @@
                     // The 'col_BuildMenu' is used for this demo only, and is normally not a collection the pbMenu cares about
                     RemoveIf(col_BuildMenu, Upper(menuKey) = Upper("exampleMenu"));
                     Collect(col_BuildMenu, {menuKey: "exampleMenu"});
+                    
                     // Build the menu items that will render when referencing 'exampleMenu'
                     // Because the menu is getting built in response to another pbMenu.OnBeforeAction event, we're using 'Self' to refer to the pbMenu which raised the event, but since we're adding all menu items to the col_pbMenu collection (last parameter), we could change 'Self' to any pbMenu on any screen.
                     //Create an 'Info Only' menu item.  (Not Selectable)
@@ -510,7 +540,9 @@
         btnClearInfoFilter As Button:
             DisplayMode: =DisplayMode.Edit
             Height: =32
-            OnSelect: =Reset(srch_pbMenuInfo)
+            OnSelect: |-
+                =UpdateContext({infoSearch: ""});
+                Reset(srch_pbMenuInfo)
             Text: ="Clear Filter"
             Width: =96
             X: =344
@@ -524,10 +556,11 @@
             Height: =Parent.Height - Self.Y - 10 
             Mode: ='TextInputCanvas.Mode'.Multiline
             Value: |-
-                =//JSON(Filter(pbMenu_Build.Information(),CountIf(cboSearchInformation.SelectedItems,true)=0 || name in Distinct(cboSearchInformation.SelectedItems,name)) ,JSONFormat.IndentFour)
-                Switch(Upper(helperView), 
+                =Switch(Upper(helperView), 
                     "MENUPROPS", 
+                        $"(sorted by {Char(34)}name{Char(34)}){const_CrLf}{const_CrLf}" & 
                         JSON(
+                            SortByColumns(
                             With({rslt: 
                             ForAll(pbMenu_Build.Information() As item, 
                                 With({srch: Lower(srch_pbMenuInfo.Value)}, 
@@ -537,7 +570,7 @@
                                 )
                             )}, 
                                 Filter(rslt,Len(name)>0)
-                            )
+                            ),"name",SortOrder.Ascending)
                             ,JSONFormat.IndentFour
                         ), 
                     Upper("menuitemsjson"), 
@@ -557,6 +590,7 @@
             Placeholder: |-
                 ="Search pbMenu_Build: Props"
             TriggerOutput: ='TextInputCanvas.TriggerOutput'.Delayed
+            Value: =infoSearch
             Width: =320
             X: =10
             Y: =5
@@ -634,7 +668,7 @@
                 )
                 
             ConfirmationColorPalette: =confirmColorPalette
-            ConfirmMode: =spin.waiting<>true && CountIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")>0
+            ConfirmMode: =CountIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_Build.ControlGUID) && action="confirm")>0
             CreateInfoItem: |
                 =With({newMenuItem: 
                     //get menu item structure
@@ -710,48 +744,55 @@
                     )
                 )
             DoMenu: |-
-                =With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
-                    If(mi.confirmItemAction=true, 
-                        If(Self.ConfirmMode() <> true, 
-                            //Add 'confirm' action and waits for user to confirm or cancel
-                            //cancel clears confirm action
-                            //confirm calls DoMenu again, which can then move forward
-                            Self.ConfirmAction(p_menuKey,p_itemKey,mi.ItemDisplayName)
-                            , 
-                            //clear the 'confirm' action, which is now confirmed, and 
-                            //process menuItem as normal
-                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")
-                        )
-                    );
-                    If(Self.ConfirmMode() <> true, 
-                        If(pbMenu.ManageItemStates = true, 
-                            If(CountIf(pbMenu.CurrentMenuItems,ItemDisabled=true)>0, 
-                                pbMenu.ItemState_UpdateAll(true)
-                            );
-                            If(mi.disableOnSelect=true, 
-                                pbMenu.ItemState(mi.ItemKey,false)
+                =With({spinning: spin.waiting=true, spinningMsg: spin.msg}, 
+                    If(Not(spinning), Set(spin, {waiting: true, msg: "Please wait ..."}));
+                    With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
+                        If(mi.confirmItemAction=true, 
+                            If(Self.ConfirmMode() <> true, 
+                                //Add 'confirm' action and waits for user to confirm or cancel
+                                //cancel clears confirm action
+                                //confirm calls DoMenu again, which can then move forward
+                                Self.ConfirmAction(p_menuKey,p_itemKey,mi.ItemDisplayName)
+                                , 
+                                //clear the 'confirm' action, which is now confirmed, and 
+                                //process menuItem as normal
+                                RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_Build.ControlGUID) && action="confirm")
                             )
                         );
-                        //Raise 'OnBeforeAction'.  If handled in event on screen ('true' returned), no further action is taken.
-                        //If not handled in the 'OnBeforeAction', will attempt to handle below and show error if was not handled.
-                        If(Self.OnBeforeAction(p_itemKey) = true, 
-                            true
-                            , 
-                            With({handledHere: 
-                                Switch(Upper(p_itemKey), 
-                                    "LAUNCHGITHUB", Launch("https://github.com/lopperman"); true, 
-                                    "LAUNCHREDDIT", Launch("https://www.reddit.com/user/ITFuture"); true, 
-                                    "GOOGLE", Launch("https://www.google.com"); true, 
-                                    "MINAVPERF", Navigate(PerformanceLog,ScreenTransition.Fade); true, 
+                        With({doMenuHandled: 
+                            If(Self.ConfirmMode() <> true, 
+                                If(pbMenu_Build.ManageItemStates = true, 
+                                    pbMenu.ItemState_UpdateAll(true);
+                                    If(mi.disableOnSelect=true, 
+                                        pbMenu.ItemState(mi.ItemKey,false)
+                                    )
+                                );
+                                //Raise 'OnBeforeAction'.  If handled in event on screen ('true' returned), no further action is taken.
+                                //If not handled in the 'OnBeforeAction', will attempt to handle below and show error if was not handled.
+                                If(Self.OnBeforeAction(p_itemKey) = true, 
+                                    true
+                                    , 
+                                    With({handledHere: 
+                                        Switch(Upper(p_itemKey), 
+                                            "LAUNCHGITHUB", Launch("https://github.com/lopperman"); true, 
+                                            "LAUNCHREDDIT", Launch("https://www.reddit.com/user/ITFuture"); true, 
+                                            "GOOGLE", Launch("https://www.google.com"); true, 
+                                            "MINAVPERF", Navigate(PerformanceLog,ScreenTransition.Fade); true, 
                 
-                                    //not handled
-                                    Notify("NO ACTION WAS TAKEN FOR MENU ITEM: " & p_menuKey & "." & p_itemKey & " (" & mi.ItemDisplayName & ")",NotificationType.Error,5000);
-                                    false
-                                )}, 
-                                handledHere
+                                            //not handled
+                                            Notify("NO ACTION WAS TAKEN FOR MENU ITEM: " & p_menuKey & "." & p_itemKey & " (" & mi.ItemDisplayName & ")",NotificationType.Error,5000);
+                                            false
+                                        )}, 
+                                        handledHere
+                                    )
+                                );
                             )
-                        );
-                    )
+                            }, 
+                            If(Not(spinning), Set(spin,{waiting: false,msg:"Please wait ..."}));
+                            doMenuHandled
+                        )
+                
+                    );
                 )
             EnableCollapsedState: =toggEnableCollapsedState.Checked
             Fill: =RGBA(255, 255, 219, 1)
@@ -770,6 +811,22 @@
                         externalUse: "[pbMenu].LayoutChoices.Horizontal (default), or [pbMenu].LayoutChoices.Vertical", 
                         type: "Input Property",
                         desc: "Use to get or set the orientation of [pbMenu]"
+                    },
+                    {
+                        name: "MinimumHeight()", 
+                        valNumber: Self.MinimumHeight(), 
+                        dataType: "Number", 
+                        externalUse: "When in 'Horizontal' layout mode, set the pbMenu component (added to your screen) 'Height' property to be 'Self.MinimumHeight()'", 
+                        type: "Output Function", 
+                        desc: "Provides recommended pbMenu Height, when in Horizontal layout mode.  Note: Property 'OverrideMinHeight can be used to fine tune desired menu height."
+                    },
+                    {
+                        name: "MinimumWidth()", 
+                        valNumber: Self.MinimumWidth(), 
+                        dataType: "Number", 
+                        externalUse: "When in 'Vertical' layout mode, set the pbMenu component (added to your screen) 'Width' property to be 'Self.MinimumWidth()'.  This will enable the pbMenu control to automatically resize when user collapses or expands the menu.", 
+                        type: "Output Function", 
+                        desc: "Provides recommended pbMenu Width, when in Vertical layout mode,  Note: if you need to adjust the expanded width, use the 'OverrideExpandedWidth' property to set the desired expanded width value"
                     },
                     {
                         name: "CurrentMenuItems", 
@@ -791,9 +848,9 @@
                         name: "CollapseMode()", 
                         valBoolean: Self.CollapsedMode(), 
                         dataType: "Boolean", 
-                        externalUse: "Reference Only (must be called as function)", 
+                        externalUse: "Reference Only, must be called as function", 
                         type: "Output Function",
-                        desc: "Returns true when 'ToolbarOrientation' is Vertical and menu is collapsed and only displaying icons"
+                        desc: "Returns true when 'ToolbarOrientation' is Vertical and menu is collapsed"
                     },
                     {
                         name: "EnableCollapsedState", 
@@ -807,15 +864,15 @@
                         name: "ConfirmationColorPalette", 
                         valColor: Self.ConfirmationColorPalette, 
                         dataType: "Color", 
-                        externalUse: "Use to set color palette of Confirmation 'Confirm' button; Default is 'PowerAppsTheme.Colors.Primary'", 
+                        externalUse: "Use to set color palette of Confirmation 'Confirm' button", 
                         type: "Input Property",
                         desc: "Color Palette used when displaying 'Confirm' button for required user confirmation"
                     }, 
                     {
-                        name: "ConfirmMode", 
+                        name: "ConfirmMode()", 
                         valBoolean: Self.ConfirmMode(), 
                         dataType: "Boolean", 
-                        externalUse: "Reference Only, must call as function", 
+                        externalUse: "Reference Only, must be called as function", 
                         type: "Output Function", 
                         desc: "When user has selected a menu item which requires confirmation, [pbMenu].'ConfirmMode()' will return true until user has selected 'Confirm' or 'Cancel'"
                     }, 
@@ -825,7 +882,7 @@
                         dataType: "Text", 
                         externalUse: "Reference Only.  VALUE WILL CHANGE BETWEEN SESSIONS!", 
                         type: "Output Property", 
-                        desc: "Unique value which can be used at runtime only, and may update each time a screen becomes visible.  The purpose of this property is to manage specific state information when multiple pbMenu components exist on the same screen"
+                        desc: "Unique value which can be used at runtime only, and may update each time a screen becomes visible.  The purpose of this property is to manage specific state information"
                     }, 
                     {
                         name: "ItemAppearanceChoices", 
@@ -863,13 +920,13 @@
                         type: "Component Action", 
                         dataType: "Record", 
                         externalUse: "Returns Menu Item Record data which is also automatically added to collection: col_pbMenu if the 'p_addToCollection' argument is true", 
-                        desc: "Returns a menu item record based on provided parameter values.  By default, new menu item is not added to a data source and therefore will not be available for use.  When called with p_addToCollection=true, the new menu item will be added to col_pbMenu (default data source for [pbMenu]), and becomes available for use by the pbMenu component.  See 'MenuData' for more information.", 
+                        desc: "Returns a menu item record based on provided parameter values.  By default, new menu item is not added to a data source and therefore will not be available for use.  When called with p_addToCollection=true, the new menu item will be added to col_pbMenu (default data source for [pbMenu]), and becomes available for use by any pbMenu component.", 
                         example: $"To get the correct structure (record) of a menu item you wish to add, which will be stored in an external datasource -- like SharePoint or DataVerse -- the following would return that record and NOT add it to the default MenuData datasource ('col_pbMenu'):  [pbMenu].CreateMenuItem({Char(34)}Main{Char(34)},{Char(34)}miNavBuild{Char(34)},{Char(34)}MENU BUILDER{Char(34)},{Char(34)}ArrowRight{Char(34)},[pbMenu].ItemAppearanceChoices.Primary,[pbMenu].ItemIconStyleChoices.Filled,{Char(34)}Build a Menu{Char(34)},false,false,false);, setting the last parameter to 'true' would cause the new menu item to also be added to 'col_pbMenu'"
                     }, 
                     {
                         name: "DoMenu", 
                         dataType: "n/a", 
-                        externalUse: "Optionally usee to trigger a menu item selection (see desc)", 
+                        externalUse: "Optionally use to trigger a menu item selection (see desc)", 
                         type: "Component Action", 
                         desc: "Called when user selects a menu item which was rendered from [pbMenu].MenuData data source. Can also be called externally. When a menu item that requires user confirmation is selected, 'DoMenu' is not called until user also selects the confirmation button. When 'DoMenu' is called externally, the item key property is NOT required to correlate to a menu item currently available, as long as the pbMenu being called is able to process the 'p_ItemKey' argument in the [pbMenu].OnBeforeAction event on the current screen."
                     }, 
@@ -891,7 +948,7 @@
                     {
                         name: "ItemState_UpdateAll", 
                         type: "Component Action", 
-                        desc: "Used internally to re-enable all menu items.  Can be called externally to enable or disable all menu items", 
+                        desc: "Used internally to re-enable all menu items.  Can be called externally to enable or disable all menu items.  Please remember that when 'ManageItemStates' is set to true, all menu items are enabled any time a menu item is selected.", 
                         canCall: true 
                     }, 
                     {
@@ -987,7 +1044,7 @@
             MenuColorPalette: =miPrimaryColorPalette
             MenuItem: =LookUp(col_pbMenu,Upper(menuKey)=Upper(p_menuKey) && Upper(ItemKey)=Upper(p_itemKey))
             MenuKey: =Coalesce(ddMenuKey.Selected.Value,"exampleMenu")
-            MinimumHeight: =If(Upper(Self.ToolbarOrientation)=Upper(pbMenu_Build.LayoutChoices.Horizontal),If(Self.OverrideMinHeight>0,Self.OverrideMinHeight, 50),140) 
+            MinimumHeight: =If(Upper(Self.ToolbarOrientation)=Upper(pbMenu.LayoutChoices.Horizontal),If(Self.OverrideMinHeight>0,Self.OverrideMinHeight, 50),140) 
             MinimumWidth: |
                 =If(pbMenu.ToolbarOrientation=pbMenu.LayoutChoices.Horizontal,200,
                     If(pbMenu.CollapsedMode()=true,50,
@@ -1590,6 +1647,14 @@
                 X: =10
                 Y: =8
                 ZIndex: =35
+
+                Value1 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
+                    FieldDisplayName: ="Value"
+                    FieldName: ="Value"
+                    FieldType: ="s"
+                    FieldVariantName: ="textualColumn"
+                    Order: =1
+                    ZIndex: =0
 
             TextCanvas3_9 As Text:
                 Align: ='TextCanvas.Align'.Center
@@ -2399,7 +2464,7 @@
                 )
             )
             
-        ConfirmMode: =spin.waiting<>true && CountIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")>0
+        ConfirmMode: =CountIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_BuildHelper.ControlGUID) && action="confirm")>0
         CreateInfoItem: |
             =With({newMenuItem: 
                 //get menu item structure
@@ -2475,48 +2540,55 @@
                 )
             )
         DoMenu: |-
-            =With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
-                If(mi.confirmItemAction=true, 
-                    If(Self.ConfirmMode() <> true, 
-                        //Add 'confirm' action and waits for user to confirm or cancel
-                        //cancel clears confirm action
-                        //confirm calls DoMenu again, which can then move forward
-                        Self.ConfirmAction(p_menuKey,p_itemKey,mi.ItemDisplayName)
-                        , 
-                        //clear the 'confirm' action, which is now confirmed, and 
-                        //process menuItem as normal
-                        RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")
-                    )
-                );
-                If(Self.ConfirmMode() <> true, 
-                    If(pbMenu.ManageItemStates = true, 
-                        If(CountIf(pbMenu.CurrentMenuItems,ItemDisabled=true)>0, 
-                            pbMenu.ItemState_UpdateAll(true)
-                        );
-                        If(mi.disableOnSelect=true, 
-                            pbMenu.ItemState(mi.ItemKey,false)
+            =With({spinning: spin.waiting=true, spinningMsg: spin.msg}, 
+                If(Not(spinning), Set(spin, {waiting: true, msg: "Please wait ..."}));
+                With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
+                    If(mi.confirmItemAction=true, 
+                        If(Self.ConfirmMode() <> true, 
+                            //Add 'confirm' action and waits for user to confirm or cancel
+                            //cancel clears confirm action
+                            //confirm calls DoMenu again, which can then move forward
+                            Self.ConfirmAction(p_menuKey,p_itemKey,mi.ItemDisplayName)
+                            , 
+                            //clear the 'confirm' action, which is now confirmed, and 
+                            //process menuItem as normal
+                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_BuildHelper.ControlGUID) && action="confirm")
                         )
                     );
-                    //Raise 'OnBeforeAction'.  If handled in event on screen ('true' returned), no further action is taken.
-                    //If not handled in the 'OnBeforeAction', will attempt to handle below and show error if was not handled.
-                    If(Self.OnBeforeAction(p_itemKey) = true, 
-                        true
-                        , 
-                        With({handledHere: 
-                            Switch(Upper(p_itemKey), 
-                                "LAUNCHGITHUB", Launch("https://github.com/lopperman"); true, 
-                                "LAUNCHREDDIT", Launch("https://www.reddit.com/user/ITFuture"); true, 
-                                "GOOGLE", Launch("https://www.google.com"); true, 
-                                "MINAVPERF", Navigate(PerformanceLog,ScreenTransition.Fade); true, 
+                    With({doMenuHandled: 
+                        If(Self.ConfirmMode() <> true, 
+                            If(pbMenu_BuildHelper.ManageItemStates = true, 
+                                pbMenu.ItemState_UpdateAll(true);
+                                If(mi.disableOnSelect=true, 
+                                    pbMenu.ItemState(mi.ItemKey,false)
+                                )
+                            );
+                            //Raise 'OnBeforeAction'.  If handled in event on screen ('true' returned), no further action is taken.
+                            //If not handled in the 'OnBeforeAction', will attempt to handle below and show error if was not handled.
+                            If(Self.OnBeforeAction(p_itemKey) = true, 
+                                true
+                                , 
+                                With({handledHere: 
+                                    Switch(Upper(p_itemKey), 
+                                        "LAUNCHGITHUB", Launch("https://github.com/lopperman"); true, 
+                                        "LAUNCHREDDIT", Launch("https://www.reddit.com/user/ITFuture"); true, 
+                                        "GOOGLE", Launch("https://www.google.com"); true, 
+                                        "MINAVPERF", Navigate(PerformanceLog,ScreenTransition.Fade); true, 
             
-                                //not handled
-                                Notify("NO ACTION WAS TAKEN FOR MENU ITEM: " & p_menuKey & "." & p_itemKey & " (" & mi.ItemDisplayName & ")",NotificationType.Error,5000);
-                                false
-                            )}, 
-                            handledHere
+                                        //not handled
+                                        Notify("NO ACTION WAS TAKEN FOR MENU ITEM: " & p_menuKey & "." & p_itemKey & " (" & mi.ItemDisplayName & ")",NotificationType.Error,5000);
+                                        false
+                                    )}, 
+                                    handledHere
+                                )
+                            );
                         )
-                    );
-                )
+                        }, 
+                        If(Not(spinning), Set(spin,{waiting: false,msg:"Please wait ..."}));
+                        doMenuHandled
+                    )
+            
+                );
             )
         EnableCollapsedState: =false
         Fill: =RGBA(232, 233, 235, 1)
@@ -2535,6 +2607,22 @@
                     externalUse: "[pbMenu].LayoutChoices.Horizontal (default), or [pbMenu].LayoutChoices.Vertical", 
                     type: "Input Property",
                     desc: "Use to get or set the orientation of [pbMenu]"
+                },
+                {
+                    name: "MinimumHeight()", 
+                    valNumber: Self.MinimumHeight(), 
+                    dataType: "Number", 
+                    externalUse: "When in 'Horizontal' layout mode, set the pbMenu component (added to your screen) 'Height' property to be 'Self.MinimumHeight()'", 
+                    type: "Output Function", 
+                    desc: "Provides recommended pbMenu Height, when in Horizontal layout mode.  Note: Property 'OverrideMinHeight can be used to fine tune desired menu height."
+                },
+                {
+                    name: "MinimumWidth()", 
+                    valNumber: Self.MinimumWidth(), 
+                    dataType: "Number", 
+                    externalUse: "When in 'Vertical' layout mode, set the pbMenu component (added to your screen) 'Width' property to be 'Self.MinimumWidth()'.  This will enable the pbMenu control to automatically resize when user collapses or expands the menu.", 
+                    type: "Output Function", 
+                    desc: "Provides recommended pbMenu Width, when in Vertical layout mode,  Note: if you need to adjust the expanded width, use the 'OverrideExpandedWidth' property to set the desired expanded width value"
                 },
                 {
                     name: "CurrentMenuItems", 
@@ -2556,9 +2644,9 @@
                     name: "CollapseMode()", 
                     valBoolean: Self.CollapsedMode(), 
                     dataType: "Boolean", 
-                    externalUse: "Reference Only (must be called as function)", 
+                    externalUse: "Reference Only, must be called as function", 
                     type: "Output Function",
-                    desc: "Returns true when 'ToolbarOrientation' is Vertical and menu is collapsed and only displaying icons"
+                    desc: "Returns true when 'ToolbarOrientation' is Vertical and menu is collapsed"
                 },
                 {
                     name: "EnableCollapsedState", 
@@ -2572,15 +2660,15 @@
                     name: "ConfirmationColorPalette", 
                     valColor: Self.ConfirmationColorPalette, 
                     dataType: "Color", 
-                    externalUse: "Use to set color palette of Confirmation 'Confirm' button; Default is 'PowerAppsTheme.Colors.Primary'", 
+                    externalUse: "Use to set color palette of Confirmation 'Confirm' button", 
                     type: "Input Property",
                     desc: "Color Palette used when displaying 'Confirm' button for required user confirmation"
                 }, 
                 {
-                    name: "ConfirmMode", 
+                    name: "ConfirmMode()", 
                     valBoolean: Self.ConfirmMode(), 
                     dataType: "Boolean", 
-                    externalUse: "Reference Only, must call as function", 
+                    externalUse: "Reference Only, must be called as function", 
                     type: "Output Function", 
                     desc: "When user has selected a menu item which requires confirmation, [pbMenu].'ConfirmMode()' will return true until user has selected 'Confirm' or 'Cancel'"
                 }, 
@@ -2590,7 +2678,7 @@
                     dataType: "Text", 
                     externalUse: "Reference Only.  VALUE WILL CHANGE BETWEEN SESSIONS!", 
                     type: "Output Property", 
-                    desc: "Unique value which can be used at runtime only, and may update each time a screen becomes visible.  The purpose of this property is to manage specific state information when multiple pbMenu components exist on the same screen"
+                    desc: "Unique value which can be used at runtime only, and may update each time a screen becomes visible.  The purpose of this property is to manage specific state information"
                 }, 
                 {
                     name: "ItemAppearanceChoices", 
@@ -2628,13 +2716,13 @@
                     type: "Component Action", 
                     dataType: "Record", 
                     externalUse: "Returns Menu Item Record data which is also automatically added to collection: col_pbMenu if the 'p_addToCollection' argument is true", 
-                    desc: "Returns a menu item record based on provided parameter values.  By default, new menu item is not added to a data source and therefore will not be available for use.  When called with p_addToCollection=true, the new menu item will be added to col_pbMenu (default data source for [pbMenu]), and becomes available for use by the pbMenu component.  See 'MenuData' for more information.", 
+                    desc: "Returns a menu item record based on provided parameter values.  By default, new menu item is not added to a data source and therefore will not be available for use.  When called with p_addToCollection=true, the new menu item will be added to col_pbMenu (default data source for [pbMenu]), and becomes available for use by any pbMenu component.", 
                     example: $"To get the correct structure (record) of a menu item you wish to add, which will be stored in an external datasource -- like SharePoint or DataVerse -- the following would return that record and NOT add it to the default MenuData datasource ('col_pbMenu'):  [pbMenu].CreateMenuItem({Char(34)}Main{Char(34)},{Char(34)}miNavBuild{Char(34)},{Char(34)}MENU BUILDER{Char(34)},{Char(34)}ArrowRight{Char(34)},[pbMenu].ItemAppearanceChoices.Primary,[pbMenu].ItemIconStyleChoices.Filled,{Char(34)}Build a Menu{Char(34)},false,false,false);, setting the last parameter to 'true' would cause the new menu item to also be added to 'col_pbMenu'"
                 }, 
                 {
                     name: "DoMenu", 
                     dataType: "n/a", 
-                    externalUse: "Optionally usee to trigger a menu item selection (see desc)", 
+                    externalUse: "Optionally use to trigger a menu item selection (see desc)", 
                     type: "Component Action", 
                     desc: "Called when user selects a menu item which was rendered from [pbMenu].MenuData data source. Can also be called externally. When a menu item that requires user confirmation is selected, 'DoMenu' is not called until user also selects the confirmation button. When 'DoMenu' is called externally, the item key property is NOT required to correlate to a menu item currently available, as long as the pbMenu being called is able to process the 'p_ItemKey' argument in the [pbMenu].OnBeforeAction event on the current screen."
                 }, 
@@ -2656,7 +2744,7 @@
                 {
                     name: "ItemState_UpdateAll", 
                     type: "Component Action", 
-                    desc: "Used internally to re-enable all menu items.  Can be called externally to enable or disable all menu items", 
+                    desc: "Used internally to re-enable all menu items.  Can be called externally to enable or disable all menu items.  Please remember that when 'ManageItemStates' is set to true, all menu items are enabled any time a menu item is selected.", 
                     canCall: true 
                 }, 
                 {
@@ -2748,10 +2836,11 @@
             //        )
             //    )
             )
+        ManageItemStates: =false
         MenuColorPalette: =If(mbMode="View", PowerAppsTheme.Colors.Darker30,Color.Green)
         MenuItem: =LookUp(col_pbMenu,Upper(menuKey)=Upper(p_menuKey) && Upper(ItemKey)=Upper(p_itemKey))
         MenuKey: =helperMenu
-        MinimumHeight: =If(Upper(Self.ToolbarOrientation)=Upper(pbMenu_BuildHelper.LayoutChoices.Horizontal),If(Self.OverrideMinHeight>0,Self.OverrideMinHeight, 50),140) 
+        MinimumHeight: =If(Upper(Self.ToolbarOrientation)=Upper(pbMenu.LayoutChoices.Horizontal),If(Self.OverrideMinHeight>0,Self.OverrideMinHeight, 50),140) 
         MinimumWidth: |
             =If(pbMenu.ToolbarOrientation=pbMenu.LayoutChoices.Horizontal,200,
                 If(pbMenu.CollapsedMode()=true,50,
@@ -2765,9 +2854,32 @@
             =Switch(Upper(p_itemKey), 
                 "MBHJSON", 
                     UpdateContext({helperView: "menuItemsJSON"});
+                    pbMenu_BuildHelper.ItemState_UpdateAll(false);
+                    pbMenu_BuildHelper.ItemState("mbhMenuProps",true);
+            
                     true, 
                 "MBHMENUPROPS", 
                     UpdateContext({helperView: "menuProps"});
+            
+                    pbMenu_BuildHelper.ItemState_UpdateAll(true);
+                    pbMenu_BuildHelper.ItemState("mbhMenuProps",false);
+            
+                    
+                    true, 
+                "MBHINPUTPROPS", 
+                    UpdateContext({infoSearch: "Input Property"}); Reset(srch_pbMenuInfo);
+                    true, 
+                "MBHOUTPUTPROPS", 
+                    UpdateContext({infoSearch: "Output Property"}); Reset(srch_pbMenuInfo);
+                    true, 
+                "MBHOUTPUTFUNCTIONS", 
+                    UpdateContext({infoSearch: "Output Function"}); Reset(srch_pbMenuInfo);
+                    true, 
+                "MBHMENUITEMS", 
+                    UpdateContext({infoSearch: "CurrentMenuItems"}); Reset(srch_pbMenuInfo);
+                    true, 
+                "MBHACTIONS", 
+                    UpdateContext({infoSearch: "Component Action"}); Reset(srch_pbMenuInfo);
                     true, 
             
                     
@@ -2787,7 +2899,7 @@
                         )
                         }, 
                         If(CountIf(col_BuildMenu,Upper(menuKey)=Upper(newMenuItem.menuKey))=0, 
-                            Collect(col_BuildMenu,newMenuItem.menuKey)
+                            Collect(col_BuildMenu,{menuKey: newMenuItem.menuKey})
                         );
                     );
                     true, 
@@ -2819,7 +2931,7 @@
                 false
             )
         OnRemoveMenuItem: =
-        OverrideExpandedWidth: =115
+        OverrideExpandedWidth: =140
         PerformanceLogging: =pbMenu_LogPerformance
         RemoveMenuItem: |-
             =RemoveIf(col_pbMenu,Upper(menuKey)=Upper(p_menuKey) && Upper(ItemKey)=Upper(p_menuItemKey));

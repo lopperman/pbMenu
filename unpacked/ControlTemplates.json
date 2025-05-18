@@ -172,6 +172,20 @@
     "OverridableProperties": {},
     "Version": "2.2.3"
   },
+  "PowerApps_CoreControls_DropdownCanvasTemplate_dataField": {
+    "CustomGroupControlTemplateName": "",
+    "FirstParty": true,
+    "Id": "http://microsoft.com/appmagic/PowerApps_CoreControls_DropdownCanvasTemplate_dataField",
+    "IsComponentTemplate": false,
+    "IsCustomGroupControlTemplate": false,
+    "IsPcfControl": false,
+    "IsPremiumPcfControl": false,
+    "IsWidgetTemplate": true,
+    "LastModifiedTimestamp": "0",
+    "Name": "PowerApps_CoreControls_DropdownCanvasTemplate_dataField",
+    "OverridableProperties": {},
+    "Version": "1.5.0"
+  },
   "PowerAppsOneGridTemplate_dataField": {
     "CustomGroupControlTemplateName": "",
     "FirstParty": true,

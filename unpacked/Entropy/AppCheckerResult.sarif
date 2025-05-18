@@ -1694,6 +1694,36 @@
             {
               "logicalLocations": [
                 {
+                  "fullyQualifiedName": "'pbMenu Sandbox'.ButtonCanvas2_3.AccessibleLabel"
+                }
+              ],
+              "physicalLocation": {
+                "address": {
+                  "fullyQualifiedName": "'pbMenu Sandbox'.ButtonCanvas2_3.AccessibleLabel",
+                  "relativeAddress": 0
+                }
+              },
+              "properties": {
+                "member": "AccessibleLabel",
+                "module": "pbMenu Sandbox",
+                "type": "'pbMenu Sandbox'.ButtonCanvas2_3"
+              }
+            }
+          ],
+          "message": {
+            "id": "issue"
+          },
+          "properties": {
+            "level": "Medium"
+          },
+          "ruleId": "acc-AccessibleLabelNeeded",
+          "ruleIndex": 0
+        },
+        {
+          "locations": [
+            {
+              "logicalLocations": [
+                {
                   "fullyQualifiedName": "'pbMenu Sandbox'.ButtonCanvas2_1.AccessibleLabel"
                 }
               ],
@@ -1767,36 +1797,6 @@
                 "member": "AccessibleLabel",
                 "module": "PerformanceLog",
                 "type": "PerformanceLog.tblPerf"
-              }
-            }
-          ],
-          "message": {
-            "id": "issue"
-          },
-          "properties": {
-            "level": "Medium"
-          },
-          "ruleId": "acc-AccessibleLabelNeeded",
-          "ruleIndex": 0
-        },
-        {
-          "locations": [
-            {
-              "logicalLocations": [
-                {
-                  "fullyQualifiedName": "'pbMenu Sandbox'.ButtonCanvas2_3.AccessibleLabel"
-                }
-              ],
-              "physicalLocation": {
-                "address": {
-                  "fullyQualifiedName": "'pbMenu Sandbox'.ButtonCanvas2_3.AccessibleLabel",
-                  "relativeAddress": 0
-                }
-              },
-              "properties": {
-                "member": "AccessibleLabel",
-                "module": "pbMenu Sandbox",
-                "type": "'pbMenu Sandbox'.ButtonCanvas2_3"
               }
             }
           ],
