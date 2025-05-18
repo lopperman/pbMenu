@@ -32,28 +32,19 @@ Screens:
             BorderColor: =PowerAppsTheme.Colors.Darker20
             BorderWidth: =1
             BusyBehavior: =Self.BusyBehaviorChoices.Spinning
-            BusyMessage: =spin.msg
-            CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
-            ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
+            BusyMessage: =""
+            CancelMenuColorPalette: =
+            ConfirmationColorPalette: =
             DefaultCollapsedState: =true
             EnableUserCollapse: =true
             Height: =Self.MinimumHeight()
-            IsBusy: '=spin.waiting=true '
+            IsBusy: =spin.waiting=true
             IsBusyEnabled: =true
             ManageItemStates: =true
-            MenuColorPalette: =PowerAppsTheme.Colors.Primary
+            MenuColorPalette: =
             MenuItemTextColor: =
             MenuKey: ="Main"
-            OnBeforeAction: |-
-              =Switch(Upper(p_itemKey), 
-                  Upper("miNavBuild"), Navigate('Menu Builder',ScreenTransition.Fade); true, 
-                  Upper("togglePerfLogging"), 
-                      Set(pbMenu_LogPerformance,Not(pbMenu_LogPerformance));
-                      Notify($"'pbMenu_LogPerformance' global variable is now set to: {pbMenu_LogPerformance}.  Any pbMenu using 'pbMenu_LogPerformance' for the Log Performance property will now use this value",NotificationType.Information,5000);
-                      true, 
-
-                  false 
-              )
+            OnBeforeAction: "=Switch(Upper(p_itemKey), \n    Upper(\"miNavBuild\"), Navigate('Menu Builder',ScreenTransition.Fade); true, \n    Upper(\"togglePerfLogging\"), \n        Set(pbMenu_LogPerformance,Not(pbMenu_LogPerformance));\n        Notify($\"'pbMenu_LogPerformance' global variable is now set to: {pbMenu_LogPerformance}.  Any pbMenu using 'pbMenu_LogPerformance' for the Log Performance property will now use this value\",NotificationType.Information,5000);\n        true, \n    Upper(\"miNavPerf\"),  Navigate(PerformanceLog,ScreenTransition.Fade); true, \n    \n    false \n)"
             OnRemoveMenuItem: =
             OverrideExpandedWidth: =0
             OverrideMinHeight: =0
@@ -71,14 +62,14 @@ Screens:
             BorderColor: =PowerAppsTheme.Colors.Darker20
             BorderWidth: =1
             BusyBehavior: =Self.BusyBehaviorChoices.Spinning
-            BusyMessage: =spin.msg
-            CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
-            ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
+            BusyMessage: =""
+            CancelMenuColorPalette: =
+            ConfirmationColorPalette: =
             DefaultCollapsedState: =true
             EnableUserCollapse: =true
             Fill: =RGBA(214, 221, 224, 1)
             Height: =Parent.Height - Self.Y -8
-            IsBusy: '=spin.waiting=true '
+            IsBusy: =spin.waiting=true
             IsBusyEnabled: =true
             ManageItemStates: =true
             MenuColorPalette: =RGBA(189, 49, 51, 1)
@@ -102,14 +93,14 @@ Screens:
             BorderColor: =PowerAppsTheme.Colors.Lighter50
             BorderWidth: =1
             BusyBehavior: =Self.BusyBehaviorChoices.Disabled
-            BusyMessage: =spin.msg
-            CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
-            ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
+            BusyMessage: =""
+            CancelMenuColorPalette: =
+            ConfirmationColorPalette: =
             DefaultCollapsedState: =true
             EnableUserCollapse: =true
             Fill: =RGBA(252, 252, 217, 1)
             Height: =Parent.Height - Self.Y -8
-            IsBusy: '=spin.waiting=true '
+            IsBusy: =spin.waiting=true
             IsBusyEnabled: =true
             ManageItemStates: =true
             MenuColorPalette: =RGBA(45, 128, 40, 1)

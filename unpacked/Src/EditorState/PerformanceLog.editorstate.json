@@ -766,7 +766,14 @@
         "Information",
         "CreateMenuItem",
         "MenuData_All",
-        "IsBusy",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "false",
+          "InvariantPropertyName": "IsBusy",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "BusyMessage",
         "BusyBehavior",
         "BusyBehaviorChoices",
@@ -1045,7 +1052,7 @@
         {
           "Category": "Data",
           "PropertyName": "IsBusy",
-          "RuleProviderType": "System"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Data",

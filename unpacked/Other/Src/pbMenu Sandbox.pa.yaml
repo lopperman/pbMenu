@@ -77,13 +77,13 @@ Screens:
             BorderColor: =PowerAppsTheme.Colors.Darker20
             BorderWidth: =1
             BusyBehavior: =Self.BusyBehaviorChoices.Spinning
-            BusyMessage: =spin.msg
-            CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
+            BusyMessage: =""
+            CancelMenuColorPalette: =
             ConfirmationColorPalette: =Color.Green
             DefaultCollapsedState: =true
             EnableUserCollapse: =true
             Height: =Self.MinimumHeight()
-            IsBusy: '=spin.waiting=true '
+            IsBusy: =spin.waiting=true
             IsBusyEnabled: =true
             ManageItemStates: =true
             MenuColorPalette: =Color.Navy
@@ -120,16 +120,16 @@ Screens:
             BorderColor: =PowerAppsTheme.Colors.Darker20
             BorderWidth: =1
             BusyBehavior: =Self.BusyBehaviorChoices.Spinning
-            BusyMessage: =spin.msg
-            CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
-            ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
+            BusyMessage: =""
+            CancelMenuColorPalette: =
+            ConfirmationColorPalette: =
             DefaultCollapsedState: =sb_DefaultCollapsed
             EnableUserCollapse: =sb_EnableCollapse
             Height: =603
-            IsBusy: '=spin.waiting=true '
+            IsBusy: =spin.waiting=true
             IsBusyEnabled: =true
             ManageItemStates: =true
-            MenuColorPalette: =PowerAppsTheme.Colors.Primary
+            MenuColorPalette: =
             MenuItemTextColor: =
             MenuKey: =vertMenuKey
             OnBeforeAction: |-
@@ -205,3 +205,48 @@ Screens:
             Width: =200
             X: =179
             Y: =532
+      - Image2:
+          Control: Image@2.2.3
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            BorderStyle: =BorderStyle.None
+            BorderThickness: =2
+            DisabledBorderColor: =RGBA(0, 0, 0, 0)
+            DisabledFill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =4
+            HoverBorderColor: =RGBA(0, 0, 0, 0)
+            HoverFill: =RGBA(0, 0, 0, 0)
+            Image: ="data:image/svg+xml;utf8, %3Csvg%20%20viewBox%3D%270%200%202048%202048%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%3E%3Cpath%20d%3D%27M1754%201220l142%20308-338%2030-30%20338-308-142-196%20277-196-277-308%20142-30-338-338-30%20142-308-277-196%20277-196-142-308%20338-30%2030-338%20308%20142%20196-277%20196%20277%20308-142%2030%20338%20338%2030-142%20308%20277%20196-277%20196zm-50%20196l-111-240%20216-152-216-152%20111-240-264-24-24-264-240%20111-152-216-152%20216-240-111-24%20264-264%2024%20111%20240-216%20152%20216%20152-111%20240%20264%2024%2024%20264%20240-111%20152%20216%20152-216%20240%20111%2024-264%20264-24z%27%20fill%3D%27%23d13438%27%3E%3C%2Fpath%3E%3C%2Fsvg%3E"
+            PressedBorderColor: =RGBA(0, 0, 0, 0)
+            PressedFill: =RGBA(0, 0, 0, 0)
+            X: =633
+            Y: =193
+      - imgUser:
+          Control: Image@2.2.3
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            BorderStyle: =BorderStyle.None
+            BorderThickness: =2
+            DisabledBorderColor: =RGBA(0, 0, 0, 0)
+            DisabledFill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =4
+            HoverBorderColor: =RGBA(0, 0, 0, 0)
+            HoverFill: =RGBA(0, 0, 0, 0)
+            Image: =user
+            PressedBorderColor: =RGBA(0, 0, 0, 0)
+            PressedFill: =RGBA(0, 0, 0, 0)
+            X: =799
+            Y: =198
+      - TextCanvas6:
+          Control: Text@0.0.51
+          Properties:
+            Align: ='TextCanvas.Align'.Center
+            AutoHeight: =true
+            Fill: =RGBA(255, 255, 0, 1)
+            Size: =18
+            Text: ="Sandbox Area"
+            VerticalAlign: =VerticalAlign.Middle
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: '=Parent.Width - Self.X - 10 '
+            X: '=pbMenu_2.X + pbMenu_2.Width + 10 '
+            Y: '=pbMenu_1.Y + pbMenu_1.Height + 10 '

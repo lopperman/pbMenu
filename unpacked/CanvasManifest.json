@@ -5,7 +5,7 @@
       "DataflowAnalysisEnabled": true,
       "DataflowAnalysisFlagStateToggledByUser": false
     },
-    "DocVersion": "1.346",
+    "DocVersion": "1.345",
     "MinVersionToLoad": "1.331",
     "MSAppStructureVersion": "2.4.0"
   },
@@ -122,7 +122,7 @@
     "DocumentType": "App",
     "EnableInstrumentation": false,
     "FileID": "8d0f00cf-2583-4da1-80b5-eec7b406053c",
-    "Id": "33904f8c-649d-4a57-b142-9fa633279d72",
+    "Id": "89290113-7973-440d-8bb5-003255b7fba3",
     "LocalDatabaseReferences": "",
     "ManualOfflineProfileId": "",
     "Name": "just-a-Menu.msapp",

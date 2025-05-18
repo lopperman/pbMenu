@@ -28,14 +28,14 @@ PerformanceLog As screen:
                         If(IsBlank(collapseRec), 
                             If(Self.EnableUserCollapse=false, 
                                 false, 
-                                pbMenu_PerfLog.DefaultCollapsedState
+                                pbMenu.DefaultCollapsedState
                             )
                             , 
                             collapseRec.boolValue
                         )}, 
                         If(isCollapsed=false, 
                             If(IsBlank(collapseRec), 
-                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu_PerfLog.ControlGUID), menuKey: pbMenu_PerfLog.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: true,  desc: ""})
+                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu.ControlGUID), menuKey: pbMenu.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: true,  desc: ""})
                                 , 
                                 Patch(col_pbMenuUtil, collapseRec, {boolValue:true})
                             )
@@ -49,7 +49,7 @@ PerformanceLog As screen:
             If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal, false,     
                 With({collapseRec: LookUp(col_pbMenuUtil,menuGuid=GUID(Self.ControlGUID) && action="collapse")}, 
                     If(IsBlank(collapseRec), 
-                        pbMenu_PerfLog.DefaultCollapsedState
+                        pbMenu.DefaultCollapsedState
                         , 
                         collapseRec.boolValue
                     )       
@@ -141,10 +141,8 @@ PerformanceLog As screen:
                     newSpacer
                 )
             )
-        DoMenu: |-
-            =With({spinning: spin.waiting=true, spinningMsg: spin.msg}, 
-                If(Not(spinning), Set(spin, {waiting: true, msg: "Please wait ..."}));
-                With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
+        DoMenu: |
+            =    With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
                     If(mi.confirmItemAction=true, 
                         If(Self.ConfirmMode() <> true, 
                             //Add 'confirm' action and waits for user to confirm or cancel
@@ -154,12 +152,12 @@ PerformanceLog As screen:
                             , 
                             //clear the 'confirm' action, which is now confirmed, and 
                             //process menuItem as normal
-                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")
+                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_PerfLog.ControlGUID) && action="confirm")
                         )
                     );
                     With({doMenuHandled: 
                         If(Self.ConfirmMode() <> true, 
-                            If(pbMenu.ManageItemStates = true, 
+                            If(pbMenu_PerfLog.ManageItemStates = true, 
                                 pbMenu.ItemState_UpdateAll(true);
                                 If(mi.disableOnSelect=true, 
                                     pbMenu.ItemState(mi.ItemKey,false)
@@ -175,7 +173,7 @@ PerformanceLog As screen:
                                         "LAUNCHGITHUB", Launch("https://github.com/lopperman"); true, 
                                         "LAUNCHREDDIT", Launch("https://www.reddit.com/user/ITFuture"); true, 
                                         "GOOGLE", Launch("https://www.google.com"); true, 
-                                        "MINAVPERF", Navigate(PerformanceLog,ScreenTransition.Fade); true, 
+                                        //"MINAVPERF", Navigate(PerformanceLog,ScreenTransition.Fade); true, 
             
                                         //not handled
                                         Notify("NO ACTION WAS TAKEN FOR MENU ITEM: " & p_menuKey & "." & p_itemKey & " (" & mi.ItemDisplayName & ")",NotificationType.Error,5000);
@@ -186,25 +184,23 @@ PerformanceLog As screen:
                             );
                         )
                         }, 
-                        If(Not(spinning), Set(spin,{waiting: false,msg:"Please wait ..."}));
                         doMenuHandled
                     )
             
                 );
-            )
         Expand: |-
             =If(Lower(Self.ToolbarOrientation)=Lower(Self.LayoutChoices.Vertical), 
                 //determine if current state is expanded
                 With({collapseRec: LookUp(col_pbMenuUtil,menuGuid=GUID(Self.ControlGUID) && action="collapse")}, 
                     With({isCollapsed: 
                         If(IsBlank(collapseRec), 
-                            pbMenu_PerfLog.DefaultCollapsedState
+                            pbMenu.DefaultCollapsedState
                             , 
                             collapseRec.boolValue
                         )}, 
                         If(isCollapsed=true, 
                             If(IsBlank(collapseRec), 
-                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu_PerfLog.ControlGUID), menuKey: pbMenu_PerfLog.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: false,  desc: ""})
+                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu.ControlGUID), menuKey: pbMenu.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: false,  desc: ""})
                                 , 
                                 Patch(col_pbMenuUtil, collapseRec, {boolValue:false})
                             )
@@ -440,6 +436,7 @@ PerformanceLog As screen:
                 }
             
             ]
+        IsBusy: =spin.waiting=true
         ItemState: |
             =With({Perf: {id: GUID(), start: Now(), action: $"ITEM STATE CHANGE: {pbMenu.MenuKey}.{p_itemKey} (enabled: {p_enabled})"}}, 
                 If(Not(StartsWith(Lower(p_itemKey),"_spacer_")) || Not(p_enabled), 

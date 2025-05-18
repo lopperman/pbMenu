@@ -162,14 +162,14 @@
                         If(IsBlank(collapseRec), 
                             If(Self.EnableUserCollapse=false, 
                                 false, 
-                                pbMenu_1.DefaultCollapsedState
+                                pbMenu.DefaultCollapsedState
                             )
                             , 
                             collapseRec.boolValue
                         )}, 
                         If(isCollapsed=false, 
                             If(IsBlank(collapseRec), 
-                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu_1.ControlGUID), menuKey: pbMenu_1.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: true,  desc: ""})
+                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu.ControlGUID), menuKey: pbMenu.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: true,  desc: ""})
                                 , 
                                 Patch(col_pbMenuUtil, collapseRec, {boolValue:true})
                             )
@@ -183,7 +183,7 @@
             If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal, false,     
                 With({collapseRec: LookUp(col_pbMenuUtil,menuGuid=GUID(Self.ControlGUID) && action="collapse")}, 
                     If(IsBlank(collapseRec), 
-                        pbMenu_1.DefaultCollapsedState
+                        pbMenu.DefaultCollapsedState
                         , 
                         collapseRec.boolValue
                     )       
@@ -276,10 +276,8 @@
                     newSpacer
                 )
             )
-        DoMenu: |-
-            =With({spinning: spin.waiting=true, spinningMsg: spin.msg}, 
-                If(Not(spinning), Set(spin, {waiting: true, msg: "Please wait ..."}));
-                With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
+        DoMenu: |
+            =    With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
                     If(mi.confirmItemAction=true, 
                         If(Self.ConfirmMode() <> true, 
                             //Add 'confirm' action and waits for user to confirm or cancel
@@ -289,12 +287,12 @@
                             , 
                             //clear the 'confirm' action, which is now confirmed, and 
                             //process menuItem as normal
-                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")
+                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_1.ControlGUID) && action="confirm")
                         )
                     );
                     With({doMenuHandled: 
                         If(Self.ConfirmMode() <> true, 
-                            If(pbMenu.ManageItemStates = true, 
+                            If(pbMenu_1.ManageItemStates = true, 
                                 pbMenu.ItemState_UpdateAll(true);
                                 If(mi.disableOnSelect=true, 
                                     pbMenu.ItemState(mi.ItemKey,false)
@@ -310,7 +308,7 @@
                                         "LAUNCHGITHUB", Launch("https://github.com/lopperman"); true, 
                                         "LAUNCHREDDIT", Launch("https://www.reddit.com/user/ITFuture"); true, 
                                         "GOOGLE", Launch("https://www.google.com"); true, 
-                                        "MINAVPERF", Navigate(PerformanceLog,ScreenTransition.Fade); true, 
+                                        //"MINAVPERF", Navigate(PerformanceLog,ScreenTransition.Fade); true, 
             
                                         //not handled
                                         Notify("NO ACTION WAS TAKEN FOR MENU ITEM: " & p_menuKey & "." & p_itemKey & " (" & mi.ItemDisplayName & ")",NotificationType.Error,5000);
@@ -321,25 +319,23 @@
                             );
                         )
                         }, 
-                        If(Not(spinning), Set(spin,{waiting: false,msg:"Please wait ..."}));
                         doMenuHandled
                     )
             
                 );
-            )
         Expand: |-
             =If(Lower(Self.ToolbarOrientation)=Lower(Self.LayoutChoices.Vertical), 
                 //determine if current state is expanded
                 With({collapseRec: LookUp(col_pbMenuUtil,menuGuid=GUID(Self.ControlGUID) && action="collapse")}, 
                     With({isCollapsed: 
                         If(IsBlank(collapseRec), 
-                            pbMenu_1.DefaultCollapsedState
+                            pbMenu.DefaultCollapsedState
                             , 
                             collapseRec.boolValue
                         )}, 
                         If(isCollapsed=true, 
                             If(IsBlank(collapseRec), 
-                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu_1.ControlGUID), menuKey: pbMenu_1.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: false,  desc: ""})
+                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu.ControlGUID), menuKey: pbMenu.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: false,  desc: ""})
                                 , 
                                 Patch(col_pbMenuUtil, collapseRec, {boolValue:false})
                             )
@@ -575,6 +571,7 @@
                 }
             
             ]
+        IsBusy: =spin.waiting=true
         ItemState: |
             =With({Perf: {id: GUID(), start: Now(), action: $"ITEM STATE CHANGE: {pbMenu.MenuKey}.{p_itemKey} (enabled: {p_enabled})"}}, 
                 If(Not(StartsWith(Lower(p_itemKey),"_spacer_")) || Not(p_enabled), 
@@ -662,14 +659,14 @@
                         If(IsBlank(collapseRec), 
                             If(Self.EnableUserCollapse=false, 
                                 false, 
-                                pbMenu_2.DefaultCollapsedState
+                                pbMenu.DefaultCollapsedState
                             )
                             , 
                             collapseRec.boolValue
                         )}, 
                         If(isCollapsed=false, 
                             If(IsBlank(collapseRec), 
-                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu_2.ControlGUID), menuKey: pbMenu_2.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: true,  desc: ""})
+                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu.ControlGUID), menuKey: pbMenu.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: true,  desc: ""})
                                 , 
                                 Patch(col_pbMenuUtil, collapseRec, {boolValue:true})
                             )
@@ -683,7 +680,7 @@
             If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal, false,     
                 With({collapseRec: LookUp(col_pbMenuUtil,menuGuid=GUID(Self.ControlGUID) && action="collapse")}, 
                     If(IsBlank(collapseRec), 
-                        pbMenu_2.DefaultCollapsedState
+                        pbMenu.DefaultCollapsedState
                         , 
                         collapseRec.boolValue
                     )       
@@ -777,10 +774,8 @@
                 )
             )
         DefaultCollapsedState: =sb_DefaultCollapsed
-        DoMenu: |-
-            =With({spinning: spin.waiting=true, spinningMsg: spin.msg}, 
-                If(Not(spinning), Set(spin, {waiting: true, msg: "Please wait ..."}));
-                With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
+        DoMenu: |
+            =    With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
                     If(mi.confirmItemAction=true, 
                         If(Self.ConfirmMode() <> true, 
                             //Add 'confirm' action and waits for user to confirm or cancel
@@ -790,12 +785,12 @@
                             , 
                             //clear the 'confirm' action, which is now confirmed, and 
                             //process menuItem as normal
-                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")
+                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_2.ControlGUID) && action="confirm")
                         )
                     );
                     With({doMenuHandled: 
                         If(Self.ConfirmMode() <> true, 
-                            If(pbMenu.ManageItemStates = true, 
+                            If(pbMenu_2.ManageItemStates = true, 
                                 pbMenu.ItemState_UpdateAll(true);
                                 If(mi.disableOnSelect=true, 
                                     pbMenu.ItemState(mi.ItemKey,false)
@@ -811,7 +806,7 @@
                                         "LAUNCHGITHUB", Launch("https://github.com/lopperman"); true, 
                                         "LAUNCHREDDIT", Launch("https://www.reddit.com/user/ITFuture"); true, 
                                         "GOOGLE", Launch("https://www.google.com"); true, 
-                                        "MINAVPERF", Navigate(PerformanceLog,ScreenTransition.Fade); true, 
+                                        //"MINAVPERF", Navigate(PerformanceLog,ScreenTransition.Fade); true, 
             
                                         //not handled
                                         Notify("NO ACTION WAS TAKEN FOR MENU ITEM: " & p_menuKey & "." & p_itemKey & " (" & mi.ItemDisplayName & ")",NotificationType.Error,5000);
@@ -822,12 +817,10 @@
                             );
                         )
                         }, 
-                        If(Not(spinning), Set(spin,{waiting: false,msg:"Please wait ..."}));
                         doMenuHandled
                     )
             
                 );
-            )
         EnableChildFocus: =true
         EnableUserCollapse: =sb_EnableCollapse
         Expand: |-
@@ -836,13 +829,13 @@
                 With({collapseRec: LookUp(col_pbMenuUtil,menuGuid=GUID(Self.ControlGUID) && action="collapse")}, 
                     With({isCollapsed: 
                         If(IsBlank(collapseRec), 
-                            pbMenu_2.DefaultCollapsedState
+                            pbMenu.DefaultCollapsedState
                             , 
                             collapseRec.boolValue
                         )}, 
                         If(isCollapsed=true, 
                             If(IsBlank(collapseRec), 
-                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu_2.ControlGUID), menuKey: pbMenu_2.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: false,  desc: ""})
+                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu.ControlGUID), menuKey: pbMenu.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: false,  desc: ""})
                                 , 
                                 Patch(col_pbMenuUtil, collapseRec, {boolValue:false})
                             )
@@ -1078,6 +1071,7 @@
                 }
             
             ]
+        IsBusy: =spin.waiting=true
         ItemState: |
             =With({Perf: {id: GUID(), start: Now(), action: $"ITEM STATE CHANGE: {pbMenu.MenuKey}.{p_itemKey} (enabled: {p_enabled})"}}, 
                 If(Not(StartsWith(Lower(p_itemKey),"_spacer_")) || Not(p_enabled), 
@@ -1289,4 +1283,52 @@
         X: =179
         Y: =532
         ZIndex: =14
+
+    Image2 As image:
+        BorderColor: =RGBA(0, 0, 0, 0)
+        BorderStyle: =BorderStyle.None
+        BorderThickness: =2
+        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+        DisabledFill: =RGBA(0, 0, 0, 0)
+        FocusedBorderThickness: =4
+        HoverBorderColor: =RGBA(0, 0, 0, 0)
+        HoverFill: =RGBA(0, 0, 0, 0)
+        Image: |-
+            ="data:image/svg+xml;utf8, %3Csvg%20%20viewBox%3D%270%200%202048%202048%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%3E%3Cpath%20d%3D%27M1754%201220l142%20308-338%2030-30%20338-308-142-196%20277-196-277-308%20142-30-338-338-30%20142-308-277-196%20277-196-142-308%20338-30%2030-338%20308%20142%20196-277%20196%20277%20308-142%2030%20338%20338%2030-142%20308%20277%20196-277%20196zm-50%20196l-111-240%20216-152-216-152%20111-240-264-24-24-264-240%20111-152-216-152%20216-240-111-24%20264-264%2024%20111%20240-216%20152%20216%20152-111%20240%20264%2024%2024%20264%20240-111%20152%20216%20152-216%20240%20111%2024-264%20264-24z%27%20fill%3D%27%23d13438%27%3E%3C%2Fpath%3E%3C%2Fsvg%3E"
+        PressedBorderColor: =RGBA(0, 0, 0, 0)
+        PressedFill: =RGBA(0, 0, 0, 0)
+        X: =633
+        Y: =193
+        ZIndex: =15
+
+    imgUser As image:
+        BorderColor: =RGBA(0, 0, 0, 0)
+        BorderStyle: =BorderStyle.None
+        BorderThickness: =2
+        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+        DisabledFill: =RGBA(0, 0, 0, 0)
+        FocusedBorderThickness: =4
+        HoverBorderColor: =RGBA(0, 0, 0, 0)
+        HoverFill: =RGBA(0, 0, 0, 0)
+        Image: =user
+        PressedBorderColor: =RGBA(0, 0, 0, 0)
+        PressedFill: =RGBA(0, 0, 0, 0)
+        X: =799
+        Y: =198
+        ZIndex: =16
+
+    TextCanvas6 As Text:
+        Align: ='TextCanvas.Align'.Center
+        AutoHeight: =true
+        DisplayMode: =DisplayMode.Edit
+        Fill: =RGBA(255, 255, 0, 1)
+        Height: =32
+        Size: =18
+        Text: ="Sandbox Area"
+        VerticalAlign: =VerticalAlign.Middle
+        Weight: ='TextCanvas.Weight'.Bold
+        Width: =Parent.Width - Self.X - 10 
+        X: =pbMenu_2.X + pbMenu_2.Width + 10 
+        Y: =pbMenu_1.Y + pbMenu_1.Height + 10 
+        ZIndex: =17
 

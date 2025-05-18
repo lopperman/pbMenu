@@ -1228,8 +1228,22 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "ConfirmationColorPalette",
-        "CancelMenuColorPalette",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "RGBA(0, 0, 0, 1)",
+          "InvariantPropertyName": "ConfirmationColorPalette",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "RGBA(0, 0, 0, 1)",
+          "InvariantPropertyName": "CancelMenuColorPalette",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
@@ -1477,14 +1491,7 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "false",
-          "InvariantPropertyName": "IsBusy",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
+        "IsBusy",
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,

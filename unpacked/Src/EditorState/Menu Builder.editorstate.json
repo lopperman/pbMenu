@@ -5461,8 +5461,22 @@
         "Information",
         "CreateMenuItem",
         "MenuData_All",
-        "IsBusy",
-        "BusyMessage",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "false",
+          "InvariantPropertyName": "IsBusy",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "\"\"",
+          "InvariantPropertyName": "BusyMessage",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
@@ -5783,12 +5797,12 @@
         {
           "Category": "Data",
           "PropertyName": "IsBusy",
-          "RuleProviderType": "System"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Data",
           "PropertyName": "BusyMessage",
-          "RuleProviderType": "System"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Data",
@@ -6244,7 +6258,14 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "DefaultCollapsedState",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "",
+          "InvariantPropertyName": "DefaultCollapsedState",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "OnBeforeAction_p_itemKey",
         {
           "AFDDataSourceName": "",
@@ -6257,8 +6278,22 @@
         "Information",
         "CreateMenuItem",
         "MenuData_All",
-        "IsBusy",
-        "BusyMessage",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "false",
+          "InvariantPropertyName": "IsBusy",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "\"\"",
+          "InvariantPropertyName": "BusyMessage",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
@@ -6268,7 +6303,14 @@
           "NameMapSourceSchema": "?"
         },
         "BusyBehaviorChoices",
-        "EnableUserCollapse",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "",
+          "InvariantPropertyName": "EnableUserCollapse",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
@@ -6520,7 +6562,7 @@
         {
           "Category": "Data",
           "PropertyName": "DefaultCollapsedState",
-          "RuleProviderType": "System"
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Data",
@@ -6565,12 +6607,12 @@
         {
           "Category": "Data",
           "PropertyName": "IsBusy",
-          "RuleProviderType": "System"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Data",
           "PropertyName": "BusyMessage",
-          "RuleProviderType": "System"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Data",
@@ -7013,9 +7055,30 @@
         "Information",
         "CreateMenuItem",
         "MenuData_All",
-        "IsBusy",
-        "BusyMessage",
-        "BusyBehavior",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "false",
+          "InvariantPropertyName": "IsBusy",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "\"\"",
+          "InvariantPropertyName": "BusyMessage",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "Self.BusyBehaviorChoices.Spinning",
+          "InvariantPropertyName": "BusyBehavior",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "BusyBehaviorChoices",
         "EnableUserCollapse",
         "OverrideExpandedWidth",
@@ -7079,7 +7142,7 @@
         {
           "Category": "Data",
           "PropertyName": "MenuColorPalette",
-          "RuleProviderType": "User"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Data",
@@ -7314,17 +7377,17 @@
         {
           "Category": "Data",
           "PropertyName": "IsBusy",
-          "RuleProviderType": "System"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Data",
           "PropertyName": "BusyMessage",
-          "RuleProviderType": "System"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Data",
           "PropertyName": "BusyBehavior",
-          "RuleProviderType": "System"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Data",
@@ -11337,7 +11400,7 @@
         {
           "Category": "Design",
           "PropertyName": "TabIndex",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",
@@ -11357,7 +11420,7 @@
         {
           "Category": "Design",
           "PropertyName": "Width",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",

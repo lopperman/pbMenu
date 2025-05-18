@@ -39,13 +39,13 @@ ComponentDefinitions:
         DisplayName: BusyMessage
         Description: A custom property
         DataType: Text
-        Default: =spin.msg
+        Default: =""
       CancelMenuColorPalette:
         PropertyKind: Input
         DisplayName: CancelMenuColorPalette
         Description: A custom property
         DataType: Color
-        Default: =RGBA(0, 0, 0, 1)
+        Default: =
       Collapse:
         PropertyKind: Action
         DisplayName: Collapse
@@ -84,7 +84,7 @@ ComponentDefinitions:
         DisplayName: ConfirmationColorPalette
         Description: A custom property
         DataType: Color
-        Default: =RGBA(0, 0, 0, 1)
+        Default: =
       ControlGUID:
         PropertyKind: Output
         DisplayName: ControlGUID
@@ -225,7 +225,7 @@ ComponentDefinitions:
         DisplayName: IsBusy
         Description: Boolean input, recommend setting to global variable which is turned on when system is interacting with remote data source, or performing operations that are not instant.  When 'Busy' is true, pbMenu will either show spinner control, or disable menu
         DataType: Boolean
-        Default: '=spin.waiting=true '
+        Default: =false
       IsBusyEnabled:
         PropertyKind: Input
         DisplayName: IsBusyEnabled
@@ -288,7 +288,7 @@ ComponentDefinitions:
         DisplayName: MenuColorPalette
         Description: A custom property
         DataType: Color
-        Default: =PowerAppsTheme.Colors.Primary
+        Default: =
       MenuData_All:
         PropertyKind: Output
         DisplayName: MenuData_All
@@ -584,10 +584,8 @@ ComponentDefinitions:
                 ShowColumns(fItems,ItemKey,ItemDisplayName,ItemIconName, ItemAppearance, ItemIconStyle, ItemTooltip, ItemDisabled)
             )
         )
-      DoMenu: |-
-        =With({spinning: spin.waiting=true, spinningMsg: spin.msg}, 
-            If(Not(spinning), Set(spin, {waiting: true, msg: "Please wait ..."}));
-            With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
+      DoMenu: |
+        =    With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
                 If(mi.confirmItemAction=true, 
                     If(Self.ConfirmMode() <> true, 
                         //Add 'confirm' action and waits for user to confirm or cancel
@@ -618,7 +616,7 @@ ComponentDefinitions:
                                     "LAUNCHGITHUB", Launch("https://github.com/lopperman"); true, 
                                     "LAUNCHREDDIT", Launch("https://www.reddit.com/user/ITFuture"); true, 
                                     "GOOGLE", Launch("https://www.google.com"); true, 
-                                    "MINAVPERF", Navigate(PerformanceLog,ScreenTransition.Fade); true, 
+                                    //"MINAVPERF", Navigate(PerformanceLog,ScreenTransition.Fade); true, 
 
                                     //not handled
                                     Notify("NO ACTION WAS TAKEN FOR MENU ITEM: " & p_menuKey & "." & p_itemKey & " (" & mi.ItemDisplayName & ")",NotificationType.Error,5000);
@@ -629,12 +627,10 @@ ComponentDefinitions:
                         );
                     )
                     }, 
-                    If(Not(spinning), Set(spin,{waiting: false,msg:"Please wait ..."}));
                     doMenuHandled
                 )
 
             );
-        )
       Expand: |-
         =If(Lower(Self.ToolbarOrientation)=Lower(Self.LayoutChoices.Vertical), 
             //determine if current state is expanded
@@ -1040,7 +1036,10 @@ ComponentDefinitions:
             BorderColor: =pbMenu.BorderColor
             BorderThickness: =Min(pbMenu.BorderWidth,3)
             Height: =pbMenu.Height - Self.Y -2
-            Visible: =(pbMenu.IsBusyEnabled=false || pbMenu.IsBusy=false || pbMenu.BusyBehavior=pbMenu.BusyBehaviorChoices.Disabled) && pbMenu.ConfirmMode()<>true
+            Visible: |-
+              =With({busyDisabled: IfError(pbMenu.IsBusyEnabled=false || pbMenu.IsBusy=false,true)}, 
+                  (busyDisabled || pbMenu.BusyBehavior=pbMenu.BusyBehaviorChoices.Disabled) && pbMenu.ConfirmMode()<>true
+              )
             Width: =pbMenu.Width - Self.X -2
             X: =2
             Y: =2

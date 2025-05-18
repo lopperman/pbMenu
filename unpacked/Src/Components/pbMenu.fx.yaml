@@ -180,10 +180,8 @@ pbMenu As CanvasComponent:
         p_itemKey:
             Default: ="Text"
         ThisProperty:
-            Default: |-
-                =With({spinning: spin.waiting=true, spinningMsg: spin.msg}, 
-                    If(Not(spinning), Set(spin, {waiting: true, msg: "Please wait ..."}));
-                    With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
+            Default: |
+                =    With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
                         If(mi.confirmItemAction=true, 
                             If(Self.ConfirmMode() <> true, 
                                 //Add 'confirm' action and waits for user to confirm or cancel
@@ -214,7 +212,7 @@ pbMenu As CanvasComponent:
                                             "LAUNCHGITHUB", Launch("https://github.com/lopperman"); true, 
                                             "LAUNCHREDDIT", Launch("https://www.reddit.com/user/ITFuture"); true, 
                                             "GOOGLE", Launch("https://www.google.com"); true, 
-                                            "MINAVPERF", Navigate(PerformanceLog,ScreenTransition.Fade); true, 
+                                            //"MINAVPERF", Navigate(PerformanceLog,ScreenTransition.Fade); true, 
                 
                                             //not handled
                                             Notify("NO ACTION WAS TAKEN FOR MENU ITEM: " & p_menuKey & "." & p_itemKey & " (" & mi.ItemDisplayName & ")",NotificationType.Error,5000);
@@ -225,12 +223,10 @@ pbMenu As CanvasComponent:
                                 );
                             )
                             }, 
-                            If(Not(spinning), Set(spin,{waiting: false,msg:"Please wait ..."}));
                             doMenuHandled
                         )
                 
                     );
-                )
     Expand():
         ThisProperty:
             Default: |-
@@ -595,9 +591,9 @@ pbMenu As CanvasComponent:
     BusyBehavior: =Self.BusyBehaviorChoices.Spinning
     BusyBehaviorChoices: |-
         ={Spinning: "Spinning", Disabled: "Disabled"}
-    BusyMessage: =spin.msg
-    CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
-    ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
+    BusyMessage: =""
+    CancelMenuColorPalette: =
+    ConfirmationColorPalette: =
     ControlGUID: =GUID()
     CurrentMenuItems: |-
         =With({fItems: Filter(col_pbMenu,Upper(menuKey)=Upper(pbMenu.MenuKey))}, 
@@ -613,7 +609,7 @@ pbMenu As CanvasComponent:
     EnableUserCollapse: =true
     Fill: =RGBA(0, 0, 0, 0)
     Height: =140
-    IsBusy: =spin.waiting=true 
+    IsBusy: =false
     IsBusyEnabled: =true
     ItemAppearanceChoices: |-
         ={Primary: "Primary", Secondary: "Secondary", Outline: "Outline", Subtle: "Subtle", Transparent: "Transparent"}
@@ -622,7 +618,7 @@ pbMenu As CanvasComponent:
     LayoutChoices: |-
         ={Horizontal: "Horizontal", Vertical: "Vertical"}
     ManageItemStates: =true
-    MenuColorPalette: =PowerAppsTheme.Colors.Primary
+    MenuColorPalette: =
     MenuData_All: =col_pbMenu
     MenuItemTextColor: =
     MenuKey: ="Main"
@@ -739,7 +735,10 @@ pbMenu As CanvasComponent:
         RadiusBottomRight: =4
         RadiusTopLeft: =4
         RadiusTopRight: =4
-        Visible: =(pbMenu.IsBusyEnabled=false || pbMenu.IsBusy=false || pbMenu.BusyBehavior=pbMenu.BusyBehaviorChoices.Disabled) && pbMenu.ConfirmMode()<>true
+        Visible: |-
+            =With({busyDisabled: IfError(pbMenu.IsBusyEnabled=false || pbMenu.IsBusy=false,true)}, 
+                (busyDisabled || pbMenu.BusyBehavior=pbMenu.BusyBehaviorChoices.Disabled) && pbMenu.ConfirmMode()<>true
+            )
         Width: =pbMenu.Width - Self.X -2
         X: =2
         Y: =2

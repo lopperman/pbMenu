@@ -1004,6 +1004,36 @@
             {
               "logicalLocations": [
                 {
+                  "fullyQualifiedName": "'Menu Builder'.cont_CreateMenuItems.contSubBuild.toggIsBusyEnabled.AccessibleLabel"
+                }
+              ],
+              "physicalLocation": {
+                "address": {
+                  "fullyQualifiedName": "'Menu Builder'.cont_CreateMenuItems.contSubBuild.toggIsBusyEnabled.AccessibleLabel",
+                  "relativeAddress": 0
+                }
+              },
+              "properties": {
+                "member": "AccessibleLabel",
+                "module": "Menu Builder",
+                "type": "'Menu Builder'.cont_CreateMenuItems.contSubBuild.toggIsBusyEnabled"
+              }
+            }
+          ],
+          "message": {
+            "id": "issue"
+          },
+          "properties": {
+            "level": "Medium"
+          },
+          "ruleId": "acc-AccessibleLabelNeeded",
+          "ruleIndex": 0
+        },
+        {
+          "locations": [
+            {
+              "logicalLocations": [
+                {
                   "fullyQualifiedName": "'Menu Builder'.cont_CreateMenuItems.contSubBuild.txtMenuName.AccessibleLabel"
                 }
               ],
@@ -1724,6 +1754,66 @@
             {
               "logicalLocations": [
                 {
+                  "fullyQualifiedName": "'pbMenu Sandbox'.imgUser.AccessibleLabel"
+                }
+              ],
+              "physicalLocation": {
+                "address": {
+                  "fullyQualifiedName": "'pbMenu Sandbox'.imgUser.AccessibleLabel",
+                  "relativeAddress": 0
+                }
+              },
+              "properties": {
+                "member": "AccessibleLabel",
+                "module": "pbMenu Sandbox",
+                "type": "'pbMenu Sandbox'.imgUser"
+              }
+            }
+          ],
+          "message": {
+            "id": "issue"
+          },
+          "properties": {
+            "level": "Medium"
+          },
+          "ruleId": "acc-AccessibleLabelNeeded",
+          "ruleIndex": 0
+        },
+        {
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "'pbMenu Sandbox'.imgUser.TabIndex"
+                }
+              ],
+              "physicalLocation": {
+                "address": {
+                  "fullyQualifiedName": "'pbMenu Sandbox'.imgUser.TabIndex",
+                  "relativeAddress": 0
+                }
+              },
+              "properties": {
+                "member": "TabIndex",
+                "module": "pbMenu Sandbox",
+                "type": "'pbMenu Sandbox'.imgUser"
+              }
+            }
+          ],
+          "message": {
+            "id": "issue"
+          },
+          "properties": {
+            "level": "Medium"
+          },
+          "ruleId": "acc-TabIndexShouldBeDefinedForInteractiveControl",
+          "ruleIndex": 1
+        },
+        {
+          "locations": [
+            {
+              "logicalLocations": [
+                {
                   "fullyQualifiedName": "'pbMenu Sandbox'.ButtonCanvas2_1.AccessibleLabel"
                 }
               ],
@@ -1928,36 +2018,6 @@
           },
           "ruleId": "acc-AccessibleLabelNeeded",
           "ruleIndex": 0
-        },
-        {
-          "locations": [
-            {
-              "logicalLocations": [
-                {
-                  "fullyQualifiedName": "'Menu Builder'.cont_CreateMenuItems.contSubBuild.toggIsBusyEnabled.AccessibleLabel"
-                }
-              ],
-              "physicalLocation": {
-                "address": {
-                  "fullyQualifiedName": "'Menu Builder'.cont_CreateMenuItems.contSubBuild.toggIsBusyEnabled.AccessibleLabel",
-                  "relativeAddress": 0
-                }
-              },
-              "properties": {
-                "member": "AccessibleLabel",
-                "module": "Menu Builder",
-                "type": "'Menu Builder'.cont_CreateMenuItems.contSubBuild.toggIsBusyEnabled"
-              }
-            }
-          ],
-          "message": {
-            "id": "issue"
-          },
-          "properties": {
-            "level": "Medium"
-          },
-          "ruleId": "acc-AccessibleLabelNeeded",
-          "ruleIndex": 0
         }
       ],
       "tool": {
@@ -2017,7 +2077,7 @@
               }
             }
           ],
-          "version": "1.346"
+          "version": "1.345"
         }
       }
     }

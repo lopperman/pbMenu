@@ -26,16 +26,16 @@ Screens:
             BorderColor: =PowerAppsTheme.Colors.Darker20
             BorderWidth: =1
             BusyBehavior: =Self.BusyBehaviorChoices.Spinning
-            BusyMessage: =spin.msg
-            CancelMenuColorPalette: =RGBA(0, 0, 0, 1)
-            ConfirmationColorPalette: =RGBA(0, 0, 0, 1)
+            BusyMessage: =""
+            CancelMenuColorPalette: =
+            ConfirmationColorPalette: =
             DefaultCollapsedState: =true
             EnableUserCollapse: =true
             Height: =Self.MinimumHeight()
-            IsBusy: '=spin.waiting=true '
+            IsBusy: =spin.waiting=true
             IsBusyEnabled: =true
             ManageItemStates: =true
-            MenuColorPalette: =PowerAppsTheme.Colors.Primary
+            MenuColorPalette: =
             MenuItemTextColor: =
             MenuKey: ="pbMenuPerfLog"
             OnBeforeAction: |
