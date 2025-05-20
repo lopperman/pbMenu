@@ -190,6 +190,16 @@ ComponentDefinitions:
         RaiseOnReset: true
         DataType: Boolean
         Default: =true
+      DeleteMenu:
+        PropertyKind: Action
+        DisplayName: DeleteMenu
+        Description: A custom property
+        ReturnType: None
+        Parameters:
+          - p_menuKey:
+              Description: A parameter
+              DataType: Text
+              Default: ="Text"
       DoMenu:
         PropertyKind: Action
         DisplayName: DoMenu
@@ -584,6 +594,7 @@ ComponentDefinitions:
                 ShowColumns(fItems,ItemKey,ItemDisplayName,ItemIconName, ItemAppearance, ItemIconStyle, ItemTooltip, ItemDisabled)
             )
         )
+      DeleteMenu: =RemoveIf(col_pbMenu,Upper(menuKey)=Upper(p_menuKey));
       DoMenu: |
         =    With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
                 If(mi.confirmItemAction=true, 
@@ -876,6 +887,11 @@ ComponentDefinitions:
                 dataType: "Record", 
                 type: "Output Property", 
                 desc: "Helper property which provides valid 'ToolbarPadding' choices"
+            }, 
+            {
+                name: "DeleteMenu", 
+                type: "Component Action", 
+                desc: "Delete all menus items in col_pbMenu collection which match menuKey (p_menuKey) parameter value"
             }
 
         ]

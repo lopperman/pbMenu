@@ -174,6 +174,11 @@ pbMenu As CanvasComponent:
                         newSpacer
                     )
                 )
+    DeleteMenu(p_menuKey As String):
+        p_menuKey:
+            Default: ="Text"
+        ThisProperty:
+            Default: =RemoveIf(col_pbMenu,Upper(menuKey)=Upper(p_menuKey));
     DoMenu(p_menuKey As String, p_itemKey As String):
         p_menuKey:
             Default: ="Text"
@@ -475,6 +480,11 @@ pbMenu As CanvasComponent:
                         dataType: "Record", 
                         type: "Output Property", 
                         desc: "Helper property which provides valid 'ToolbarPadding' choices"
+                    }, 
+                    {
+                        name: "DeleteMenu", 
+                        type: "Component Action", 
+                        desc: "Delete all menus items in col_pbMenu collection which match menuKey (p_menuKey) parameter value"
                     }
                 
                 ]

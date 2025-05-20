@@ -28,7 +28,14 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "DisplayMode",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "DisplayMode.Edit",
+          "InvariantPropertyName": "DisplayMode",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "ZIndex",
         {
           "AFDDataSourceName": "",
@@ -98,7 +105,7 @@
       "MetaDataIDKey": "",
       "Name": "btnDemoDisableAll",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 11,
+      "ParentIndex": 10,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -154,7 +161,7 @@
         {
           "Category": "Design",
           "PropertyName": "DisplayMode",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -191,7 +198,14 @@
         },
         "Width",
         "Height",
-        "DisplayMode",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "DisplayMode.Edit",
+          "InvariantPropertyName": "DisplayMode",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "ZIndex",
         {
           "AFDDataSourceName": "",
@@ -261,7 +275,7 @@
       "MetaDataIDKey": "",
       "Name": "btnDemoEnableAll",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 5,
+      "ParentIndex": 4,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -317,7 +331,7 @@
         {
           "Category": "Design",
           "PropertyName": "DisplayMode",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -354,7 +368,14 @@
         },
         "Width",
         "Height",
-        "DisplayMode",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "DisplayMode.Edit",
+          "InvariantPropertyName": "DisplayMode",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "ZIndex",
         {
           "AFDDataSourceName": "",
@@ -424,7 +445,7 @@
       "MetaDataIDKey": "",
       "Name": "btnDemoIsBusy",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 6,
+      "ParentIndex": 5,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -480,7 +501,7 @@
         {
           "Category": "Design",
           "PropertyName": "DisplayMode",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -524,7 +545,14 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "DisplayMode",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "DisplayMode.Edit",
+          "InvariantPropertyName": "DisplayMode",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "ZIndex",
         {
           "AFDDataSourceName": "",
@@ -594,7 +622,7 @@
       "MetaDataIDKey": "",
       "Name": "btnDemoIsNotBusy",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 12,
+      "ParentIndex": 11,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -650,7 +678,7 @@
         {
           "Category": "Design",
           "PropertyName": "DisplayMode",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -701,7 +729,14 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "DisplayMode",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "DisplayMode.Edit",
+          "InvariantPropertyName": "DisplayMode",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "ZIndex",
         {
           "AFDDataSourceName": "",
@@ -771,7 +806,7 @@
       "MetaDataIDKey": "",
       "Name": "btnDemoIsNotBusy_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 8,
+      "ParentIndex": 7,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -827,7 +862,7 @@
         {
           "Category": "Design",
           "PropertyName": "DisplayMode",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -871,7 +906,14 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "DisplayMode",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "DisplayMode.Edit",
+          "InvariantPropertyName": "DisplayMode",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "ZIndex",
         {
           "AFDDataSourceName": "",
@@ -949,7 +991,7 @@
       "MetaDataIDKey": "",
       "Name": "btnDemoRebuildMenus",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 7,
+      "ParentIndex": 6,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -1010,7 +1052,7 @@
         {
           "Category": "Design",
           "PropertyName": "DisplayMode",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -1054,7 +1096,14 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "DisplayMode",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "DisplayMode.Edit",
+          "InvariantPropertyName": "DisplayMode",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "ZIndex",
         {
           "AFDDataSourceName": "",
@@ -1095,7 +1144,7 @@
         {
           "Category": "Design",
           "PropertyName": "X",
-          "RuleProviderType": "User"
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Design",
@@ -1115,12 +1164,12 @@
         {
           "Category": "Design",
           "PropertyName": "DisplayMode",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
           "PropertyName": "ZIndex",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Behavior",
@@ -1218,7 +1267,7 @@
       "MetaDataIDKey": "",
       "Name": "cont_BuildUtil",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 14,
+      "ParentIndex": 13,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -1427,7 +1476,7 @@
       "MetaDataIDKey": "",
       "Name": "Container1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 15,
+      "ParentIndex": 14,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -1549,122 +1598,6 @@
       "StyleName": "defaultGroupContainerStyle",
       "Type": "ControlInfo"
     },
-    "dData": {
-      "AllowAccessToGlobals": true,
-      "ControlPropertyState": [
-        "Fill",
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "640",
-          "InvariantPropertyName": "Height",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "640",
-          "InvariantPropertyName": "Width",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "1046",
-          "InvariantPropertyName": "X",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "95",
-          "InvariantPropertyName": "Y",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
-        "ZIndex",
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "",
-          "InvariantPropertyName": "BuildDemoMenus",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
-        "MenuItems",
-        "MenuItems_p_menuKey"
-      ],
-      "HasDynamicProperties": false,
-      "IsAutoGenerated": false,
-      "IsComponentDefinition": false,
-      "IsDataControl": false,
-      "IsFromScreenLayout": false,
-      "IsGroupControl": false,
-      "IsLocked": false,
-      "LayoutName": "",
-      "Metadata": {
-        "AllowAccessToGlobals": true,
-        "AllowCustomization": true,
-        "Description": ""
-      },
-      "MetaDataIDKey": "",
-      "Name": "dData",
-      "OptimizeForDevices": "Off",
-      "ParentIndex": 2,
-      "PersistMetaDataIDKey": false,
-      "Properties": [
-        {
-          "Category": "Data",
-          "PropertyName": "MenuItems",
-          "RuleProviderType": "System"
-        },
-        {
-          "Category": "Data",
-          "PropertyName": "MenuItems_p_menuKey",
-          "RuleProviderType": "System"
-        },
-        {
-          "Category": "Design",
-          "PropertyName": "Fill",
-          "RuleProviderType": "System"
-        },
-        {
-          "Category": "Design",
-          "PropertyName": "Height",
-          "RuleProviderType": "Unknown"
-        },
-        {
-          "Category": "Design",
-          "PropertyName": "Width",
-          "RuleProviderType": "Unknown"
-        },
-        {
-          "Category": "Design",
-          "PropertyName": "X",
-          "RuleProviderType": "User"
-        },
-        {
-          "Category": "Design",
-          "PropertyName": "Y",
-          "RuleProviderType": "Unknown"
-        },
-        {
-          "Category": "Design",
-          "PropertyName": "ZIndex",
-          "RuleProviderType": "Unknown"
-        },
-        {
-          "Category": "Behavior",
-          "PropertyName": "BuildDemoMenus",
-          "RuleProviderType": "System"
-        }
-      ],
-      "StyleName": "",
-      "Type": "ControlInfo"
-    },
     "githubProfile": {
       "AllowAccessToGlobals": true,
       "ControlPropertyState": [
@@ -1741,7 +1674,14 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "DisplayMode",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "DisplayMode.Edit",
+          "InvariantPropertyName": "DisplayMode",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "ZIndex",
         "RadiusTopLeft",
         "RadiusTopRight",
@@ -1781,7 +1721,7 @@
       "MetaDataIDKey": "",
       "Name": "githubProfile",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 9,
+      "ParentIndex": 8,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -1877,7 +1817,7 @@
         {
           "Category": "Design",
           "PropertyName": "DisplayMode",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -2337,7 +2277,9 @@
         "OverrideMinHeight",
         "Expand",
         "Collapse",
-        "IsBusyEnabled"
+        "IsBusyEnabled",
+        "DeleteMenu_p_menuKey",
+        "DeleteMenu"
       ],
       "HasDynamicProperties": false,
       "IsAutoGenerated": false,
@@ -2709,6 +2651,11 @@
           "RuleProviderType": "System"
         },
         {
+          "Category": "Data",
+          "PropertyName": "DeleteMenu_p_menuKey",
+          "RuleProviderType": "System"
+        },
+        {
           "Category": "Design",
           "PropertyName": "Fill",
           "RuleProviderType": "System"
@@ -2806,6 +2753,11 @@
         {
           "Category": "Behavior",
           "PropertyName": "Collapse",
+          "RuleProviderType": "System"
+        },
+        {
+          "Category": "Behavior",
+          "PropertyName": "DeleteMenu",
           "RuleProviderType": "System"
         }
       ],
@@ -3175,7 +3127,9 @@
         "OverrideMinHeight",
         "Expand",
         "Collapse",
-        "IsBusyEnabled"
+        "IsBusyEnabled",
+        "DeleteMenu_p_menuKey",
+        "DeleteMenu"
       ],
       "HasDynamicProperties": false,
       "IsAutoGenerated": false,
@@ -3193,7 +3147,7 @@
       "MetaDataIDKey": "",
       "Name": "pbMenu_Vert",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 3,
+      "ParentIndex": 2,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -3547,6 +3501,11 @@
           "RuleProviderType": "System"
         },
         {
+          "Category": "Data",
+          "PropertyName": "DeleteMenu_p_menuKey",
+          "RuleProviderType": "System"
+        },
+        {
           "Category": "Design",
           "PropertyName": "Height",
           "RuleProviderType": "User"
@@ -3644,6 +3603,11 @@
         {
           "Category": "Behavior",
           "PropertyName": "Collapse",
+          "RuleProviderType": "System"
+        },
+        {
+          "Category": "Behavior",
+          "PropertyName": "DeleteMenu",
           "RuleProviderType": "System"
         }
       ],
@@ -3945,7 +3909,9 @@
         "OverrideMinHeight",
         "Expand",
         "Collapse",
-        "IsBusyEnabled"
+        "IsBusyEnabled",
+        "DeleteMenu_p_menuKey",
+        "DeleteMenu"
       ],
       "HasDynamicProperties": false,
       "IsAutoGenerated": false,
@@ -3963,7 +3929,7 @@
       "MetaDataIDKey": "",
       "Name": "pbMenu_Vert_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 4,
+      "ParentIndex": 3,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -4317,6 +4283,11 @@
           "RuleProviderType": "System"
         },
         {
+          "Category": "Data",
+          "PropertyName": "DeleteMenu_p_menuKey",
+          "RuleProviderType": "System"
+        },
+        {
           "Category": "Design",
           "PropertyName": "Height",
           "RuleProviderType": "User"
@@ -4415,6 +4386,11 @@
           "Category": "Behavior",
           "PropertyName": "Collapse",
           "RuleProviderType": "System"
+        },
+        {
+          "Category": "Behavior",
+          "PropertyName": "DeleteMenu",
+          "RuleProviderType": "System"
         }
       ],
       "StyleName": "",
@@ -4496,7 +4472,14 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "DisplayMode",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "DisplayMode.Edit",
+          "InvariantPropertyName": "DisplayMode",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "ZIndex",
         "RadiusTopLeft",
         "RadiusTopRight",
@@ -4536,7 +4519,7 @@
       "MetaDataIDKey": "",
       "Name": "redditProfile",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 10,
+      "ParentIndex": 9,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -4632,7 +4615,7 @@
         {
           "Category": "Design",
           "PropertyName": "DisplayMode",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -4765,7 +4748,7 @@
       "MetaDataIDKey": "",
       "Name": "TextCanvas5",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 13,
+      "ParentIndex": 12,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {

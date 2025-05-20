@@ -173,6 +173,7 @@
                     newSpacer
                 )
             )
+        DeleteMenu: =RemoveIf(col_pbMenu,Upper(menuKey)=Upper(p_menuKey));
         DoMenu: |
             =    With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
                     If(mi.confirmItemAction=true, 
@@ -466,6 +467,11 @@
                     dataType: "Record", 
                     type: "Output Property", 
                     desc: "Helper property which provides valid 'ToolbarPadding' choices"
+                }, 
+                {
+                    name: "DeleteMenu", 
+                    type: "Component Action", 
+                    desc: "Delete all menus items in col_pbMenu collection which match menuKey (p_menuKey) parameter value"
                 }
             
             ]
@@ -577,14 +583,14 @@
                         If(IsBlank(collapseRec), 
                             If(Self.EnableUserCollapse=false, 
                                 false, 
-                                pbMenu1.DefaultCollapsedState
+                                pbMenu.DefaultCollapsedState
                             )
                             , 
                             collapseRec.boolValue
                         )}, 
                         If(isCollapsed=false, 
                             If(IsBlank(collapseRec), 
-                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu1.ControlGUID), menuKey: pbMenu1.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: true,  desc: ""})
+                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu.ControlGUID), menuKey: pbMenu.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: true,  desc: ""})
                                 , 
                                 Patch(col_pbMenuUtil, collapseRec, {boolValue:true})
                             )
@@ -598,7 +604,7 @@
             If(Self.ToolbarOrientation=Self.LayoutChoices.Horizontal, false,     
                 With({collapseRec: LookUp(col_pbMenuUtil,menuGuid=GUID(Self.ControlGUID) && action="collapse")}, 
                     If(IsBlank(collapseRec), 
-                        pbMenu1.DefaultCollapsedState
+                        pbMenu.DefaultCollapsedState
                         , 
                         collapseRec.boolValue
                     )       
@@ -606,16 +612,16 @@
             )
         ConfirmAction: |+
             =With({Perf: {id: GUID(), start: Now(), action: $"CONFIRM ACTION: {p_menuKey}.{p_itemKey} ({p_itemDisplay})"}}, 
-                RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu1.ControlGUID) && action="confirm");
-                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu1.ControlGUID), menuKey: p_menuKey,itemKey: p_itemKey, action: "confirm", boolValue: true,  desc: p_itemDisplay});
-                If(pbMenu1.PerformanceLogging=true, 
+                RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm");
+                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu.ControlGUID), menuKey: p_menuKey,itemKey: p_itemKey, action: "confirm", boolValue: true,  desc: p_itemDisplay});
+                If(pbMenu.PerformanceLogging=true, 
                     With({endTS: Now()}, 
                         Collect(col_pbMenuPerf,{id: Perf.id, elapsed: DateDiff(Perf.start,endTS,TimeUnit.Milliseconds), start: Perf.start, end: Now(),  action: Perf.action})
                     )
                 )
             )
             
-        ConfirmMode: =CountIf(col_pbMenuUtil,menuGuid=GUID(pbMenu1.ControlGUID) && action="confirm")>0
+        ConfirmMode: =CountIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")>0
         CreateInfoItem: |
             =With({newMenuItem: 
                 //get menu item structure
@@ -625,7 +631,7 @@
                     ItemDisplayName: TrimEnds(p_itemDisplay), 
                     ItemIconName: "Info", 
                     ItemAppearance: TrimEnds(p_itemAppearance), 
-                    ItemIconStyle: pbMenu1.ItemIconStyleChoices.Filled, 
+                    ItemIconStyle: pbMenu.ItemIconStyleChoices.Filled, 
                     ItemTooltip: TrimEnds(p_itemTooltip), 
                     ItemDisabled: false, 
                     disableOnSelect: false, 
@@ -652,7 +658,7 @@
                             RemoveIf(col_pbMenu,menuKey=newMenuItem.menuKey && ItemKey=newMenuItem.ItemKey);
                             Collect(col_pbMenu,newMenuItem)
                         );
-                        If(pbMenu1.PerformanceLogging=true, 
+                        If(pbMenu.PerformanceLogging=true, 
                             With({endTS: Now()}, 
                                 Collect(col_pbMenuPerf,{id: Perf.id, elapsed: DateDiff(Perf.start,endTS,TimeUnit.Milliseconds), start: Perf.start, end: Now(),  action: Perf.action})
                             )
@@ -682,7 +688,7 @@
                     If(p_addToCollection=true && Not(IsBlank(newSpacer)), 
                         Collect(col_pbMenu,newSpacer)
                     );
-                    If(pbMenu1.PerformanceLogging=true, 
+                    If(pbMenu.PerformanceLogging=true, 
                         With({endTS: Now()}, 
                             Collect(col_pbMenuPerf,{id: Perf.id, elapsed: DateDiff(Perf.start,endTS,TimeUnit.Milliseconds), start: Perf.start, end: Now(),  action: Perf.action})
                         )
@@ -690,18 +696,9 @@
                     newSpacer
                 )
             )
-        CurrentMenuItems: |-
-            =With({fItems: Filter(col_pbMenu,Upper(menuKey)=Upper(pbMenu1.MenuKey))}, 
-                If(CountRows(fItems)=0, 
-                    [
-                        pbMenu1.MissingMenuRecord
-                    ]
-                    , 
-                    ShowColumns(fItems,ItemKey,ItemDisplayName,ItemIconName, ItemAppearance, ItemIconStyle, ItemTooltip, ItemDisabled)
-                )
-            )
+        DeleteMenu: =RemoveIf(col_pbMenu,Upper(menuKey)=Upper(p_menuKey));
         DoMenu: |
-            =    With({mi: pbMenu1.MenuItem(p_menuKey,p_itemKey)}, 
+            =    With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
                     If(mi.confirmItemAction=true, 
                         If(Self.ConfirmMode() <> true, 
                             //Add 'confirm' action and waits for user to confirm or cancel
@@ -711,15 +708,15 @@
                             , 
                             //clear the 'confirm' action, which is now confirmed, and 
                             //process menuItem as normal
-                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu1.ControlGUID) && action="confirm")
+                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")
                         )
                     );
                     With({doMenuHandled: 
                         If(Self.ConfirmMode() <> true, 
-                            If(pbMenu1.ManageItemStates = true, 
-                                pbMenu1.ItemState_UpdateAll(true);
+                            If(pbMenu.ManageItemStates = true, 
+                                pbMenu.ItemState_UpdateAll(true);
                                 If(mi.disableOnSelect=true, 
-                                    pbMenu1.ItemState(mi.ItemKey,false)
+                                    pbMenu.ItemState(mi.ItemKey,false)
                                 )
                             );
                             //Raise 'OnBeforeAction'.  If handled in event on screen ('true' returned), no further action is taken.
@@ -753,13 +750,13 @@
                 With({collapseRec: LookUp(col_pbMenuUtil,menuGuid=GUID(Self.ControlGUID) && action="collapse")}, 
                     With({isCollapsed: 
                         If(IsBlank(collapseRec), 
-                            pbMenu1.DefaultCollapsedState
+                            pbMenu.DefaultCollapsedState
                             , 
                             collapseRec.boolValue
                         )}, 
                         If(isCollapsed=true, 
                             If(IsBlank(collapseRec), 
-                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu1.ControlGUID), menuKey: pbMenu1.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: false,  desc: ""})
+                                Collect(col_pbMenuUtil,{menuGuid: GUID(pbMenu.ControlGUID), menuKey: pbMenu.MenuKey,itemKey: "_COLLAPSE", action: "collapse", boolValue: false,  desc: ""})
                                 , 
                                 Patch(col_pbMenuUtil, collapseRec, {boolValue:false})
                             )
@@ -992,11 +989,16 @@
                     dataType: "Record", 
                     type: "Output Property", 
                     desc: "Helper property which provides valid 'ToolbarPadding' choices"
+                }, 
+                {
+                    name: "DeleteMenu", 
+                    type: "Component Action", 
+                    desc: "Delete all menus items in col_pbMenu collection which match menuKey (p_menuKey) parameter value"
                 }
             
             ]
         ItemState: |
-            =With({Perf: {id: GUID(), start: Now(), action: $"ITEM STATE CHANGE: {pbMenu1.MenuKey}.{p_itemKey} (enabled: {p_enabled})"}}, 
+            =With({Perf: {id: GUID(), start: Now(), action: $"ITEM STATE CHANGE: {pbMenu.MenuKey}.{p_itemKey} (enabled: {p_enabled})"}}, 
                 If(Not(StartsWith(Lower(p_itemKey),"_spacer_")) || Not(p_enabled), 
                     UpdateIf(col_pbMenu,Upper(menuKey)=Upper(Self.MenuKey) && Upper(ItemKey)=Upper(p_itemKey),{ItemDisabled:Not(p_enabled)})        
                 );
@@ -1012,14 +1014,14 @@
             //            )
             //        )
             //    );
-                If(pbMenu1.PerformanceLogging=true && p_enablePerfLog=true, 
+                If(pbMenu.PerformanceLogging=true && p_enablePerfLog=true, 
                     With({endTS: Now()}, 
                         Collect(col_pbMenuPerf,{id: Perf.id, elapsed: DateDiff(Perf.start,endTS,TimeUnit.Milliseconds), start: Perf.start, end: Now(),  action: Perf.action})
                     )
                 )
             )
         ItemState_UpdateAll: |
-            =With({Perf: {id: GUID(), start: Now(), action: $"UPDATE ITEM STATES (ALL): {pbMenu1.MenuKey} (Enabled: {p_Enabled})"}}, 
+            =With({Perf: {id: GUID(), start: Now(), action: $"UPDATE ITEM STATES (ALL): {pbMenu.MenuKey} (Enabled: {p_Enabled})"}}, 
                 UpdateIf(col_pbMenu,Upper(menuKey)=Upper(Self.MenuKey),{ItemDisabled:Not(p_Enabled)});
             
             //    ForAll(pbMenu.MenuItems As mItem, 
@@ -1035,26 +1037,16 @@
             )
         MenuItem: =LookUp(col_pbMenu,Upper(menuKey)=Upper(p_menuKey) && Upper(ItemKey)=Upper(p_itemKey))
         MenuKey: ="MainMenu"
-        MinimumHeight: =If(Upper(Self.ToolbarOrientation)=Upper(pbMenu1.LayoutChoices.Horizontal),If(Self.OverrideMinHeight>0,Self.OverrideMinHeight, 50),140) 
+        MinimumHeight: =If(Upper(Self.ToolbarOrientation)=Upper(pbMenu.LayoutChoices.Horizontal),If(Self.OverrideMinHeight>0,Self.OverrideMinHeight, 50),140) 
         MinimumWidth: |
-            =If(pbMenu1.ToolbarOrientation=pbMenu1.LayoutChoices.Horizontal,200,
-                If(pbMenu1.CollapsedMode()=true,50,
-                    If(pbMenu1.OverrideExpandedWidth<=0,
+            =If(pbMenu.ToolbarOrientation=pbMenu.LayoutChoices.Horizontal,200,
+                If(pbMenu.CollapsedMode()=true,50,
+                    If(pbMenu.OverrideExpandedWidth<=0,
                         120, 
-                        pbMenu1.OverrideExpandedWidth
+                        pbMenu.OverrideExpandedWidth
                     )
                 )
             )
-        MissingMenuRecord: |-
-            ={            
-                ItemKey: Upper("_MISSING"), 
-                ItemDisplayName:  "'" & pbMenu1.MenuKey & "' menu items not found!", 
-                ItemIconName: "ErrorCircle", 
-                ItemAppearance: pbMenu1.ItemAppearanceChoices.Primary, 
-                ItemIconStyle: pbMenu1.ItemIconStyleChoices.Filled, 
-                ItemTooltip: "No Menu Items Found", 
-                ItemDisabled: false
-            }
         OnBeforeAction: |-
             =Switch(Upper(p_itemKey), 
                 Upper("miConfirm1"),
@@ -1072,30 +1064,6 @@
             Self.OnRemoveMenuItem(p_menuKey,p_menuItemKey)
         Reset: |
             =Reset(pbMenu1)
-        StaticBackMenuItem: |-
-            ={            
-                ItemKey: Upper("_BACK"), 
-                ItemDisplayName:  "BACK", 
-                ItemIconName: "ArrowLeft", 
-                ItemAppearance: pbMenu1.ItemAppearanceChoices.Outline, 
-                ItemIconStyle: pbMenu1.ItemIconStyleChoices.Filled, 
-                ItemTooltip: "Go to last screen", 
-                ItemDisabled: false, 
-                confirmItemAction: false, 
-                disableOnSelect: false 
-            }
-        StaticCollapseMenuRecord: |-
-            ={            
-                ItemKey: Upper("_COLLAPSE"), 
-                ItemDisplayName:  "", 
-                ItemIconName: If(pbMenu1.CollapsedMode()=true,"ChevronRight","ChevronLeft"), 
-                ItemAppearance: pbMenu1.ItemAppearanceChoices.Outline, 
-                ItemIconStyle: pbMenu1.ItemIconStyleChoices.Filled, 
-                ItemTooltip: If(pbMenu1.CollapsedMode()=true,"Expand Menu","Collapse Menu"), 
-                ItemDisabled: false, 
-                confirmItemAction: false, 
-                disableOnSelect: false 
-            }
         ToolbarOrientation: =pbMenu1.LayoutChoices.Horizontal
         Width: =Parent.Width
         Y: =pbMenu_GetStarted.Y + pbMenu_GetStarted.Height

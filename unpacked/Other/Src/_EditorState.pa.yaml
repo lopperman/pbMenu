@@ -15,6 +15,5 @@ EditorState:
     - Get Started
   ComponentDefinitionsOrder:
     - pbMenu
-    - pbMenuData
     - compEditControls
     - confirmAction

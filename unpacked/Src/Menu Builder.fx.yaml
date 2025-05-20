@@ -1,7 +1,7 @@
 "'Menu Builder' As screen":
     LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
     OnVisible: |
-        =If(CountIf(col_pbMenu,true)=0,dData.BuildDemoMenus());
+        =
         pbMenu_MenuBuilder.DoMenu(pbMenu_MenuBuilder.MenuKey,"mbBuild");
         
         UpdateContext({miPrimaryColorPalette:PowerAppsTheme.Colors.Primary});
@@ -165,6 +165,7 @@
                     newSpacer
                 )
             )
+        DeleteMenu: =RemoveIf(col_pbMenu,Upper(menuKey)=Upper(p_menuKey));
         DoMenu: |
             =    With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
                     If(mi.confirmItemAction=true, 
@@ -176,12 +177,12 @@
                             , 
                             //clear the 'confirm' action, which is now confirmed, and 
                             //process menuItem as normal
-                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_MenuBuilder.ControlGUID) && action="confirm")
+                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")
                         )
                     );
                     With({doMenuHandled: 
                         If(Self.ConfirmMode() <> true, 
-                            If(pbMenu_MenuBuilder.ManageItemStates = true, 
+                            If(pbMenu.ManageItemStates = true, 
                                 pbMenu.ItemState_UpdateAll(true);
                                 If(mi.disableOnSelect=true, 
                                     pbMenu.ItemState(mi.ItemKey,false)
@@ -457,6 +458,11 @@
                     dataType: "Record", 
                     type: "Output Property", 
                     desc: "Helper property which provides valid 'ToolbarPadding' choices"
+                }, 
+                {
+                    name: "DeleteMenu", 
+                    type: "Component Action", 
+                    desc: "Delete all menus items in col_pbMenu collection which match menuKey (p_menuKey) parameter value"
                 }
             
             ]
@@ -542,9 +548,12 @@
                     // All menu data is stored in a single collection (which also means, you can add menu items using any pbMenu component, and any pbMenu component can render any menu)
                     // In order to not remove menu data from other menus in this demo, I'm just clearing the 'exampleMenu' data here
                     RemoveIf(col_pbMenu, Upper(menuKey) = Upper("exampleMenu"));
+                    RemoveIf(col_pbMenu, Upper(menuKey) = Upper("exampleMenuII"));
                     // The 'col_BuildMenu' is used for this demo only, and is normally not a collection the pbMenu cares about
                     RemoveIf(col_BuildMenu, Upper(menuKey) = Upper("exampleMenu"));
+                    RemoveIf(col_BuildMenu, Upper(menuKey) = Upper("exampleMenuII"));
                     Collect(col_BuildMenu, {menuKey: "exampleMenu"});
+                    Collect(col_BuildMenu, {menuKey: "exampleMenuII"});
                     
                     // Build the menu items that will render when referencing 'exampleMenu'
                     // Because the menu is getting built in response to another pbMenu.OnBeforeAction event, we're using 'Self' to refer to the pbMenu which raised the event, but since we're adding all menu items to the col_pbMenu collection (last parameter), we could change 'Self' to any pbMenu on any screen.
@@ -568,6 +577,17 @@
                     Self.CreateMenuItem("exampleMenu","exLong2","This is a really long display name 2","Money",Self.ItemAppearanceChoices.Outline,Self.ItemIconStyleChoices.Filled,"Calculate Widget",true,false,true);
                     Self.CreateMenuItem("exampleMenu","exLong3","This is a really long display name 3","Money",Self.ItemAppearanceChoices.Outline,Self.ItemIconStyleChoices.Filled,"Calculate Widget",true,false,true);
                     Self.CreateMenuItem("exampleMenu","exLong4","This is a really long display name 4","Money",Self.ItemAppearanceChoices.Outline,Self.ItemIconStyleChoices.Filled,"Calculate Widget",true,false,true);
+            
+                    //BUILDS A SECOND EXAMPLE MENU (exampleMenuII)
+                    Self.CreateInfoItem("exampleMenuII","Example Menu Pt. Deux",Self.ItemAppearanceChoices.Transparent,"Example Menu II",true);
+                    //Create a 'spacer' menu item.  (Not Selectable, No text or icon displayed)
+                    Self.CreateSpacer("exampleMenuII",true);
+                    //Create menu item 'exConfirm1' (The last 3 argements are for requiring disabling when selected, requiring confirmation, and (true) to add to col_pbMenu collection)
+                    Self.CreateMenuItem("exampleMenuII","add1","Add 1","Add",Self.ItemAppearanceChoices.Primary,Self.ItemIconStyleChoices.Filled,"Requires Confirmation",false,true,true);
+                    //Create menu item 'exConfirm2' (does not require confirmation)
+                    Self.CreateMenuItem("exampleMenuII","add2","Add 2 - No Confirm","Edit",Self.ItemAppearanceChoices.Primary,Self.ItemIconStyleChoices.Filled,"No Confirmation Required",false,false,true);
+                    //Another spacer
+            
             
                     UpdateContext({ignoreUnhandled:true}); Reset(toggIgnoreUnhandled);
                     UpdateContext({manageItemStates:true}); Reset(toggManageItemStates);
@@ -839,6 +859,7 @@
                         newSpacer
                     )
                 )
+            DeleteMenu: =RemoveIf(col_pbMenu,Upper(menuKey)=Upper(p_menuKey));
             DoMenu: |
                 =    With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
                         If(mi.confirmItemAction=true, 
@@ -850,12 +871,12 @@
                                 , 
                                 //clear the 'confirm' action, which is now confirmed, and 
                                 //process menuItem as normal
-                                RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_Build.ControlGUID) && action="confirm")
+                                RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")
                             )
                         );
                         With({doMenuHandled: 
                             If(Self.ConfirmMode() <> true, 
-                                If(pbMenu_Build.ManageItemStates = true, 
+                                If(pbMenu.ManageItemStates = true, 
                                     pbMenu.ItemState_UpdateAll(true);
                                     If(mi.disableOnSelect=true, 
                                         pbMenu.ItemState(mi.ItemKey,false)
@@ -1133,6 +1154,11 @@
                         dataType: "Record", 
                         type: "Output Property", 
                         desc: "Helper property which provides valid 'ToolbarPadding' choices"
+                    }, 
+                    {
+                        name: "DeleteMenu", 
+                        type: "Component Action", 
+                        desc: "Delete all menus items in col_pbMenu collection which match menuKey (p_menuKey) parameter value"
                     }
                 
                 ]
@@ -2732,6 +2758,7 @@
                 )
             )
         DefaultCollapsedState: =false
+        DeleteMenu: =RemoveIf(col_pbMenu,Upper(menuKey)=Upper(p_menuKey));
         DoMenu: |
             =    With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
                     If(mi.confirmItemAction=true, 
@@ -2743,12 +2770,12 @@
                             , 
                             //clear the 'confirm' action, which is now confirmed, and 
                             //process menuItem as normal
-                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_BuildHelper.ControlGUID) && action="confirm")
+                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")
                         )
                     );
                     With({doMenuHandled: 
                         If(Self.ConfirmMode() <> true, 
-                            If(pbMenu_BuildHelper.ManageItemStates = true, 
+                            If(pbMenu.ManageItemStates = true, 
                                 pbMenu.ItemState_UpdateAll(true);
                                 If(mi.disableOnSelect=true, 
                                     pbMenu.ItemState(mi.ItemKey,false)
@@ -3025,6 +3052,11 @@
                     dataType: "Record", 
                     type: "Output Property", 
                     desc: "Helper property which provides valid 'ToolbarPadding' choices"
+                }, 
+                {
+                    name: "DeleteMenu", 
+                    type: "Component Action", 
+                    desc: "Delete all menus items in col_pbMenu collection which match menuKey (p_menuKey) parameter value"
                 }
             
             ]
@@ -3149,7 +3181,7 @@
                         )
                     );
                     true, 
-                "REBUILDDEMOMENUS", dData.BuildDemoMenus(); true, 
+                
                 Upper("mbbCreateSpacer"), 
                     If(Len(TrimEnds(txtMenuName.Value))=0, 
                         Notify("Menu Key is required to create spacer.  Please enter menu name in the Menu Name ('Menu Key') Textbox",NotificationType.Error,2000)

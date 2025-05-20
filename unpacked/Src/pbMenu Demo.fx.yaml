@@ -1,7 +1,12 @@
 "'pbMenu Demo' As screen":
     LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
     OnVisible: |-
-        =If(CountIf(col_pbMenu,true)=0,dData.BuildDemoMenus());
+        =If(menusInitialized <> true,
+            Select(btnDemoRebuildMenus);
+            UpdateContext({menusInitialized: true});
+        );
+        
+        
         UpdateContext({vert1Menu: "mainVert1"});
         UpdateContext({vert2Menu: "mainVert2"});
         If(IsBlank(fromScreen), 
@@ -146,6 +151,7 @@
                     newSpacer
                 )
             )
+        DeleteMenu: =RemoveIf(col_pbMenu,Upper(menuKey)=Upper(p_menuKey));
         DoMenu: |
             =    With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
                     If(mi.confirmItemAction=true, 
@@ -157,12 +163,12 @@
                             , 
                             //clear the 'confirm' action, which is now confirmed, and 
                             //process menuItem as normal
-                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(MM.ControlGUID) && action="confirm")
+                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")
                         )
                     );
                     With({doMenuHandled: 
                         If(Self.ConfirmMode() <> true, 
-                            If(MM.ManageItemStates = true, 
+                            If(pbMenu.ManageItemStates = true, 
                                 pbMenu.ItemState_UpdateAll(true);
                                 If(mi.disableOnSelect=true, 
                                     pbMenu.ItemState(mi.ItemKey,false)
@@ -438,6 +444,11 @@
                     dataType: "Record", 
                     type: "Output Property", 
                     desc: "Helper property which provides valid 'ToolbarPadding' choices"
+                }, 
+                {
+                    name: "DeleteMenu", 
+                    type: "Component Action", 
+                    desc: "Delete all menus items in col_pbMenu collection which match menuKey (p_menuKey) parameter value"
                 }
             
             ]
@@ -637,6 +648,7 @@
                     newSpacer
                 )
             )
+        DeleteMenu: =RemoveIf(col_pbMenu,Upper(menuKey)=Upper(p_menuKey));
         DoMenu: |
             =    With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
                     If(mi.confirmItemAction=true, 
@@ -648,12 +660,12 @@
                             , 
                             //clear the 'confirm' action, which is now confirmed, and 
                             //process menuItem as normal
-                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_Vert.ControlGUID) && action="confirm")
+                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")
                         )
                     );
                     With({doMenuHandled: 
                         If(Self.ConfirmMode() <> true, 
-                            If(pbMenu_Vert.ManageItemStates = true, 
+                            If(pbMenu.ManageItemStates = true, 
                                 pbMenu.ItemState_UpdateAll(true);
                                 If(mi.disableOnSelect=true, 
                                     pbMenu.ItemState(mi.ItemKey,false)
@@ -930,6 +942,11 @@
                     dataType: "Record", 
                     type: "Output Property", 
                     desc: "Helper property which provides valid 'ToolbarPadding' choices"
+                }, 
+                {
+                    name: "DeleteMenu", 
+                    type: "Component Action", 
+                    desc: "Delete all menus items in col_pbMenu collection which match menuKey (p_menuKey) parameter value"
                 }
             
             ]
@@ -1141,6 +1158,7 @@
                     newSpacer
                 )
             )
+        DeleteMenu: =RemoveIf(col_pbMenu,Upper(menuKey)=Upper(p_menuKey));
         DoMenu: |
             =    With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
                     If(mi.confirmItemAction=true, 
@@ -1152,12 +1170,12 @@
                             , 
                             //clear the 'confirm' action, which is now confirmed, and 
                             //process menuItem as normal
-                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_Vert_1.ControlGUID) && action="confirm")
+                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")
                         )
                     );
                     With({doMenuHandled: 
                         If(Self.ConfirmMode() <> true, 
-                            If(pbMenu_Vert_1.ManageItemStates = true, 
+                            If(pbMenu.ManageItemStates = true, 
                                 pbMenu.ItemState_UpdateAll(true);
                                 If(mi.disableOnSelect=true, 
                                     pbMenu.ItemState(mi.ItemKey,false)
@@ -1434,6 +1452,11 @@
                     dataType: "Record", 
                     type: "Output Property", 
                     desc: "Helper property which provides valid 'ToolbarPadding' choices"
+                }, 
+                {
+                    name: "DeleteMenu", 
+                    type: "Component Action", 
+                    desc: "Delete all menus items in col_pbMenu collection which match menuKey (p_menuKey) parameter value"
                 }
             
             ]
@@ -1544,7 +1567,7 @@
             ZIndex: =1
 
         btnEasyStart As Button:
-            DisplayMode: =DisplayMode.Edit
+            DisplayMode: =If(spin.waiting=true,DisplayMode.Disabled, DisplayMode.Edit)
             Height: =80
             OnSelect: =Navigate('Get Started',ScreenTransition.Fade)
             Text: ="CLICK FOR MINIMUM STEP-BY-STEP INSTRUCTIONS TO START USING THE pbMenu COMPONENT"
@@ -1608,7 +1631,7 @@
         BorderColor: =RGBA(224, 86, 6, 1)
         BorderStyle: =BorderStyle.Solid
         BorderThickness: =1
-        DisplayMode: =DisplayMode.Edit
+        DisplayMode: =If(spin.waiting=true,DisplayMode.Disabled, DisplayMode.Edit)
         FontWeight: =FontWeight.Bold
         Height: =32
         OnSelect: =Set(spin,Blank());
@@ -1623,7 +1646,7 @@
         BorderColor: =RGBA(224, 86, 6, 1)
         BorderStyle: =BorderStyle.Solid
         BorderThickness: =1
-        DisplayMode: =DisplayMode.Edit
+        DisplayMode: =If(spin.waiting=true,DisplayMode.Disabled, DisplayMode.Edit)
         FontWeight: =FontWeight.Bold
         Height: =32
         OnSelect: |+
@@ -1640,7 +1663,7 @@
         BorderColor: =RGBA(224, 86, 6, 1)
         BorderStyle: =BorderStyle.Solid
         BorderThickness: =1
-        DisplayMode: =DisplayMode.Edit
+        DisplayMode: =If(spin.waiting=true,DisplayMode.Disabled, DisplayMode.Edit)
         FontWeight: =FontWeight.Bold
         Height: =32
         OnSelect: =MM.ItemState_UpdateAll(false)
@@ -1655,7 +1678,7 @@
         BorderColor: =RGBA(224, 86, 6, 1)
         BorderStyle: =BorderStyle.Solid
         BorderThickness: =1
-        DisplayMode: =DisplayMode.Edit
+        DisplayMode: =If(spin.waiting=true,DisplayMode.Disabled, DisplayMode.Edit)
         FontWeight: =FontWeight.Bold
         Height: =32
         OnSelect: =MM.ItemState_UpdateAll(true)
@@ -1665,94 +1688,78 @@
         Y: =MM.Y + MM.Height + 10
         ZIndex: =13
 
-    dData As pbMenuData:
-        BuildDemoMenus: |-
-            =Set(spin,{waiting: true,msg: "Please wait ..."});
-            
-            //Clear(col_pbMenu);
-            Clear(col_pbMenuUtil);
-            
-            MM.CreateMenuItem("Main","miNavBuild","MENU BUILDER","ArrowRight",MM.ItemAppearanceChoices.Primary,MM.ItemIconStyleChoices.Filled,"Build a Menu",false,false,true);
-            MM.CreateMenuItem("Main","miNavPerf","PERF LOG","ArrowRight",MM.ItemAppearanceChoices.Primary,MM.ItemIconStyleChoices.Filled,"View Performance Log",false,false,true);
-            MM.CreateSpacer("Main",true);
-            MM.CreateMenuItem("Main","launchGithub","lopperman @ github","Open",MM.ItemAppearanceChoices.Outline,MM.ItemIconStyleChoices.Filled,"Paul Brower Github Profile",false,false,true);
-            MM.CreateMenuItem("Main","launchReddit","ITFuture @ reddit","Open",MM.ItemAppearanceChoices.Outline,MM.ItemIconStyleChoices.Filled,"Paul Brower Reddit Profile",false,false,true);
-            MM.CreateMenuItem("Main","TogglePerfLogging","Toggle Perf Logging","ServiceBell",MM.ItemAppearanceChoices.Outline,MM.ItemIconStyleChoices.Filled,"",false,false,true);
-            
-            MM.CreateInfoItem("mainVert1","Menu: MainVert1",MM.ItemAppearanceChoices.Outline,"Menu Name",true);
-            MM.CreateMenuItem("mainVert1","launchGithub","lopperman @ github","Open",MM.ItemAppearanceChoices.Outline,MM.ItemIconStyleChoices.Filled,"Paul Brower Github Profile",true,false,true);
-            MM.CreateMenuItem("mainVert1","launchReddit","ITFuture @ reddit","Open",MM.ItemAppearanceChoices.Outline,MM.ItemIconStyleChoices.Filled,"Paul Brower Reddit Profile",true,false,true);
-            MM.CreateSpacer("mainVert1",true);
-            MM.CreateMenuItem("mainVert1","useMenu_mainVert2","Use Menu V2","People",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Demo",false,true,true);
-            MM.CreateSpacer("mainVert1",true);
-            MM.CreateMenuItem("mainVert1","disableOtherMenus","Disable Menus","DismissCircle",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Disable Other Menus",true,false,true);
-            MM.CreateMenuItem("mainVert1","enableOtherMenus","Enable Menus","CheckmarkCircle",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Enable Other Menus",true,false,true);
-            
-            MM.CreateInfoItem("mainVert2","Menu: MainVert2",MM.ItemAppearanceChoices.Outline,"Menu Name",true);
-            MM.CreateMenuItem("mainVert2","miNavBuild","MENU BUILDER","ArrowRight",MM.ItemAppearanceChoices.Primary,MM.ItemIconStyleChoices.Filled,"Build a Menu",false,false,true);
-            MM.CreateMenuItem("mainVert2","launchGithub","lopperman @ github","Open",MM.ItemAppearanceChoices.Outline,MM.ItemIconStyleChoices.Filled,"Paul Brower Github Profile",true,false,true);
-            MM.CreateMenuItem("mainVert2","launchReddit","ITFuture @ reddit","Open",MM.ItemAppearanceChoices.Outline,MM.ItemIconStyleChoices.Filled,"Paul Brower Reddit Profile",true,false,true);
-            MM.CreateSpacer("mainVert2",true);
-            MM.CreateMenuItem("mainVert2","useMenu_mainVert1","Use Menu V1","Person",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Demo",true,true,true);
-            
-            
-            MM.CreateMenuItem("MenuBuilder","mbBuild","BUILD","Settings",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Create Menu Items",true,false,true);
-            MM.CreateMenuItem("MenuBuilder","mbViewData","VIEW MENU INFO","Eye",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Menu Data",true,false,true);
-            MM.CreateSpacer("menuBuilder",true);
-            MM.CreateMenuItem("MenuBuilder","mbExampleMenu","CREATE EXAMPLE MENU","Add",MM.ItemAppearanceChoices.Transparent, MM.ItemIconStyleChoices.Filled,"Create Example Menu",false,true,true);
-            MM.CreateMenuItem("MenuBuilder","mbExampleMenuAbout","ABOUT EXAMPLE MENU","Question",MM.ItemAppearanceChoices.Transparent, MM.ItemIconStyleChoices.Filled,"Create Example Menu",true,false,true);
-            MM.CreateSpacer("menuBuilder",true);
-            MM.CreateMenuItem("MenuBuilder","mbReset","RESET","DismissCircle",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Clear Demo Menu Items",false,true,true);
-            MM.CreateMenuItem("menuBuilder","miNavPerf","PERF LOG","ArrowRight",MM.ItemAppearanceChoices.Primary,MM.ItemIconStyleChoices.Filled,"View Performance Log",false,false,true);
-            
-            
-            MM.CreateMenuItem("mbHelper_View","mbhJSON","MENU JSON","Eye",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Menu JSON",false,false,true);
-            MM.CreateMenuItem("mbHelper_View","mbhMenuProps","MENU INFO","Info",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Menu Properties",false,false,true);
-            MM.CreateMenuItem("mbHelper_View","mbhInputProps","INPUT PROPERTIES","Edit",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Input Properties",false,false,true);
-            MM.CreateMenuItem("mbHelper_View","mbhOutputProps","OUTPUT PROPERTIES","Eye",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Output Properties",false,false,true);
-            MM.CreateMenuItem("mbHelper_View","mbhOutputFunctions","OUTPUT FUNCTIONS","Eye",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Output Functions",false,false,true);
-            MM.CreateMenuItem("mbHelper_View","mbhMenuItems","CURRENT MENU ITEMS","List",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Current Menu Items",false,false,true);
-            MM.CreateMenuItem("mbHelper_View","mbhActions","COMPONENT ACTIONS","List",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Component Actions",false,false,true);
-            
-            //MM.CreateMenuItem("mbHelper_Build","mbbCreate","New Item","Add",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Create Menu Item",true,false,true);
-            MM.CreateInfoItem("mbHelper_Build","MENU ITEMS",MM.ItemAppearanceChoices.Transparent,"",true);
-            MM.CreateSpacer("mbHelper_Build",true);
-            MM.CreateMenuItem("mbHelper_Build","mbbSave","Create Item","Save",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Save Menu Item",false,true,true);
-            MM.CreateMenuItem("mbHelper_Build","mbbCreateSpacer","New Spacer","Circle",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Create Menu Item Spacer",false,false,true);
-            MM.CreateMenuItem("mbHelper_Build","mbbDelete","Remove Item","Delete",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Delete Menu Item",false,true,true);
-            //MM.CreateMenuItem("mbHelper_Build","mbbUndo","Revert Item","ArrowUndo",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Undo Menu Item",false,true,true);
-            MM.CreateSpacer("mbHelper_Build",true);
-            MM.CreateInfoItem("mbHelper_Build","AIN'T THIS COOL?",MM.ItemAppearanceChoices.Transparent,"",true);
-            
-            
-            MM.CreateMenuItem("pbMenuPerfLog","sortStartToggle","Sort Start Desc","ArrowSort",MM.ItemAppearanceChoices.Outline, MM.ItemIconStyleChoices.Filled,"Sort by Start ",false,false,true);
-            MM.CreateMenuItem("pbMenuPerfLog","sortElapsedToggle","Sort Elapsed Desc","ArrowSort",MM.ItemAppearanceChoices.Outline, MM.ItemIconStyleChoices.Filled,"Sort by Elapsed",false,false,true);
-            
-            
-            Set(spin,Blank());
-        Height: =105
-        MenuItems: |-
-            =With({fItems: Filter(col_pbMenu,Upper(menuKey)=Upper(p_menuKey))}, 
-                ShowColumns(fItems,ItemKey,ItemDisplayName,ItemIconName, ItemAppearance, ItemIconStyle, ItemTooltip, ItemDisabled)
-            )
-        Width: =310
-        X: =Parent.Width - Self.Width - 8
-        Y: =MM.Y + MM.Height
-        ZIndex: =14
-
     btnDemoRebuildMenus As Button:
         BasePaletteColor: =PowerAppsTheme.Colors.Lighter60
         BorderColor: =RGBA(224, 86, 6, 1)
         BorderStyle: =BorderStyle.Solid
         BorderThickness: =1
-        DisplayMode: =DisplayMode.Edit
+        DisplayMode: =If(spin.waiting=true,DisplayMode.Disabled, DisplayMode.Edit)
         FontWeight: =FontWeight.Bold
         Height: =66
         Icon: ="GlobeError"
-        OnSelect: |
-            =Clear(col_pbMenu);
-            Clear(col_pbMenuUtil);
-            dData.BuildDemoMenus();
+        OnSelect: |-
+            =    Set(spin,{waiting: true,msg: "Please wait ..."});
+                Clear(col_pbMenuUtil);
+                MM.DeleteMenu("main");
+                MM.CreateMenuItem("Main","miNavBuild","MENU BUILDER","ArrowRight",MM.ItemAppearanceChoices.Primary,MM.ItemIconStyleChoices.Filled,"Build a Menu",false,false,true);
+                MM.CreateMenuItem("Main","miNavPerf","PERF LOG","ArrowRight",MM.ItemAppearanceChoices.Primary,MM.ItemIconStyleChoices.Filled,"View Performance Log",false,false,true);
+                MM.CreateSpacer("Main",true);
+                MM.CreateMenuItem("Main","launchGithub","lopperman @ github","Open",MM.ItemAppearanceChoices.Outline,MM.ItemIconStyleChoices.Filled,"Paul Brower Github Profile",false,false,true);
+                MM.CreateMenuItem("Main","launchReddit","ITFuture @ reddit","Open",MM.ItemAppearanceChoices.Outline,MM.ItemIconStyleChoices.Filled,"Paul Brower Reddit Profile",false,false,true);
+                MM.CreateMenuItem("Main","TogglePerfLogging","Toggle Perf Logging","ServiceBell",MM.ItemAppearanceChoices.Outline,MM.ItemIconStyleChoices.Filled,"",false,false,true);
+            
+                MM.DeleteMenu("mainvert1");
+                MM.CreateInfoItem("mainVert1","Menu: MainVert1",MM.ItemAppearanceChoices.Outline,"Menu Name",true);
+                MM.CreateMenuItem("mainVert1","launchGithub","lopperman @ github","Open",MM.ItemAppearanceChoices.Outline,MM.ItemIconStyleChoices.Filled,"Paul Brower Github Profile",true,false,true);
+                MM.CreateMenuItem("mainVert1","launchReddit","ITFuture @ reddit","Open",MM.ItemAppearanceChoices.Outline,MM.ItemIconStyleChoices.Filled,"Paul Brower Reddit Profile",true,false,true);
+                MM.CreateSpacer("mainVert1",true);
+                MM.CreateMenuItem("mainVert1","useMenu_mainVert2","Use Menu V2","People",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Demo",false,true,true);
+                MM.CreateSpacer("mainVert1",true);
+                MM.CreateMenuItem("mainVert1","disableOtherMenus","Disable Menus","DismissCircle",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Disable Other Menus",true,false,true);
+                MM.CreateMenuItem("mainVert1","enableOtherMenus","Enable Menus","CheckmarkCircle",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Enable Other Menus",true,false,true);
+            
+                MM.DeleteMenu("mainvert2");
+                MM.CreateInfoItem("mainVert2","Menu: MainVert2",MM.ItemAppearanceChoices.Outline,"Menu Name",true);
+                MM.CreateMenuItem("mainVert2","miNavBuild","MENU BUILDER","ArrowRight",MM.ItemAppearanceChoices.Primary,MM.ItemIconStyleChoices.Filled,"Build a Menu",false,false,true);
+                MM.CreateMenuItem("mainVert2","launchGithub","lopperman @ github","Open",MM.ItemAppearanceChoices.Outline,MM.ItemIconStyleChoices.Filled,"Paul Brower Github Profile",true,false,true);
+                MM.CreateMenuItem("mainVert2","launchReddit","ITFuture @ reddit","Open",MM.ItemAppearanceChoices.Outline,MM.ItemIconStyleChoices.Filled,"Paul Brower Reddit Profile",true,false,true);
+                MM.CreateSpacer("mainVert2",true);
+                MM.CreateMenuItem("mainVert2","useMenu_mainVert1","Use Menu V1","Person",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Demo",true,true,true);
+            
+                MM.DeleteMenu("menubuilder");
+                MM.CreateMenuItem("MenuBuilder","mbBuild","BUILD","Settings",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Create Menu Items",true,false,true);
+                MM.CreateMenuItem("MenuBuilder","mbViewData","VIEW MENU INFO","Eye",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Menu Data",true,false,true);
+                MM.CreateSpacer("menuBuilder",true);
+                MM.CreateMenuItem("MenuBuilder","mbExampleMenu","CREATE EXAMPLE MENU","Add",MM.ItemAppearanceChoices.Transparent, MM.ItemIconStyleChoices.Filled,"Create Example Menu",false,true,true);
+                MM.CreateMenuItem("MenuBuilder","mbExampleMenuAbout","ABOUT EXAMPLE MENU","Question",MM.ItemAppearanceChoices.Transparent, MM.ItemIconStyleChoices.Filled,"Create Example Menu",true,false,true);
+                MM.CreateSpacer("menuBuilder",true);
+                MM.CreateMenuItem("MenuBuilder","mbReset","RESET","DismissCircle",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Clear Demo Menu Items",false,true,true);
+                MM.CreateMenuItem("menuBuilder","miNavPerf","PERF LOG","ArrowRight",MM.ItemAppearanceChoices.Primary,MM.ItemIconStyleChoices.Filled,"View Performance Log",false,false,true);
+            
+            
+                MM.DeleteMenu("mbhelper_view");
+                MM.CreateMenuItem("mbHelper_View","mbhJSON","MENU JSON","Eye",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Menu JSON",false,false,true);
+                MM.CreateMenuItem("mbHelper_View","mbhMenuProps","MENU INFO","Info",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Menu Properties",false,false,true);
+                MM.CreateMenuItem("mbHelper_View","mbhInputProps","INPUT PROPERTIES","Edit",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Input Properties",false,false,true);
+                MM.CreateMenuItem("mbHelper_View","mbhOutputProps","OUTPUT PROPERTIES","Eye",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Output Properties",false,false,true);
+                MM.CreateMenuItem("mbHelper_View","mbhOutputFunctions","OUTPUT FUNCTIONS","Eye",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Output Functions",false,false,true);
+                MM.CreateMenuItem("mbHelper_View","mbhMenuItems","CURRENT MENU ITEMS","List",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Current Menu Items",false,false,true);
+                MM.CreateMenuItem("mbHelper_View","mbhActions","COMPONENT ACTIONS","List",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"View Component Actions",false,false,true);
+            
+                MM.DeleteMenu("mbhelper_build");
+                MM.CreateInfoItem("mbHelper_Build","MENU ITEMS",MM.ItemAppearanceChoices.Transparent,"",true);
+                MM.CreateSpacer("mbHelper_Build",true);
+                MM.CreateMenuItem("mbHelper_Build","mbbSave","Create Item","Save",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Save Menu Item",false,true,true);
+                MM.CreateMenuItem("mbHelper_Build","mbbCreateSpacer","New Spacer","Circle",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Create Menu Item Spacer",false,false,true);
+                MM.CreateMenuItem("mbHelper_Build","mbbDelete","Remove Item","Delete",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Delete Menu Item",false,true,true);
+                //MM.CreateMenuItem("mbHelper_Build","mbbUndo","Revert Item","ArrowUndo",MM.ItemAppearanceChoices.Primary, MM.ItemIconStyleChoices.Filled,"Undo Menu Item",false,true,true);
+                MM.CreateSpacer("mbHelper_Build",true);
+                MM.CreateInfoItem("mbHelper_Build","AIN'T THIS COOL?",MM.ItemAppearanceChoices.Transparent,"",true);
+            
+                MM.DeleteMenu("pbmenuperflog");
+                MM.CreateMenuItem("pbMenuPerfLog","sortStartToggle","Sort Start Desc","ArrowSort",MM.ItemAppearanceChoices.Outline, MM.ItemIconStyleChoices.Filled,"Sort by Start ",false,false,true);
+                MM.CreateMenuItem("pbMenuPerfLog","sortElapsedToggle","Sort Elapsed Desc","ArrowSort",MM.ItemAppearanceChoices.Outline, MM.ItemIconStyleChoices.Filled,"Sort by Elapsed",false,false,true);
+                Set(spin,Blank());
         Text: ="REBUILD MENUS"
         Width: =126
         X: =btnDemoIsBusy.X + btnDemoIsBusy.Width + 20
@@ -1764,6 +1771,7 @@
         BorderThickness: =2
         DisabledBorderColor: =RGBA(0, 0, 0, 0)
         DisabledFill: =RGBA(0, 0, 0, 0)
+        DisplayMode: =If(spin.waiting=true,DisplayMode.Disabled, DisplayMode.Edit)
         FocusedBorderThickness: =4
         Height: =64
         HoverBorderColor: =RGBA(0, 46, 255, 1)
@@ -1784,6 +1792,7 @@
         BorderThickness: =2
         DisabledBorderColor: =RGBA(0, 0, 0, 0)
         DisabledFill: =RGBA(0, 0, 0, 0)
+        DisplayMode: =If(spin.waiting=true,DisplayMode.Disabled, DisplayMode.Edit)
         FocusedBorderThickness: =4
         Height: =64
         HoverBorderColor: =RGBA(0, 46, 255, 1)
@@ -1803,7 +1812,7 @@
         BorderColor: =RGBA(224, 86, 6, 1)
         BorderStyle: =BorderStyle.Solid
         BorderThickness: =1
-        DisplayMode: =DisplayMode.Edit
+        DisplayMode: =If(spin.waiting=true,DisplayMode.Disabled, DisplayMode.Edit)
         FontWeight: =FontWeight.Bold
         Height: =btnDemoRebuildMenus.Height
         OnSelect: =MM.DoMenu(MM.MenuKey,"google")

@@ -141,6 +141,7 @@ PerformanceLog As screen:
                     newSpacer
                 )
             )
+        DeleteMenu: =RemoveIf(col_pbMenu,Upper(menuKey)=Upper(p_menuKey));
         DoMenu: |
             =    With({mi: pbMenu.MenuItem(p_menuKey,p_itemKey)}, 
                     If(mi.confirmItemAction=true, 
@@ -152,12 +153,12 @@ PerformanceLog As screen:
                             , 
                             //clear the 'confirm' action, which is now confirmed, and 
                             //process menuItem as normal
-                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu_PerfLog.ControlGUID) && action="confirm")
+                            RemoveIf(col_pbMenuUtil,menuGuid=GUID(pbMenu.ControlGUID) && action="confirm")
                         )
                     );
                     With({doMenuHandled: 
                         If(Self.ConfirmMode() <> true, 
-                            If(pbMenu_PerfLog.ManageItemStates = true, 
+                            If(pbMenu.ManageItemStates = true, 
                                 pbMenu.ItemState_UpdateAll(true);
                                 If(mi.disableOnSelect=true, 
                                     pbMenu.ItemState(mi.ItemKey,false)
@@ -433,6 +434,11 @@ PerformanceLog As screen:
                     dataType: "Record", 
                     type: "Output Property", 
                     desc: "Helper property which provides valid 'ToolbarPadding' choices"
+                }, 
+                {
+                    name: "DeleteMenu", 
+                    type: "Component Action", 
+                    desc: "Delete all menus items in col_pbMenu collection which match menuKey (p_menuKey) parameter value"
                 }
             
             ]

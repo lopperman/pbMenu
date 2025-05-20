@@ -24,7 +24,6 @@ App As appinfo:
         
         Set(pbMenu_LogPerformance,true);
         
-        dData.BuildDemoMenus();
         
     StartScreen: ='pbMenu Demo'
     Theme: =PowerAppsTheme
